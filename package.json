@@ -1,0 +1,30 @@
+{
+  "name": "yournotes",
+  "version": "0.0.1",
+  "description": "A note taking app for Mac, Windows and Linux.",
+  "main": "index.js",
+  "scripts": {
+    "electron": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zimniros/YourNotes.git"
+  },
+  "keywords": [
+    "macos",
+    "windows",
+    "linux",
+    "react",
+    "electron"
+  ],
+  "author": "Anton Zimnitski",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Zimniros/YourNotes/issues"
+  },
+  "homepage": "https://github.com/Zimniros/YourNotes#readme",
+  "devDependencies": {
+    "devtron": "^1.4.0",
+    "electron": "^3.0.12"
+  }
+}
