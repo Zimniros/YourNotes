@@ -1,3 +1,6 @@
-body {
-  color: orangered;
-}
+@import "./variables";
+
+@import "./base";
+
+// Components
+@import "./components/Sidebar";

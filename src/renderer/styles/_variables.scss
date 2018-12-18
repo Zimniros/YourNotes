@@ -1,0 +1,27 @@
+// Main colors
+$brand-color: #0079c4;
+$main-bg-color: #fff;
+$dark-grey: #777777;
+$light-grey: #e9e9e9;
+$black: #444444;
+
+// Sidebar colors
+$sidebar-bg-color: $main-bg-color;
+$sidebar-text-color: $dark-grey;
+$sidebar-hover-color: lighten($light-grey, 5%);
+$sidebar-active-color: $light-grey;
+
+// Sidebar text
+$sidebar-title-fz: 2.2rem;
+$sidebar-subtitle-fz: 1.6rem;
+
+// Notelist colors
+$notelist-bg-color: $light-grey;
+$notelist-hover-color: $light-grey;
+$notelist-active-color: $main-bg-color;
+
+// Editor colors
+$editor-bg-color: $main-bg-color;
+
+$sidebar-width: 25rem;
+$notelist-width: 35rem;

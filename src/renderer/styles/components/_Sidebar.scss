@@ -1,0 +1,32 @@
+.sidebar {
+  background: $sidebar-bg-color;
+  color: $sidebar-text-color;
+  width: $sidebar-width;
+}
+
+.sidebar--active {
+  background: $sidebar-active-color;
+  color: $black;
+}
+
+.main-shortcuts__item,
+.folder-shortcuts__title,
+.tag-shortcuts__title {
+  font-size: $sidebar-title-fz;
+  font-weight: 600;
+}
+
+.folder-shortcuts__item,
+.tag-shortcuts__item {
+  font-size: $sidebar-subtitle-fz;
+}
+
+.main-shortcuts__item,
+.folder-shortcuts__title,
+.tag-shortcuts__title,
+.folder-shortcuts__item,
+.tag-shortcuts__item {
+  &:hover {
+    background: $sidebar-hover-color;
+  }
+}

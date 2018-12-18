@@ -1,5 +1,10 @@
 import React from 'react';
+import Sidebar from './Sidebar';
 
-const App = () => <div>Electron App</div>;
+const App = () => (
+  <>
+    <Sidebar />
+  </>
+);
 
 export default App;
