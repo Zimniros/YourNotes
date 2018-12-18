@@ -2,7 +2,7 @@
   "name": "yournotes",
   "version": "0.0.2",
   "description": "A note taking app for Mac, Windows and Linux.",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
     "prod": "webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
     "start": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",

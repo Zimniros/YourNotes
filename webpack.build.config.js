@@ -43,6 +43,7 @@ module.exports = {
   module: {
     rules: [scss, javascript, images, fonts],
   },
+  entry: [path.resolve(__dirname, 'src', 'renderer', 'index.js')],
   target: 'electron-renderer',
   plugins: [
     new HtmlWebpackPlugin({
