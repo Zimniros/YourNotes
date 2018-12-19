@@ -3,6 +3,7 @@ import React from 'react';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 import NoteList from './NoteList';
+import Details from './Details';
 
 const App = () => (
   <>
@@ -11,6 +12,7 @@ const App = () => (
       <Topbar />
       <NoteList />
     </div>
+    <Details />
   </>
 );
 

@@ -27,6 +27,7 @@
   "homepage": "https://github.com/Zimniros/YourNotes#readme",
   "devDependencies": {
     "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.2.1",
     "@babel/preset-env": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^9.4.3",
@@ -59,7 +60,10 @@
     "webpack-dev-server": "^3.1.10"
   },
   "dependencies": {
+    "immutable": "^4.0.0-rc.12",
     "react": "^16.6.3",
-    "react-dom": "^16.6.3"
+    "react-dom": "^16.6.3",
+    "slate": "^0.44.9",
+    "slate-react": "^0.21.15"
   }
 }
