@@ -1,5 +1,7 @@
 import React from 'react';
 
-const BoldMark = props => <strong>{props.children}</strong>;
+const BoldMark = ({ attributes, children }) => (
+  <strong {...attributes}>{children}</strong>
+);
 
 export default BoldMark;

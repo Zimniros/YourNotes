@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Editor } from 'slate-react';
 import { Value } from 'slate';
+import { isKeyHotkey } from 'is-hotkey';
 import BoldMark from './helpers/BoldMark';
 import ItalicMark from './helpers/ItalicMark';
 
@@ -25,6 +26,9 @@ const initialValue = Value.fromJSON({
   },
 });
 
+const isBoldHotkey = isKeyHotkey('mod+b');
+const isItalicHotkey = isKeyHotkey('mod+i');
+
 class NoteEditor extends Component {
   state = {
     value: initialValue,
@@ -34,34 +38,31 @@ class NoteEditor extends Component {
     this.setState({ value });
   };
 
-  onKeyDown = (e, change) => {
-    if (!e.ctrlKey) {
-      return;
-    }
-    e.preventDefault();
+  onKeyDown = (event, editor, next) => {
+    let mark;
 
-    switch (e.key) {
-      case 'b': {
-        change.toggleMark('bold');
-        break;
-      }
-      case 'i': {
-        change.toggleMark('italic');
-        break;
-      }
-      default:
-        break;
+    if (isBoldHotkey(event)) {
+      mark = 'bold';
+    } else if (isItalicHotkey(event)) {
+      mark = 'italic';
+    } else {
+      return next();
     }
+
+    event.preventDefault();
+    editor.toggleMark(mark);
+
+    return undefined;
   };
 
-  renderMark = (props) => {
+  renderMark = (props, editor, next) => {
     switch (props.mark.type) {
       case 'bold':
         return <BoldMark {...props} />;
       case 'italic':
         return <ItalicMark {...props} />;
       default:
-        return false;
+        return next();
     }
   };
 
