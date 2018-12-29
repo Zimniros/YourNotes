@@ -1,7 +1,10 @@
+@import "FolderList";
+
 .sidebar {
   background: $sidebar-bg-color;
   color: $sidebar-text-color;
   width: $sidebar-width;
+  user-select: none;
 }
 
 .sidebar__menu {
@@ -33,8 +36,8 @@
 }
 
 .menu__icon {
-  height: 2rem;
-  width: 2rem;
+  height: $sidebar-icon-height;
+  width: $sidebar-icon-width;
 }
 
 .menu__item--active .menu__icon {

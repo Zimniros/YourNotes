@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Sidebar from './Sidebar';
+import Sidebar from './Sidebar/index';
 import Topbar from './Topbar';
 import NoteList from './NoteList';
 import Details from './Details';

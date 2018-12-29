@@ -4,6 +4,7 @@ import Icon from 'react-icons-kit';
 import { book } from 'react-icons-kit/fa/book';
 import { star } from 'react-icons-kit/fa/star';
 import { trashO } from 'react-icons-kit/fa/trashO';
+import FolderList from './FolderList';
 
 const Sidebar = () => (
   <div className="sidebar">
@@ -25,13 +26,8 @@ const Sidebar = () => (
       </button>
     </div>
 
-    <div className="sidebar__folder-shortcuts">
-      <div className="folder-shortcuts__title">Folders</div>
-      <ul className="folder-shortcuts__list">
-        <li className="folder-shortcuts__item">Folder 1</li>
-        <li className="folder-shortcuts__item">Folder 2</li>
-      </ul>
-    </div>
+    <FolderList />
+
     <div className="sidebar__tag-shortcuts">
       <div className="tag-shortcuts__title">Tags</div>
       <ul className="tag-shortcuts__list">

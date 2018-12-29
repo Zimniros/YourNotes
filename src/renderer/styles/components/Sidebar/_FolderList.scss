@@ -1,0 +1,39 @@
+.sidebar__folder-list {
+  width: 100%;
+}
+
+.folder-list__title {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+}
+
+.folder-list__text {
+  margin-left: 1rem;
+}
+
+.folder-list__icon {
+  height: $sidebar-icon-height;
+  width: $sidebar-icon-width;
+  transition: all 0.2s;
+
+  &--chevron {
+    &:hover,
+    &:active {
+      color: $brand-color;
+    }
+  }
+
+  &--new {
+    margin-left: auto;
+
+    &:hover,
+    &:active {
+      color: $brand-color;
+    }
+  }
+}
+
+.sidebar__folder-list--is-open .folder-list__icon--chevron {
+  transform: rotate(90deg);
+}
