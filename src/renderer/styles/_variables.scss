@@ -12,8 +12,7 @@ $sidebar-hover-color: lighten($light-grey, 5%);
 $sidebar-active-color: $light-grey;
 
 // Sidebar text
-$sidebar-title-fz: 2.2rem;
-$sidebar-subtitle-fz: 1.6rem;
+$sidebar-title-fz: 1.8rem;
 
 // Notelist colors
 $notelist-bg-color: $light-grey;
@@ -23,5 +22,5 @@ $notelist-active-color: $main-bg-color;
 // Editor colors
 $editor-bg-color: $main-bg-color;
 
-$sidebar-width: 25rem;
+$sidebar-width: 20rem;
 $notelist-width: 35rem;

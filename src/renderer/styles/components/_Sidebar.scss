@@ -4,29 +4,47 @@
   width: $sidebar-width;
 }
 
-.sidebar--active {
-  background: $sidebar-active-color;
-  color: $black;
+.sidebar__menu {
+  width: 100%;
+  margin-bottom: 3rem;
 }
 
-.main-shortcuts__item,
-.folder-shortcuts__title,
-.tag-shortcuts__title {
+.menu__item {
+  display: flex;
+  border: 0;
+  padding: 1rem 1.5rem 0.75rem 2rem;
+  background: none;
+  width: 100%;
   font-size: $sidebar-title-fz;
-  font-weight: 600;
-}
+  font-weight: 500;
+  color: $sidebar-text-color;
+  cursor: pointer;
+  align-items: center;
 
-.folder-shortcuts__item,
-.tag-shortcuts__item {
-  font-size: $sidebar-subtitle-fz;
-}
-
-.main-shortcuts__item,
-.folder-shortcuts__title,
-.tag-shortcuts__title,
-.folder-shortcuts__item,
-.tag-shortcuts__item {
   &:hover {
     background: $sidebar-hover-color;
   }
+
+  &--active,
+  &:active {
+    background: $sidebar-active-color;
+    color: $black;
+  }
+}
+
+.menu__icon {
+  height: 2rem;
+  width: 2rem;
+}
+
+.menu__item--active .menu__icon {
+  color: $brand-color;
+}
+
+.menu__text {
+  margin-left: 1rem;
+}
+
+.menu__count {
+  margin-left: auto;
 }
