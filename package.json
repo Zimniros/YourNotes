@@ -1,6 +1,6 @@
 {
-  "name": "yournotes",
-  "version": "0.0.2",
+  "name": "Yournotes",
+  "version": "0.0.4",
   "description": "A note taking app for Mac, Windows and Linux.",
   "main": "index.js",
   "scripts": {
