@@ -57,16 +57,18 @@
     "style-loader": "^0.23.1",
     "webpack": "^4.27.1",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.10"
+    "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
     "immutable": "^4.0.0-rc.12",
     "is-hotkey": "^0.1.4",
+    "lodash": "^4.17.11",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-icons-kit": "^1.2.1",
     "react-router-dom": "^4.3.1",
     "slate": "^0.44.9",
-    "slate-react": "^0.21.15"
+    "slate-react": "^0.21.15",
+    "uuid": "^3.3.2"
   }
 }

@@ -6,11 +6,11 @@ import Topbar from './Topbar';
 import NoteList from './NoteList';
 import Details from './Details';
 
-import initStorage from '../../lib/initStorage';
+import resolveStorage from '../../lib/resolveStorage';
 
 class App extends Component {
   componentDidMount() {
-    console.log(initStorage());
+    resolveStorage();
   }
 
   render() {
