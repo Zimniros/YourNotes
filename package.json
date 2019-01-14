@@ -63,6 +63,7 @@
     "immutable": "^4.0.0-rc.12",
     "is-hotkey": "^0.1.4",
     "lodash": "^4.17.11",
+    "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-icons-kit": "^1.2.1",

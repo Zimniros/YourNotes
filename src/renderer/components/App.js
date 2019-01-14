@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';

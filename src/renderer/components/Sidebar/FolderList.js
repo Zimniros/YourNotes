@@ -1,17 +1,24 @@
+/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import Icon from 'react-icons-kit';
 import { chevronRight } from 'react-icons-kit/fa/chevronRight';
 import { plus } from 'react-icons-kit/fa/plus';
 
-// Mock data
-// TODO: Replace with actual data
-const MOCK_FOLDERS = ['My folder', 'Not my folder', 'folder7', 'folder654'];
-
 class FolderList extends Component {
   state = {
     isOpen: false,
-    folders: MOCK_FOLDERS,
+    folders: this.props.folders || [],
+  };
+
+  static propTypes = {
+    folders: PropTypes.arrayOf(PropTypes.string),
+  };
+
+  static defaultProps = {
+    folders: [],
   };
 
   onChevronClick = (event) => {
@@ -55,4 +62,6 @@ class FolderList extends Component {
   }
 }
 
-export default FolderList;
+const mapStateToProps = state => ({ folders: state.folders });
+
+export default connect(mapStateToProps)(FolderList);
