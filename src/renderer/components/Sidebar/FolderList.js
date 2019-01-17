@@ -7,6 +7,8 @@ import Icon from 'react-icons-kit';
 import { chevronRight } from 'react-icons-kit/fa/chevronRight';
 import { plus } from 'react-icons-kit/fa/plus';
 
+import { showModal } from '../../actions';
+
 class FolderList extends Component {
   state = {
     isOpen: false,
@@ -15,6 +17,7 @@ class FolderList extends Component {
 
   static propTypes = {
     folders: PropTypes.arrayOf(PropTypes.string),
+    dispatch: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -31,7 +34,7 @@ class FolderList extends Component {
   onNewClick = (event) => {
     event.preventDefault();
 
-    console.log('add later');
+    this.props.dispatch(showModal());
   };
 
   render() {

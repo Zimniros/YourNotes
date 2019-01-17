@@ -6,6 +6,8 @@ import Topbar from './Topbar';
 import NoteList from './NoteList';
 import Details from './Details';
 
+import AddFolderModal from './helpers/AddFolderModal';
+
 import resolveStorage from '../../lib/resolveStorage';
 
 class App extends Component {
@@ -23,6 +25,7 @@ class App extends Component {
             <NoteList />
           </div>
           <Details />
+          <AddFolderModal />
         </div>
       </Router>
     );
