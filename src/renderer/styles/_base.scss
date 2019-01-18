@@ -20,6 +20,16 @@ body {
   background: $main-bg-color;
 }
 
+button {
+  border: 0;
+  outline: 0;
+  background: none;
+}
+
+button:disabled {
+  opacity: 0.3;
+}
+
 #root {
   height: 100%;
   width: 100vw;

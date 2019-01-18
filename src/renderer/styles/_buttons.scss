@@ -1,0 +1,30 @@
+.btn {
+  padding: $small-space $space;
+  border: 1px solid $dark-grey;
+  border-radius: 0.2rem;
+  font-size: 1.6rem;
+  cursor: pointer;
+  background: $main-bg-color;
+  color: $black;
+
+  &:hover {
+    background: darken($main-bg-color, 5%);
+  }
+
+  &:active {
+    background: darken($main-bg-color, 10%);
+  }
+}
+
+.btn--primary {
+  color: $main-bg-color;
+  background: $brand-color;
+
+  &:hover {
+    background: darken($brand-color, 5%);
+  }
+
+  &:active {
+    background: darken($brand-color, 10%);
+  }
+}
