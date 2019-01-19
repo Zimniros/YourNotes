@@ -6,12 +6,8 @@ import consts from './consts';
 import resolveStorage from './resolveStorage';
 
 function addFolder(name) {
-  let storageData;
-  try {
-    if (!isString(name)) throw new Error('Name must be a string.');
-    storageData = resolveStorage();
-  } catch (err) {
-    console.error(err);
+  if (!isString(name)) {
+    return Promise.reject(new Error('Name must be a string.'));
   }
 
   const newFolder = {
@@ -19,11 +15,14 @@ function addFolder(name) {
     name,
   };
 
-  storageData.folders.push(newFolder);
+  return Promise.resolve(newFolder).then((folder) => {
+    const storageData = resolveStorage();
+    const newStorageData = Object.assign({}, storageData, { folders: [...storageData.folders, folder] });
 
-  fs.writeFileSync(consts.JSON_PATH, JSON.stringify(storageData));
+    fs.writeFileSync(consts.JSON_PATH, JSON.stringify(newStorageData));
 
-  return storageData;
+    return folder;
+  });
 }
 
 export default addFolder;
