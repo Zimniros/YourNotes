@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import Sidebar from './Sidebar';
@@ -8,28 +8,18 @@ import Details from './Details';
 
 import AddFolderModal from './helpers/AddFolderModal';
 
-import resolveStorage from '../../lib/resolveStorage';
-
-class App extends Component {
-  componentDidMount() {
-    resolveStorage();
-  }
-
-  render() {
-    return (
-      <Router>
-        <div className="app">
-          <Sidebar />
-          <div className="notelist-wrapper">
-            <Topbar />
-            <NoteList />
-          </div>
-          <Details />
-          <AddFolderModal />
-        </div>
-      </Router>
-    );
-  }
-}
+const App = () => (
+  <Router>
+    <div className="app">
+      <Sidebar />
+      <div className="notelist-wrapper">
+        <Topbar />
+        <NoteList />
+      </div>
+      <Details />
+      <AddFolderModal />
+    </div>
+  </Router>
+);
 
 export default App;

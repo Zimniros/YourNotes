@@ -11,13 +11,12 @@ function resolveStorage() {
     storage.version = jsonData.version;
   } catch (err) {
     if (err.code === 'ENOENT') {
-      fs.writeFileSync(consts.JSON_PATH, JSON.stringify({ folders: [], version: '0.0.3' }));
+      fs.writeFileSync(consts.JSON_PATH, JSON.stringify({ folders: [] }));
     } else {
       console.error(err);
     }
 
     storage.folders = [];
-    storage.version = '0.0.3';
   }
 
   return storage.folders;

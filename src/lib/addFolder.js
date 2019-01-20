@@ -1,6 +1,6 @@
 import v4 from 'uuid/v4';
 import fs from 'fs';
-import { isString } from 'lodash';
+import { isString, isEmpty } from 'lodash';
 
 import consts from './consts';
 import resolveStorage from './resolveStorage';
@@ -10,14 +10,19 @@ function addFolder(name) {
     return Promise.reject(new Error('Name must be a string.'));
   }
 
+  if (name < 1) {
+    return Promise.reject(new Error('Name must be at least 1 character long.'));
+  }
+
   const newFolder = {
-    key: v4(),
+    id: v4(),
     name,
   };
 
   return Promise.resolve(newFolder).then((folder) => {
     const storageData = resolveStorage();
-    const newStorageData = Object.assign({}, storageData, { folders: [...storageData.folders, folder] });
+    const folders = isEmpty(storageData) ? [folder] : [...storageData, folder];
+    const newStorageData = Object.assign({}, { folders });
 
     fs.writeFileSync(consts.JSON_PATH, JSON.stringify(newStorageData));
 

@@ -9,7 +9,7 @@ import Icon from 'react-icons-kit';
 import { chevronRight } from 'react-icons-kit/fa/chevronRight';
 import { plus } from 'react-icons-kit/fa/plus';
 
-import { showModal, getFolders } from '../../actions';
+import { showModal } from '../../actions';
 import { folderType } from '../../types';
 
 class FolderList extends Component {
@@ -21,10 +21,6 @@ class FolderList extends Component {
     folders: PropTypes.arrayOf(folderType).isRequired,
     dispatch: PropTypes.func.isRequired,
   };
-
-  componentDidMount() {
-    this.props.dispatch(getFolders());
-  }
 
   onChevronClick(event) {
     event.preventDefault();

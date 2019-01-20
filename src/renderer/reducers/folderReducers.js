@@ -1,11 +1,7 @@
-import resolveStorage from '../../lib/resolveStorage';
-
 export default (state = [], action) => {
-  let folders;
   switch (action.type) {
-    case 'GET_FOLDERS':
-      folders = resolveStorage();
-      return folders;
+    case 'ADD_FOLDER':
+      return [...state, action.folder];
     default:
       return state;
   }

@@ -8,7 +8,8 @@ import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { closeModal } from '../../actions';
+import { closeModal, addFolder } from '../../actions';
+import addFolderAPI from '../../../lib/addFolder';
 
 class AddFolderModal extends Component {
   static propTypes = {
@@ -23,6 +24,11 @@ class AddFolderModal extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      folderName: '',
+      error: '',
+    };
+
     this.inputRef = React.createRef();
   }
 
@@ -30,39 +36,62 @@ class AddFolderModal extends Component {
     this.inputRef.current.focus();
   }
 
-  onSubmit(event) {
-    // TODO: finish submiting
-    event.preventDefault();
-    this.onClose(event);
+  onInputChange(event) {
+    this.setState({ folderName: event.target.value });
   }
 
-  onClose(event) {
+  onSubmit(event) {
     event.preventDefault();
+
+    const { folderName } = this.state;
+    const { dispatch } = this.props;
+
+    addFolderAPI(folderName)
+      .then((folder) => {
+        dispatch(addFolder(folder));
+        this.onClose(event);
+      })
+      .catch(error => this.setState({ error: error.message }));
+  }
+
+  onClose() {
     const { dispatch } = this.props;
     dispatch(closeModal());
   }
 
   render() {
+    const { folderName, error } = this.state;
     const { isOpen } = this.props;
+
+    const errorMessage = error ? <span className="add-folder-modal__error">{error}</span> : null;
+
     if (isOpen) {
       return (
         <Modal
           isOpen={isOpen}
           onAfterOpen={() => this.onOpen()}
-          onRequestClose={event => this.onClose(event)}
+          onRequestClose={() => this.onClose()}
           className="add-folder-modal"
           overlayClassName="add-folder-modal__overlay"
           ariaHideApp={false}
         >
           <div className="add-folder-modal__top-row">
             <h2 className="add-folder-modal__header">Add new folder</h2>
-            <div className="add-folder-modal__close" onClick={event => this.onClose(event)} />
+            <div className="add-folder-modal__close" onClick={() => this.onClose()} />
           </div>
           <form className="add-folder-modal__form" onSubmit={event => this.onSubmit(event)}>
             <label className="add-folder-modal__label" htmlFor="name-input">
               Folder name
             </label>
-            <input className="add-folder-modal__input" type="text" id="name-input" ref={this.inputRef} required />
+            <input
+              className="add-folder-modal__input"
+              onChange={event => this.onInputChange(event)}
+              value={folderName}
+              type="text"
+              id="name-input"
+              ref={this.inputRef}
+            />
+            {errorMessage}
             <div className="add-folder-modal__bottom-row">
               <button className="btn btn--primary " type="submit">
                 Confirm
