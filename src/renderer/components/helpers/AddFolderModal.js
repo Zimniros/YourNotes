@@ -56,6 +56,7 @@ class AddFolderModal extends Component {
 
   onClose() {
     const { dispatch } = this.props;
+    this.setState({ folderName: '', error: '' });
     dispatch(closeModal());
   }
 
@@ -64,6 +65,7 @@ class AddFolderModal extends Component {
     const { isOpen } = this.props;
 
     const errorMessage = error ? <span className="add-folder-modal__error">{error}</span> : null;
+    const inputClassName = error ? 'add-folder-modal__input add-folder-modal__input--error' : 'add-folder-modal__input';
 
     if (isOpen) {
       return (
@@ -80,18 +82,22 @@ class AddFolderModal extends Component {
             <div className="add-folder-modal__close" onClick={() => this.onClose()} />
           </div>
           <form className="add-folder-modal__form" onSubmit={event => this.onSubmit(event)}>
-            <label className="add-folder-modal__label" htmlFor="name-input">
-              Folder name
-            </label>
-            <input
-              className="add-folder-modal__input"
-              onChange={event => this.onInputChange(event)}
-              value={folderName}
-              type="text"
-              id="name-input"
-              ref={this.inputRef}
-            />
-            {errorMessage}
+            <div className="add-folder-modal__group">
+              <label className="add-folder-modal__label" htmlFor="name-input">
+                Folder name
+              </label>
+              <input
+                className={inputClassName}
+                onChange={event => this.onInputChange(event)}
+                value={folderName}
+                type="text"
+                id="name-input"
+                ref={this.inputRef}
+                required
+              />
+              {errorMessage}
+            </div>
+
             <div className="add-folder-modal__bottom-row">
               <button className="btn btn--primary " type="submit">
                 Confirm

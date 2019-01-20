@@ -43,6 +43,12 @@
   flex-direction: column;
 }
 
+.add-folder-modal__group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: $space;
+}
+
 .add-folder-modal__header {
   font-size: 2.8rem;
 }
@@ -56,11 +62,19 @@
   border: 1px solid $dark-grey;
   border-radius: 0.2rem;
   font-size: 1.8rem;
-  margin-bottom: $space;
 
   &:focus {
     outline: 1px solid $brand-color;
   }
+
+  &--error {
+    border-color: $red;
+  }
+}
+
+.add-folder-modal__error {
+  font-size: 1.4rem;
+  color: $red;
 }
 
 .add-folder-modal__close {
