@@ -1,10 +1,9 @@
 import { combineReducers } from 'redux';
 
 import modal from './modalReducers';
-
-const foldersReducer = () => ['My folder', 'Not my folder', 'folder7', 'folder654'];
+import folders from './folderReducers';
 
 export default combineReducers({
-  folders: foldersReducer,
+  folders,
   modal,
 });

@@ -20,7 +20,7 @@ function resolveStorage() {
     storage.version = '0.0.3';
   }
 
-  return storage;
+  return storage.folders;
 }
 
 export default resolveStorage;
