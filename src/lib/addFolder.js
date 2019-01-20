@@ -14,13 +14,18 @@ function addFolder(name) {
     return Promise.reject(new Error('Name must be at least 1 character long.'));
   }
 
+  const storageData = resolveStorage();
+
+  if (storageData.some(folder => folder.name === name)) {
+    return Promise.reject(new Error(`A folder with the name '${name}' already exists.`));
+  }
+
   const newFolder = {
     id: v4(),
     name,
   };
 
   return Promise.resolve(newFolder).then((folder) => {
-    const storageData = resolveStorage();
     const folders = isEmpty(storageData) ? [folder] : [...storageData, folder];
     const newStorageData = Object.assign({}, { folders });
 

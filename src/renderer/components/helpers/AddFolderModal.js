@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/label-has-for */
@@ -46,12 +47,14 @@ class AddFolderModal extends Component {
     const { folderName } = this.state;
     const { dispatch } = this.props;
 
-    addFolderAPI(folderName)
-      .then((folder) => {
-        dispatch(addFolder(folder));
-        this.onClose(event);
-      })
-      .catch(error => this.setState({ error: error.message }));
+    this.setState({ folderName: folderName.trim() }, () => {
+      addFolderAPI(this.state.folderName)
+        .then((folder) => {
+          dispatch(addFolder(folder));
+          this.onClose(event);
+        })
+        .catch(error => this.setState({ error: error.message }));
+    });
   }
 
   onClose() {
