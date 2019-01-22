@@ -60,13 +60,14 @@
     "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
+    "@mdi/js": "^3.3.92",
+    "@mdi/react": "^1.1.0",
     "immutable": "^4.0.0-rc.12",
     "is-hotkey": "^0.1.4",
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-icons-kit": "^1.2.1",
     "react-modal": "^3.8.1",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",

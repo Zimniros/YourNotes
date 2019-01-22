@@ -5,16 +5,15 @@
 .folder-list__title {
   display: flex;
   align-items: center;
-  padding: 1rem;
-}
-
-.folder-list__text {
-  margin-left: 1rem;
+  padding: $small-space $small-space / 2 0 $small-space / 2;
+  font-size: 1.8rem;
+  font-weight: 500;
 }
 
 .folder-list__icon {
-  height: $sidebar-icon-height;
-  width: $sidebar-icon-width;
+  height: 3rem;
+  width: 3rem;
+  fill: currentColor;
   transition: all 0.2s;
 
   &--chevron {
@@ -34,6 +33,38 @@
   }
 }
 
+.folder-list__item {
+  padding: $small-space / 2 $small-space $small-space / 2 $space;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background: $sidebar-hover-color;
+  }
+
+  &--active,
+  &:active {
+    background: $sidebar-active-color;
+    color: $black;
+  }
+}
+
 .sidebar__folder-list--is-open .folder-list__icon--chevron {
   transform: rotate(90deg);
+}
+
+.item__icon {
+  height: 2rem;
+  width: 2rem;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+.item__name {
+  margin-left: $small-space / 2;
+  line-height: 1;
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

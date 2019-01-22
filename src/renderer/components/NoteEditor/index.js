@@ -3,20 +3,24 @@ import { Editor } from 'slate-react';
 import { Value } from 'slate';
 import { isKeyHotkey } from 'is-hotkey';
 
-import Icon from 'react-icons-kit';
-import { ic_format_bold as bold } from 'react-icons-kit/md/ic_format_bold';
-import { ic_format_italic as italic } from 'react-icons-kit/md/ic_format_italic';
-import { ic_format_underlined as underlined } from 'react-icons-kit/md/ic_format_underlined';
-import { ic_navigate_next as code } from 'react-icons-kit/md/ic_navigate_next';
-import { ic_looks_one as header1 } from 'react-icons-kit/md/ic_looks_one';
-import { ic_looks_two as header2 } from 'react-icons-kit/md/ic_looks_two';
-import { ic_looks_3 as header3 } from 'react-icons-kit/md/ic_looks_3';
-import { ic_format_list_numbered as numberedList } from 'react-icons-kit/md/ic_format_list_numbered';
-import { ic_format_list_bulleted as bulletedList } from 'react-icons-kit/md/ic_format_list_bulleted';
-import { ic_format_quote as quote } from 'react-icons-kit/md/ic_format_quote';
+import Icon from '@mdi/react';
+import {
+  mdiFormatBold as bold,
+  mdiFormatItalic as italic,
+  mdiFormatUnderline as underlined,
+  mdiFormatHeader1 as header1,
+  mdiFormatHeader2 as header2,
+  mdiFormatHeader3 as header3,
+  mdiFormatListNumbered as numberedList,
+  mdiFormatListBulleted as bulletedList,
+  mdiFormatQuoteOpen as quote,
+  mdiCodeTags as code,
+} from '@mdi/js';
 
-import Toolbar from './helpers/Toolbar';
-import Button from './helpers/Button';
+
+import Toolbar from './Toolbar';
+import Button from './Button';
+
 
 const initialValue = Value.fromJSON({
   document: {
@@ -178,7 +182,7 @@ class NoteEditor extends Component {
 
     return (
       <Button active={isActive} onMouseDown={event => this.onClickMark(event, type)}>
-        <Icon icon={icon} />
+        <Icon path={icon} />
       </Button>
     );
   };
@@ -199,7 +203,7 @@ class NoteEditor extends Component {
 
     return (
       <Button active={isActive} onMouseDown={event => this.onClickBlock(event, type)}>
-        <Icon icon={icon} />
+        <Icon path={icon} />
       </Button>
     );
   };

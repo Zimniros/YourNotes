@@ -5,9 +5,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { isArray, isEmpty } from 'lodash';
 
-import Icon from 'react-icons-kit';
-import { chevronRight } from 'react-icons-kit/fa/chevronRight';
-import { plus } from 'react-icons-kit/fa/plus';
+import Icon from '@mdi/react';
+import { mdiChevronRight as chevron, mdiPlus as plus, mdiFolderOutline as folderIcon } from '@mdi/js';
 
 import { showModal } from '../../actions';
 import { folderType } from '../../types';
@@ -40,8 +39,9 @@ class FolderList extends Component {
     const { folders } = this.props;
     const folderList = isArray(folders) && !isEmpty(folders)
       ? folders.map(folder => (
-        <div key={folder.id} className="folder__item">
-          {folder.name}
+        <div key={folder.id} className="folder-list__item">
+          <Icon className="item__icon" path={folderIcon} />
+          <span className="item__name">{folder.name}</span>
         </div>
       ))
       : null;
@@ -53,15 +53,13 @@ class FolderList extends Component {
           <Icon
             onClick={event => this.onChevronClick(event)}
             className="folder-list__icon folder-list__icon--chevron"
-            size="100%"
-            icon={chevronRight}
+            path={chevron}
           />
           <span className="folder-list__text">Folders</span>
           <Icon
             onClick={event => this.onNewClick(event)}
             className="folder-list__icon folder-list__icon--new"
-            size="100%"
-            icon={plus}
+            path={plus}
           />
         </div>
         {isOpen ? folderList : null}

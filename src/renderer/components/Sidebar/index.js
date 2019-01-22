@@ -1,26 +1,25 @@
 import React from 'react';
 
-import Icon from 'react-icons-kit';
-import { book } from 'react-icons-kit/fa/book';
-import { star } from 'react-icons-kit/fa/star';
-import { trashO } from 'react-icons-kit/fa/trashO';
+import Icon from '@mdi/react';
+import { mdiNotebook as notebook, mdiStarOutline as star, mdiTrashCanOutline as trash } from '@mdi/js';
+
 import FolderList from './FolderList';
 
 const Sidebar = () => (
   <div className="sidebar">
     <div className="sidebar__menu">
       <button type="button" className="menu__item">
-        <Icon className="menu__icon" size="100%" icon={book} />
+        <Icon className="menu__icon" path={notebook} />
         <span className="menu__text">All Notes</span>
         <span className="menu__count">0</span>
       </button>
       <button type="button" className="menu__item">
-        <Icon className="menu__icon" size="100%" icon={star} />
+        <Icon className="menu__icon" path={star} />
         <span className="menu__text">Starred</span>
         <span className="menu__count">0</span>
       </button>
       <button type="button" className="menu__item">
-        <Icon className="menu__icon" size="100%" icon={trashO} />
+        <Icon className="menu__icon" path={trash} />
         <span className="menu__text">Trash</span>
         <span className="menu__count">0</span>
       </button>

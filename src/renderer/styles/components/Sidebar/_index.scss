@@ -38,6 +38,7 @@
 .menu__icon {
   height: $sidebar-icon-height;
   width: $sidebar-icon-width;
+  fill: currentColor;
 }
 
 .menu__item--active .menu__icon {
