@@ -6,8 +6,9 @@ import { connect } from 'react-redux';
 import { isArray, isEmpty } from 'lodash';
 
 import Icon from '@mdi/react';
-import { mdiChevronRight as chevron, mdiPlus as plus, mdiFolderOutline as folderIcon } from '@mdi/js';
+import { mdiChevronRight as chevron, mdiPlus as plus } from '@mdi/js';
 
+import FolderItem from './FolderItem';
 import { showModal } from '../../actions';
 import { folderType } from '../../types';
 
@@ -38,12 +39,7 @@ class FolderList extends Component {
     const { isOpen } = this.state;
     const { folders } = this.props;
     const folderList = isArray(folders) && !isEmpty(folders)
-      ? folders.map(folder => (
-        <div key={folder.id} className="folder-list__item">
-          <Icon className="item__icon" path={folderIcon} />
-          <span className="item__name">{folder.name}</span>
-        </div>
-      ))
+      ? folders.map(folder => <FolderItem key={folder.id} folder={folder} />)
       : null;
     const className = `sidebar__folder-list ${isOpen ? 'sidebar__folder-list--is-open' : ''}`;
 

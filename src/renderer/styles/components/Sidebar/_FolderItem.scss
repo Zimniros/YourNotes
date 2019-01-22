@@ -1,0 +1,31 @@
+.folder-list__folder {
+  display: flex;
+  align-items: center;
+  padding: $small-space / 2 $small-space $small-space / 2 $space;
+
+  &:hover {
+    background: $sidebar-hover-color;
+  }
+
+  &--active,
+  &:active {
+    color: $black;
+    background: $sidebar-active-color;
+  }
+}
+
+.folder__icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  fill: currentColor;
+}
+
+.folder__name {
+  overflow: hidden;
+  flex: 0 1 auto;
+  margin-left: $small-space / 2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
