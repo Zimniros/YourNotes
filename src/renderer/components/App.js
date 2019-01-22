@@ -6,7 +6,7 @@ import Topbar from './Topbar';
 import NoteList from './NoteList';
 import Details from './Details';
 
-import AddFolderModal from './helpers/AddFolderModal';
+import AddFolderModal from './modals/AddFolderModal';
 
 const App = () => (
   <Router>
