@@ -1,0 +1,27 @@
+@import "./SearchBar";
+
+.top-bar {
+  width: 100%;
+  padding: $space;
+  color: $black;
+}
+
+.top-bar__row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: $small-space;
+}
+
+.top-bar__icon {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  fill: currentColor;
+  cursor: pointer;
+
+  &:hover,
+  &:active {
+    color: $brand-color;
+  }
+}

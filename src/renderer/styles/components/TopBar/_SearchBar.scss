@@ -1,0 +1,19 @@
+.search-bar {
+}
+
+.search-bar__input {
+  width: 100%;
+  padding: $small-space / 2 $small-space;
+  text-align: center;
+  background: none;
+  border: 1px solid currentColor;
+  border-radius: 0.5rem;
+  outline-color: transparent;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    border-color: $brand-color;
+    outline-color: $brand-color;
+    background: lighten($light-grey, 10%);
+  }
+}

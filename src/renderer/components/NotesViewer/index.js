@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Topbar from './Topbar';
+import TopBar from '../TopBar';
 import NoteList from './NoteList';
 
 const NotesViewer = () => (
   <div className="notes-viewer">
-    <Topbar />
+    <TopBar />
     <NoteList />
   </div>
 );
