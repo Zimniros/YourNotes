@@ -25,3 +25,10 @@
     color: $brand-color;
   }
 }
+
+.top-bar__location-name {
+  margin: 0 $small-space;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

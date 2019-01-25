@@ -1,6 +1,8 @@
 .folder-list__folder {
   display: flex;
   align-items: center;
+  text-decoration: none;
+  color: currentColor;
   padding: $small-space / 2 $small-space $small-space / 2 $space;
 
   &:hover {

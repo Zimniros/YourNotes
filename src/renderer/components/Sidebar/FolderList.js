@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { arrayOf, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { isArray, isEmpty } from 'lodash';
 
@@ -18,8 +18,9 @@ class FolderList extends Component {
   };
 
   static propTypes = {
-    folders: PropTypes.arrayOf(folderType).isRequired,
-    dispatch: PropTypes.func.isRequired,
+    folders: arrayOf(folderType).isRequired,
+    dispatch: func.isRequired,
+    onItemClick: func.isRequired,
   };
 
   onChevronClick(event) {
@@ -37,9 +38,9 @@ class FolderList extends Component {
 
   render() {
     const { isOpen } = this.state;
-    const { folders } = this.props;
+    const { folders, onItemClick } = this.props;
     const folderList = isArray(folders) && !isEmpty(folders)
-      ? folders.map(folder => <FolderItem key={folder.id} folder={folder} />)
+      ? folders.map(folder => <FolderItem key={folder.id} folder={folder} onClick={onItemClick} />)
       : null;
     const className = `sidebar__folder-list ${isOpen ? 'sidebar__folder-list--is-open' : ''}`;
 

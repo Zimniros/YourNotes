@@ -4,17 +4,17 @@ import { mdiNotebook as notebook, mdiStarOutline as star, mdiTrashCanOutline as 
 export const sidebarShortcuts = [
   {
     name: 'All Notes',
-    route: 'home',
+    route: '/home',
     icon: notebook,
   },
   {
     name: 'Starred',
-    route: 'home',
+    route: '/starred',
     icon: star,
   },
   {
     name: 'Trash',
-    route: 'trash',
+    route: '/trash',
     icon: trash,
   },
 ];

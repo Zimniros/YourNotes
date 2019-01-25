@@ -12,7 +12,9 @@ const TopBar = ({ locationName }) => (
   <div className="top-bar">
     <div className="top-bar__row">
       <Icon className="top-bar__icon" path={sort} />
-      <div>{locationName}</div>
+      <div title={locationName} className="top-bar__location-name">
+        {locationName}
+      </div>
       <Icon className="top-bar__icon" path={newNote} />
     </div>
     <SearchBar />

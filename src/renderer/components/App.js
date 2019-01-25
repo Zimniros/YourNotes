@@ -1,18 +1,32 @@
-import React from 'react';
-
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import NotesViewer from './NotesViewer';
 import Details from './Details';
 
 import AddFolderModal from './modals/AddFolderModal';
 
-const App = () => (
-  <div className="app">
-    <Sidebar />
-    <NotesViewer />
-    <Details />
-    <AddFolderModal />
-  </div>
-);
+class App extends Component {
+  componentDidMount() {
+    const { location, history } = this.props;
+    const { pathname } = location;
+    const { push } = history;
 
-export default App;
+    if (pathname === '/') push('/home');
+  }
+
+  render() {
+    return (
+      <div className="app">
+        <Sidebar />
+        <NotesViewer />
+        <Details />
+        <AddFolderModal />
+      </div>
+    );
+  }
+}
+
+export default withRouter(App);
