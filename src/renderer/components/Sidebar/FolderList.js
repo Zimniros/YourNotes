@@ -65,6 +65,6 @@ class FolderList extends Component {
   }
 }
 
-const mapStateToProps = state => ({ folders: state.folders });
+const mapStateToProps = state => ({ folders: state.folders.folders });
 
 export default connect(mapStateToProps)(FolderList);

@@ -5,3 +5,8 @@ export const folderType = shape({
   id: string.isRequired,
   name: string.isRequired,
 });
+
+export const folderDefault = {
+  id: '',
+  name: '',
+};

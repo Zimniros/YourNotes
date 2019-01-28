@@ -6,7 +6,7 @@ import { func } from 'prop-types';
 import Icon from '@mdi/react';
 
 import { sidebarShortcuts } from '../lib/consts';
-import { setLocationName } from '../../actions';
+import { selectFolder, resetSelectedFolder } from '../../actions';
 import FolderList from './FolderList';
 
 class Sidebar extends Component {
@@ -20,14 +20,16 @@ class Sidebar extends Component {
     this.onShortcutClick = this.onShortcutClick.bind(this);
   }
 
-  onShortcutClick(locationName) {
+  onShortcutClick(folderId = null) {
     const { dispatch } = this.props;
-    dispatch(setLocationName(locationName));
+    const action = folderId ? selectFolder(folderId) : resetSelectedFolder();
+
+    dispatch(action);
   }
 
   renderSidebarNav() {
     return sidebarShortcuts.map(el => (
-      <Link key={el.route} to={el.route} className="menu__item" onClick={() => this.onShortcutClick(el.name)}>
+      <Link key={el.route} to={el.route} className="menu__item" onClick={() => this.onShortcutClick()}>
         <Icon className="menu__icon" path={el.icon} />
         <span className="menu__text">{el.name}</span>
         <span className="menu__count">0</span>

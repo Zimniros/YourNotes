@@ -7,10 +7,8 @@ import { createStore } from 'redux';
 import './styles/main.scss';
 import App from './components/App';
 import reducers from './reducers';
-import resolveStorage from '../lib/resolveStorage';
 
-const folders = resolveStorage();
-const store = createStore(reducers, { folders });
+const store = createStore(reducers);
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,4 +1,5 @@
-/* eslint-disable import/prefer-default-export */
+/* eslint-disable no-useless-escape */
+/* eslint-disable max-len */
 import { mdiNotebook as notebook, mdiStarOutline as star, mdiTrashCanOutline as trash } from '@mdi/js';
 
 export const sidebarShortcuts = [
@@ -18,3 +19,10 @@ export const sidebarShortcuts = [
     icon: trash,
   },
 ];
+
+export const folderPathnameRegex = /^\/folder\/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}[\/\?]?/gm;
+
+export default {
+  sidebarShortcuts,
+  folderPathnameRegex,
+};
