@@ -9,7 +9,7 @@ import resolveStorage from './resolveStorage';
 function addNote(folderId) {
   const folders = resolveStorage();
 
-  if (folderId && folders.some(({ id }) => id === folderId)) {
+  if (folderId && !folders.some(({ id }) => id === folderId)) {
     return Promise.reject(new Error(`A folder with the id '${folderId}' doesn't exist.`));
   }
 
@@ -33,7 +33,7 @@ function addNote(folderId) {
       if (err) return reject(err);
 
       fs.writeFileSync(notePath, data);
-      return resolve(id);
+      return resolve(newNote);
     });
   });
 }

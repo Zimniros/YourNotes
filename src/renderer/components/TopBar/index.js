@@ -8,9 +8,10 @@ import Icon from '@mdi/react';
 import { mdiFilePlus as newNote, mdiSortDescending as sort } from '@mdi/js';
 
 import SearchBar from './SearchBar';
-import addNote from '../../../lib/addNote';
+import addNoteApi from '../../../lib/addNote';
 import { folderType, folderDefault } from '../../types';
 import { sidebarShortcuts } from '../lib/consts';
+import { addNote } from '../../actions';
 
 class TopBar extends Component {
   static propTypes = {
@@ -22,11 +23,18 @@ class TopBar extends Component {
   };
 
   onNewNoteClick() {
-    addNote()
-      .then((data) => {
-        this.props.history.push({
-          pathname: this.props.location.pathname,
-          search: `?key=${data}`,
+    const {
+      location, history, selectedFolder, dispatch,
+    } = this.props;
+    const folderId = selectedFolder && selectedFolder.id ? selectedFolder.id : null;
+
+    addNoteApi(folderId)
+      .then((note) => {
+        dispatch(addNote(note));
+
+        history.push({
+          pathname: location.pathname,
+          search: `?key=${note.id}`,
         });
       })
       .catch(err => console.log('err', err));
