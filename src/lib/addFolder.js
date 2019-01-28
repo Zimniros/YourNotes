@@ -14,24 +14,24 @@ function addFolder(name) {
     return Promise.reject(new Error('Name must be at least 1 character long.'));
   }
 
-  const storageData = resolveStorage();
+  return resolveStorage().then((data) => {
+    if (data.some(folder => folder.name === name)) {
+      return Promise.reject(new Error(`A folder with the name '${name}' already exists.`));
+    }
 
-  if (storageData.some(folder => folder.name === name)) {
-    return Promise.reject(new Error(`A folder with the name '${name}' already exists.`));
-  }
+    const newFolder = {
+      id: v4(),
+      name,
+    };
 
-  const newFolder = {
-    id: v4(),
-    name,
-  };
+    return Promise.resolve(newFolder).then((folder) => {
+      const folders = isEmpty(data) ? [folder] : [...data, folder];
+      const newStorageData = Object.assign({}, { folders });
 
-  return Promise.resolve(newFolder).then((folder) => {
-    const folders = isEmpty(storageData) ? [folder] : [...storageData, folder];
-    const newStorageData = Object.assign({}, { folders });
+      fs.writeFileSync(consts.JSON_PATH, JSON.stringify(newStorageData));
 
-    fs.writeFileSync(consts.JSON_PATH, JSON.stringify(newStorageData));
-
-    return folder;
+      return folder;
+    });
   });
 }
 

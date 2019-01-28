@@ -1,60 +1,36 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { func } from 'prop-types';
 
 import Icon from '@mdi/react';
 
 import { sidebarShortcuts } from '../lib/consts';
-import { selectFolder, resetSelectedFolder } from '../../actions';
 import FolderList from './FolderList';
 
-class Sidebar extends Component {
-  static propTypes = {
-    dispatch: func.isRequired,
-  };
+const Sidebar = () => {
+  const shortcuts = sidebarShortcuts.map(el => (
+    <Link key={el.route} to={el.route} className="menu__item">
+      <Icon className="menu__icon" path={el.icon} />
+      <span className="menu__text">{el.name}</span>
+      <span className="menu__count">0</span>
+    </Link>
+  ));
 
-  constructor() {
-    super();
+  return (
+    <div className="sidebar">
+      <div className="sidebar__menu">{shortcuts}</div>
 
-    this.onShortcutClick = this.onShortcutClick.bind(this);
-  }
+      <FolderList />
 
-  onShortcutClick(folderId = null) {
-    const { dispatch } = this.props;
-    const action = folderId ? selectFolder(folderId) : resetSelectedFolder();
-
-    dispatch(action);
-  }
-
-  renderSidebarNav() {
-    return sidebarShortcuts.map(el => (
-      <Link key={el.route} to={el.route} className="menu__item" onClick={() => this.onShortcutClick()}>
-        <Icon className="menu__icon" path={el.icon} />
-        <span className="menu__text">{el.name}</span>
-        <span className="menu__count">0</span>
-      </Link>
-    ));
-  }
-
-  render() {
-    return (
-      <div className="sidebar">
-        <div className="sidebar__menu">{this.renderSidebarNav()}</div>
-
-        <FolderList onItemClick={this.onShortcutClick} />
-
-        <div className="sidebar__tag-shortcuts">
-          <div className="tag-shortcuts__title">Tags</div>
-          <ul className="tag-shortcuts__list">
-            <li className="tag-shortcuts__item">Tag 1</li>
-            <li className="tag-shortcuts__item">Tag 2</li>
-            <li className="tag-shortcuts__item">Tag 3</li>
-          </ul>
-        </div>
+      <div className="sidebar__tag-shortcuts">
+        <div className="tag-shortcuts__title">Tags</div>
+        <ul className="tag-shortcuts__list">
+          <li className="tag-shortcuts__item">Tag 1</li>
+          <li className="tag-shortcuts__item">Tag 2</li>
+          <li className="tag-shortcuts__item">Tag 3</li>
+        </ul>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-export default connect(null)(Sidebar);
+export default Sidebar;

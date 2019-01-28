@@ -1,16 +1,15 @@
 /* eslint-disable max-len */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
-import { arrayOf, func } from 'prop-types';
+import { func, instanceOf } from 'prop-types';
 import { connect } from 'react-redux';
-import { isArray, isEmpty } from 'lodash';
 
 import Icon from '@mdi/react';
 import { mdiChevronRight as chevron, mdiPlus as plus } from '@mdi/js';
 
 import FolderItem from './FolderItem';
 import { showModal } from '../../actions';
-import { folderType } from '../../types';
+import Map from '../../../lib/Map';
 
 class FolderList extends Component {
   state = {
@@ -18,7 +17,7 @@ class FolderList extends Component {
   };
 
   static propTypes = {
-    folders: arrayOf(folderType).isRequired,
+    folders: instanceOf(Map).isRequired,
     dispatch: func.isRequired,
     onItemClick: func.isRequired,
   };
@@ -39,7 +38,8 @@ class FolderList extends Component {
   render() {
     const { isOpen } = this.state;
     const { folders, onItemClick } = this.props;
-    const folderList = isArray(folders) && !isEmpty(folders)
+
+    const folderList = folders && folders.size
       ? folders.map(folder => <FolderItem key={folder.id} folder={folder} onClick={onItemClick} />)
       : null;
     const className = `sidebar__folder-list ${isOpen ? 'sidebar__folder-list--is-open' : ''}`;
@@ -65,6 +65,6 @@ class FolderList extends Component {
   }
 }
 
-const mapStateToProps = state => ({ folders: state.folders.folders });
+const mapStateToProps = state => ({ folders: state.folders });
 
 export default connect(mapStateToProps)(FolderList);

@@ -11,15 +11,6 @@ export const addFolder = folder => ({
   folder,
 });
 
-export const selectFolder = id => ({
-  type: 'SELECT_FOLDER',
-  id,
-});
-
-export const resetSelectedFolder = () => ({
-  type: 'RESET_SELECTED_FOLDER',
-});
-
 export const addNote = note => ({
   type: 'ADD_NOTE',
   note,

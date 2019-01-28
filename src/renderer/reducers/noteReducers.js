@@ -1,18 +1,15 @@
-import resolveNotes from '../../lib/resolveNotes';
+/* eslint-disable no-case-declarations */
+import Map from '../../lib/Map';
 
-const initialState = {
-  notes: [],
-  selectedNote: null,
-};
-
-resolveNotes().then((data) => {
-  initialState.notes = data;
-});
+const initialState = new Map();
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case 'ADD_NOTE':
-      return { ...state, notes: [...state.notes, action.note] };
+      const { note } = action;
+      const newState = new Map(state);
+      newState.set(note.key, note);
+      return newState;
     default:
       return state;
   }
