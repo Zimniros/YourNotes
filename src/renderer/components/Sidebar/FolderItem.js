@@ -7,8 +7,8 @@ import { mdiFolderOutline as folderIcon } from '@mdi/js';
 
 import { folderType } from '../../types';
 
-const FolderItem = ({ folder, onClick }) => (
-  <Link to={`/folder/${folder.id}`} className="folder-list__folder" onClick={() => onClick(folder.id)}>
+const FolderItem = ({ folder }) => (
+  <Link to={`/folder/${folder.id}`} className="folder-list__folder">
     <Icon className="folder__icon" path={folderIcon} />
     <span title={folder.name} className="folder__name">
       {folder.name}
@@ -20,5 +20,4 @@ export default FolderItem;
 
 FolderItem.propTypes = {
   folder: folderType.isRequired,
-  onClick: func.isRequired,
 };

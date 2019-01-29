@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unused-state */
+/* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/prop-types */
 /* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
@@ -10,7 +12,7 @@ import { mdiFilePlus as newNote, mdiSortDescending as sort } from '@mdi/js';
 import SearchBar from './SearchBar';
 import addNoteApi from '../../../lib/addNote';
 import { folderType, folderDefault } from '../../types';
-import { sidebarShortcuts } from '../lib/consts';
+import { folderPathnameRegex, sidebarShortcuts } from '../lib/consts';
 import { addNote } from '../../actions';
 
 class TopBar extends Component {
@@ -22,11 +24,24 @@ class TopBar extends Component {
     selectedFolder: folderDefault,
   };
 
+  state = {
+    locationName: '',
+    folderId: '',
+  };
+
+  componentDidMount() {
+    this.setLocation();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.setLocation();
+    }
+  }
+
   onNewNoteClick() {
-    const {
-      location, history, selectedFolder, dispatch,
-    } = this.props;
-    const folderId = selectedFolder && selectedFolder.id ? selectedFolder.id : null;
+    const { location, history, dispatch } = this.props;
+    const { folderId } = this.state;
 
     addNoteApi(folderId)
       .then((note) => {
@@ -41,28 +56,30 @@ class TopBar extends Component {
   }
 
   setLocation() {
-    const { selectedFolder, location } = this.props;
+    const { location, folders } = this.props;
     const { pathname } = location;
-    let locationName;
 
-    if (selectedFolder) {
-      locationName = selectedFolder.name ? selectedFolder.name : '';
+    const match = pathname.match(folderPathnameRegex);
+
+    if (match) {
+      const { name, id } = folders.get(match[1]);
+
+      this.setState({ locationName: name, folderId: id });
     } else {
       const routeObj = sidebarShortcuts.find(({ route }) => route === pathname);
-      locationName = routeObj ? routeObj.name : '';
+      const locationName = routeObj ? routeObj.name : '';
+      this.setState({ locationName, folderId: '' });
     }
-
-    return locationName;
   }
 
   render() {
-    const name = this.setLocation();
+    const { locationName } = this.state;
     return (
       <div className="top-bar">
         <div className="top-bar__row">
           <Icon className="top-bar__icon" path={sort} />
-          <div title={name} className="top-bar__location-name">
-            {name}
+          <div title={locationName} className="top-bar__location-name">
+            {locationName}
           </div>
           <Icon className="top-bar__icon" path={newNote} onClick={() => this.onNewNoteClick()} />
         </div>
@@ -72,6 +89,6 @@ class TopBar extends Component {
   }
 }
 
-const mapStateToProps = state => ({ selectedFolder: state.folders.selectedFolder });
+const mapStateToProps = state => ({ folders: state.folders });
 
 export default withRouter(connect(mapStateToProps)(TopBar));

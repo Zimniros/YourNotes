@@ -32,6 +32,7 @@ function addNote(folderId) {
         if (err) return reject(err);
 
         fs.writeFileSync(notePath, data);
+        newNote.key = id;
         return resolve(newNote);
       });
     });

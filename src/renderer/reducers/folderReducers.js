@@ -8,7 +8,7 @@ export default (state = initialState, action) => {
     case 'ADD_FOLDER':
       const { folder } = action;
       const newState = new Map(state);
-      newState.set(folder.key, folder);
+      newState.set(folder.id, folder);
       return newState;
 
     default:

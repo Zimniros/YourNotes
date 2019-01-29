@@ -19,7 +19,6 @@ class FolderList extends Component {
   static propTypes = {
     folders: instanceOf(Map).isRequired,
     dispatch: func.isRequired,
-    onItemClick: func.isRequired,
   };
 
   onChevronClick(event) {
@@ -37,11 +36,9 @@ class FolderList extends Component {
 
   render() {
     const { isOpen } = this.state;
-    const { folders, onItemClick } = this.props;
+    const { folders } = this.props;
 
-    const folderList = folders && folders.size
-      ? folders.map(folder => <FolderItem key={folder.id} folder={folder} onClick={onItemClick} />)
-      : null;
+    const folderList = folders && folders.size ? folders.map(folder => <FolderItem key={folder.id} folder={folder} />) : null;
     const className = `sidebar__folder-list ${isOpen ? 'sidebar__folder-list--is-open' : ''}`;
 
     return (
