@@ -19,6 +19,10 @@ class ExtendedMap {
     return this._map.set(...args);
   }
 
+  forEach(...args) {
+    return this._map.forEach(...args);
+  }
+
   map(cb) {
     const result = [];
     for (const [key, value] of this._map) {
@@ -32,7 +36,7 @@ class ExtendedMap {
   }
 
   toArray() {
-    return [...this._map.keys()];
+    return [...this._map.values()];
   }
 }
 

@@ -15,8 +15,8 @@ function addNote(folderId) {
     const newNote = {
       title: '',
       content: '',
-      createdAt: new Date().getTime(),
-      updatedAt: '',
+      createdAt: new Date(),
+      updatedAt: new Date(),
       folder: folderId || '',
       tags: [],
       isStarred: false,
