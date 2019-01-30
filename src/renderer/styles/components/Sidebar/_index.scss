@@ -5,6 +5,7 @@
   background: $sidebar-bg-color;
   color: $sidebar-text-color;
   width: $sidebar-width;
+  flex-shrink: 0;
   user-select: none;
 }
 

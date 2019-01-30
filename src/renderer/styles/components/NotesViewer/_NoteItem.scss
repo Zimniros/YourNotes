@@ -1,5 +1,8 @@
 .note-item {
   position: relative;
+  display: block;
+  text-decoration: none;
+  color: $black;
   padding: $space;
   background: $notelist-bg-color;
   height: 12rem;

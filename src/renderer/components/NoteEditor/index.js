@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Editor } from 'slate-react';
-import { Value } from 'slate';
 import { isKeyHotkey } from 'is-hotkey';
+import { withRouter } from 'react-router-dom';
 
 import Icon from '@mdi/react';
 import {
@@ -17,31 +17,9 @@ import {
   mdiCodeTags as code,
 } from '@mdi/js';
 
-
 import Toolbar from './Toolbar';
 import Button from './Button';
-
-
-const initialValue = Value.fromJSON({
-  document: {
-    nodes: [
-      {
-        object: 'block',
-        type: 'paragraph',
-        nodes: [
-          {
-            object: 'text',
-            leaves: [
-              {
-                text: 'My first paragraph!',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-});
+import { initialEditorValue } from '../lib/consts';
 
 const isBoldHotkey = isKeyHotkey('mod+b');
 const isItalicHotkey = isKeyHotkey('mod+i');
@@ -52,8 +30,28 @@ const DEFAULT_NODE = 'paragraph';
 
 class NoteEditor extends Component {
   state = {
-    value: initialValue,
+    value: initialEditorValue,
   };
+
+  componentDidMount() {
+    const { location } = this.props;
+    const { search } = location;
+    const key = new URLSearchParams(search).get('key');
+
+    console.log('componentDidMount');
+    console.log('location', location);
+    console.log('key', key);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { location } = this.props;
+    const { search } = location;
+    const key = new URLSearchParams(search).get('key');
+
+    console.log('componentDidMount');
+    console.log('location', location);
+    console.log('key', key);
+  }
 
   ref = (editor) => {
     this.editor = editor;
@@ -233,6 +231,7 @@ class NoteEditor extends Component {
             ref={this.ref}
             renderNode={this.renderNode}
             renderMark={this.renderMark}
+            placeholder="Start typing..."
           />
         </div>
       </>
@@ -240,4 +239,4 @@ class NoteEditor extends Component {
   }
 }
 
-export default NoteEditor;
+export default withRouter(NoteEditor);

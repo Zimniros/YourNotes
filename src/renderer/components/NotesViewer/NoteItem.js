@@ -1,24 +1,35 @@
 import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
+
+import { noteType, locationType } from '../../types';
 import { formatUpdatedAt } from '../lib/timeHelpers';
 
-import { noteType } from '../../types';
-
-const NoteItem = ({ note }) => {
-  const { title, content, updatedAt } = note;
+const NoteItem = ({ note, location }) => {
+  const {
+    key, title, content, updatedAt,
+  } = note;
+  const { pathname } = location;
 
   return (
-    <div className="note-item">
+    <Link
+      to={{
+        pathname,
+        search: `?key=${key}`,
+      }}
+      className="note-item"
+    >
       <div className="note-item__title">{title || 'Untitled'}</div>
       <div className="note-item__updated-at">{formatUpdatedAt(updatedAt)}</div>
       <div className="note-item__content">
         <span>{content || 'Empty note'}</span>
       </div>
-    </div>
+    </Link>
   );
 };
 
-export default NoteItem;
+export default withRouter(NoteItem);
 
 NoteItem.propTypes = {
   note: noteType.isRequired,
+  location: locationType.isRequired,
 };

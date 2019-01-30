@@ -49,7 +49,7 @@ class TopBar extends Component {
 
         history.push({
           pathname: location.pathname,
-          search: `?key=${note.id}`,
+          search: `?key=${note.key}`,
         });
       })
       .catch(err => console.log('err', err));

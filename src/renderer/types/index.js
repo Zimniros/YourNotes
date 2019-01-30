@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import {
-  shape, string, arrayOf, bool,
+  shape, string, arrayOf, bool, number, oneOf, oneOfType, object, func, array,
 } from 'prop-types';
 
 export const folderType = shape({
@@ -17,8 +17,8 @@ export const noteType = shape({
   key: string.isRequired,
   title: string.isRequired,
   content: string.isRequired,
-  createdAt: string.isRequired,
-  updatedAt: string.isRequired,
+  createdAt: number.isRequired,
+  updatedAt: number.isRequired,
   folder: string.isRequired,
   tags: arrayOf(string).isRequired,
   isStarred: bool.isRequired,
@@ -36,3 +36,28 @@ export const noteDefault = {
   isStarred: false,
   isTrashed: false,
 };
+
+export const locationType = shape({
+  hash: string.isRequired,
+  key: string, // only in createBrowserHistory and createMemoryHistory
+  pathname: string.isRequired,
+  search: string.isRequired,
+  state: oneOfType([array, bool, number, object, string]), // only in createBrowserHistory and createMemoryHistory
+});
+
+export const historyType = shape({
+  action: oneOf(['PUSH', 'REPLACE', 'POP']).isRequired,
+  block: func.isRequired,
+  canGo: func, // only in createMemoryHistory
+  createHref: func.isRequired,
+  entries: arrayOf(locationType), // only in createMemoryHistory
+  go: func.isRequired,
+  goBack: func.isRequired,
+  goForward: func.isRequired,
+  index: number, // only in createMemoryHistory
+  length: number,
+  listen: func.isRequired,
+  location: locationType.isRequired,
+  push: func.isRequired,
+  replace: func.isRequired,
+});
