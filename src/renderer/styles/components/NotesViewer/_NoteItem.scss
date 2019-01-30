@@ -1,0 +1,39 @@
+.note-item {
+  position: relative;
+  padding: $space;
+  background: $notelist-bg-color;
+  height: 12rem;
+
+  &:hover {
+    background: darken($notelist-bg-color, 10%);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: $space;
+    right: $space;
+    height: 2px;
+    background: darken($notelist-bg-color, 10%);
+  }
+}
+
+.note-item__title {
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+.note-item__updated-at {
+  font-style: italic;
+  font-size: 1.2rem;
+  color: lighten($dark-grey, 10%);
+  margin-top: -2px;
+  margin-bottom: $small-space / 2;
+}
+
+.note-item__content {
+  font-size: 1.4rem;
+  word-break: break-all;
+  overflow: hidden;
+}

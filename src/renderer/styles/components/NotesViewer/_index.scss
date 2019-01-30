@@ -1,4 +1,9 @@
+@import "NoteList";
+@import "NoteItem";
+
 .notes-viewer {
   background: $notelist-bg-color;
   width: $notes-viewer-width;
+  display: flex;
+  flex-direction: column;
 }
