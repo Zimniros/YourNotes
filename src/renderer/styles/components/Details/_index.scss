@@ -1,0 +1,27 @@
+@import "Toolbar";
+
+.details {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 $space;
+}
+
+.details__title {
+  border: none;
+  outline: none;
+  border-bottom: 2px solid $light-grey;
+  font-size: 2.5rem;
+  transition: 0.3s all ease-in-out;
+  padding: $small-space 0;
+
+  &:focus {
+    border-color: $brand-color;
+  }
+}
+
+.details__editor {
+  padding: $small-space 0;
+  overflow-y: auto;
+  word-break: break-all;
+}

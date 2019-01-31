@@ -1,7 +1,10 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import { Editor } from 'slate-react';
 import { isKeyHotkey } from 'is-hotkey';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Icon from '@mdi/react';
 import {
@@ -29,18 +32,25 @@ const isCodeHotkey = isKeyHotkey('mod+`');
 const DEFAULT_NODE = 'paragraph';
 
 class NoteEditor extends Component {
-  state = {
-    value: initialEditorValue,
-  };
+  constructor(props) {
+    super(props);
+    this.editorRef = React.createRef();
+    this.className = 'details__editor';
+
+    this.state = {
+      value: initialEditorValue,
+      title: '',
+      isEditorFocused: false,
+    };
+  }
 
   componentDidMount() {
     const { location } = this.props;
     const { search } = location;
     const key = new URLSearchParams(search).get('key');
 
-    console.log('componentDidMount');
-    console.log('location', location);
-    console.log('key', key);
+    this.setEditor();
+    this.isEditorFocused();
   }
 
   componentDidUpdate(prevProps) {
@@ -48,14 +58,17 @@ class NoteEditor extends Component {
     const { search } = location;
     const key = new URLSearchParams(search).get('key');
 
-    console.log('componentDidMount');
-    console.log('location', location);
-    console.log('key', key);
+    this.setEditor();
+    this.isEditorFocused();
   }
 
-  ref = (editor) => {
-    this.editor = editor;
-  };
+  setEditor() {
+    const { location, notes } = this.props;
+    const { search } = location;
+    const key = new URLSearchParams(search).get('key');
+
+    const note = notes.get(key);
+  }
 
   hasMark = (type) => {
     const { value } = this.state;
@@ -73,13 +86,13 @@ class NoteEditor extends Component {
 
   onClickMark = (event, type) => {
     event.preventDefault();
-    this.editor.toggleMark(type);
+    this.editorRef.current.toggleMark(type);
   };
 
   onClickBlock = (event, type) => {
     event.preventDefault();
 
-    const { editor } = this;
+    const editor = this.editorRef.current;
     const { value } = editor;
     const { document } = value;
 
@@ -135,6 +148,19 @@ class NoteEditor extends Component {
     return undefined;
   };
 
+  isEditorFocused() {
+    const { isEditorFocused } = this.state;
+    const isEditorActiveElement = document.activeElement.className === this.className;
+
+    if (isEditorActiveElement && !isEditorFocused) {
+      this.setState({ isEditorFocused: true });
+    }
+
+    if (!isEditorActiveElement && isEditorFocused) {
+      this.setState({ isEditorFocused: false });
+    }
+  }
+
   renderMark = (props, editor, next) => {
     const { children, mark, attributes } = props;
 
@@ -176,10 +202,12 @@ class NoteEditor extends Component {
   };
 
   renderMarkButton = (type, icon) => {
+    const { isEditorFocused } = this.state;
+    const isDisabled = !isEditorFocused;
     const isActive = this.hasMark(type);
 
     return (
-      <Button active={isActive} onMouseDown={event => this.onClickMark(event, type)}>
+      <Button isActive={isActive} onMouseDown={event => this.onClickMark(event, type)} isDisabled={isDisabled}>
         <Icon path={icon} />
       </Button>
     );
@@ -187,6 +215,8 @@ class NoteEditor extends Component {
 
   renderBlockButton = (type, icon) => {
     let isActive = this.hasBlock(type);
+    const { isEditorFocused } = this.state;
+    const isDisabled = !isEditorFocused;
 
     if (['numbered-list', 'bulleted-list'].includes(type)) {
       const {
@@ -200,17 +230,25 @@ class NoteEditor extends Component {
     }
 
     return (
-      <Button active={isActive} onMouseDown={event => this.onClickBlock(event, type)}>
+      <Button isActive={isActive} onMouseDown={event => this.onClickBlock(event, type)} isDisabled={isDisabled}>
         <Icon path={icon} />
       </Button>
     );
   };
 
   render() {
+    const { location } = this.props;
+    const { search } = location;
+    const key = new URLSearchParams(search).get('key');
+
+    if (!key) {
+      return <div className="details">Select note</div>;
+    }
+
     const { value } = this.state;
 
     return (
-      <>
+      <div className="details">
         <Toolbar>
           {this.renderMarkButton('bold', bold)}
           {this.renderMarkButton('italic', italic)}
@@ -223,20 +261,23 @@ class NoteEditor extends Component {
           {this.renderBlockButton('numbered-list', numberedList)}
           {this.renderBlockButton('bulleted-list', bulletedList)}
         </Toolbar>
-        <div className="editor">
-          <Editor
-            value={value}
-            onChange={this.onChange}
-            onKeyDown={this.onKeyDown}
-            ref={this.ref}
-            renderNode={this.renderNode}
-            renderMark={this.renderMark}
-            placeholder="Start typing..."
-          />
-        </div>
-      </>
+        <input type="text" className="details__title" placeholder="Untitled" />
+
+        <Editor
+          className={this.className}
+          value={value}
+          onChange={this.onChange}
+          onKeyDown={this.onKeyDown}
+          ref={this.editorRef}
+          renderNode={this.renderNode}
+          renderMark={this.renderMark}
+          placeholder="Start typing..."
+        />
+      </div>
     );
   }
 }
 
-export default withRouter(NoteEditor);
+const mapStateToProps = state => ({ notes: state.notes });
+
+export default withRouter(connect(mapStateToProps)(NoteEditor));
