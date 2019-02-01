@@ -6,6 +6,7 @@
 import React, { Component } from 'react';
 import { Editor } from 'slate-react';
 import { isKeyHotkey } from 'is-hotkey';
+import { connect } from 'react-redux';
 
 import Icon from '@mdi/react';
 import {
@@ -23,6 +24,7 @@ import {
 
 import Toolbar from './Toolbar';
 import Button from './Button';
+import { updateNote } from '../../actions';
 
 const isBoldHotkey = isKeyHotkey('mod+b');
 const isItalicHotkey = isKeyHotkey('mod+i');
@@ -41,6 +43,8 @@ class NoteEditor extends Component {
       note: null,
       isEditorFocused: false,
     };
+
+    this.delayTimer = null;
   }
 
   componentDidMount() {
@@ -71,7 +75,11 @@ class NoteEditor extends Component {
 
   onChange = ({ value }) => {
     const { note } = this.state;
-    this.setState({ note: Object.assign({}, note, { value }) });
+    const updatedAt = new Date().getTime();
+
+    this.setState({ note: Object.assign({}, note, { value, updatedAt }) }, () => {
+      this.saveNote();
+    });
   };
 
   onClickMark = (event, type) => {
@@ -137,6 +145,22 @@ class NoteEditor extends Component {
 
     return undefined;
   };
+
+  saveNote() {
+    clearTimeout(this.delayTimer);
+    this.delayTimer = setTimeout(() => {
+      this.saveNoteNow();
+    }, 1000);
+  }
+
+  saveNoteNow() {
+    const { dispatch } = this.props;
+    const { note } = this.state;
+    clearTimeout(this.delayTimer);
+    this.delayTimer = null;
+
+    dispatch(updateNote(note));
+  }
 
   isEditorFocused() {
     const { isEditorFocused } = this.state;
@@ -265,4 +289,4 @@ class NoteEditor extends Component {
   }
 }
 
-export default NoteEditor;
+export default connect(null)(NoteEditor);

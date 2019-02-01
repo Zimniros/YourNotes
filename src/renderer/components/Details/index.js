@@ -26,11 +26,7 @@ class Details extends Component {
     const note = this.getNote();
 
     if (note) {
-      const parsed = JSON.parse(note.value);
-      const valued = Value.fromJSON(parsed);
-      const assigned = Object.assign({}, note, { value: valued });
-
-      return <NoteEditor note={assigned} />;
+      return <NoteEditor note={note} />;
     }
 
     return <div>Create new note</div>;

@@ -4,6 +4,7 @@
 import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
+import { Value } from 'slate';
 import consts from './consts';
 
 function resolveNotes() {
@@ -28,7 +29,7 @@ function resolveNotes() {
       try {
         const data = JSON.parse(fs.readFileSync(path.join(notesFolderPath, notePath)));
         data.key = path.basename(notePath, '.json');
-        return data;
+        return Object.assign(data, { value: Value.fromJSON(JSON.parse(data.value)) });
       } catch (err) {
         console.error(`error on note path: ${notePath}, error: ${err}`);
       }

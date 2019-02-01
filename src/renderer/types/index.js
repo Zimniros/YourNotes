@@ -15,7 +15,7 @@ export const folderDefault = {
 export const noteType = shape({
   key: string.isRequired,
   title: string.isRequired,
-  value: string.isRequired,
+  value: object.isRequired,
   createdAt: number.isRequired,
   updatedAt: number.isRequired,
   folder: string.isRequired,
@@ -27,7 +27,7 @@ export const noteType = shape({
 export const noteDefault = {
   key: '',
   title: '',
-  value: '',
+  value: {},
   createdAt: new Date().getTime(),
   updatedAt: new Date().getTime(),
   folder: '',

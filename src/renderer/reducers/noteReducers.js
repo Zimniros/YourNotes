@@ -5,11 +5,20 @@ const initialState = new Map();
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case 'ADD_NOTE':
+    case 'ADD_NOTE': {
       const { note } = action;
       const newState = new Map(state);
       newState.set(note.key, note);
       return newState;
+    }
+
+    case 'UPDATE_NOTE': {
+      const { note } = action;
+      const newState = new Map(state);
+      newState.set(note.key, note);
+      return newState;
+    }
+
     default:
       return state;
   }

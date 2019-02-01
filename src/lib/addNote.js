@@ -16,7 +16,7 @@ function addNote(folderId) {
 
     const newNote = {
       title: '',
-      value: JSON.stringify(initialEditorValue),
+      value: initialEditorValue,
       createdAt: new Date().getTime(),
       updatedAt: new Date().getTime(),
       folder: folderId || '',
@@ -27,7 +27,7 @@ function addNote(folderId) {
 
     const id = v4();
     const notePath = path.join(consts.NOTES_PATH, `${id}.json`);
-    const data = JSON.stringify(newNote);
+    const data = JSON.stringify(Object.assign(newNote, { value: JSON.stringify(newNote.value.toJSON()) }));
 
     return new Promise((resolve, reject) => {
       mkdirp(consts.NOTES_PATH, (err) => {
