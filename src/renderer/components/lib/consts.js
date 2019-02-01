@@ -1,7 +1,6 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable max-len */
 import { mdiNotebook as notebook, mdiStarOutline as star, mdiTrashCanOutline as trash } from '@mdi/js';
-import { Value } from 'slate';
 
 export const sidebarShortcuts = [
   {
@@ -21,7 +20,7 @@ export const sidebarShortcuts = [
   },
 ];
 
-export const initialEditorValue = Value.fromJSON({
+export const initialEditorValue = {
   document: {
     nodes: [
       {
@@ -31,7 +30,7 @@ export const initialEditorValue = Value.fromJSON({
       },
     ],
   },
-});
+};
 
 export const folderPathnameRegex = /^\/folder\/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}[\/\?]?/m;
 

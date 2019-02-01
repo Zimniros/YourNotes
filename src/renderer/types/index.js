@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import {
   shape, string, arrayOf, bool, number, oneOf, oneOfType, object, func, array,
 } from 'prop-types';
@@ -16,7 +15,7 @@ export const folderDefault = {
 export const noteType = shape({
   key: string.isRequired,
   title: string.isRequired,
-  content: string.isRequired,
+  value: string.isRequired,
   createdAt: number.isRequired,
   updatedAt: number.isRequired,
   folder: string.isRequired,
@@ -28,9 +27,9 @@ export const noteType = shape({
 export const noteDefault = {
   key: '',
   title: '',
-  content: '',
-  createdAt: '',
-  updatedAt: '',
+  value: '',
+  createdAt: new Date().getTime(),
+  updatedAt: new Date().getTime(),
   folder: '',
   tags: [],
   isStarred: false,
@@ -61,3 +60,12 @@ export const historyType = shape({
   push: func.isRequired,
   replace: func.isRequired,
 });
+
+export default {
+  folderType,
+  folderDefault,
+  noteType,
+  noteDefault,
+  locationType,
+  historyType,
+};
