@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { Editor } from 'slate-react';
 import { isKeyHotkey } from 'is-hotkey';
 import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
 
 import Icon from '@mdi/react';
 import {
@@ -25,6 +26,7 @@ import {
 import Toolbar from './Toolbar';
 import Button from './Button';
 import { updateNote } from '../../actions';
+import updateNoteApi from '../../../lib/updateNote';
 
 const isBoldHotkey = isKeyHotkey('mod+b');
 const isItalicHotkey = isKeyHotkey('mod+i');
@@ -45,6 +47,7 @@ class NoteEditor extends Component {
     };
 
     this.delayTimer = null;
+    this.isReady = false;
   }
 
   componentDidMount() {
@@ -56,7 +59,14 @@ class NoteEditor extends Component {
     const isNewNote = nextProps.note.key !== this.props.note.key;
 
     if (isNewNote) {
+      this.saveNoteNow();
       this.setState({ note: nextProps.note });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.note && this.state.note) {
+      this.isReady = prevState.note.value.document !== this.state.note.value.document;
     }
   }
 
@@ -159,7 +169,9 @@ class NoteEditor extends Component {
     clearTimeout(this.delayTimer);
     this.delayTimer = null;
 
-    dispatch(updateNote(note));
+    updateNoteApi(note)
+      .then(data => dispatch(updateNote(data)))
+      .catch(error => console.log('Error in saveNoteNow()', error));
   }
 
   isEditorFocused() {
