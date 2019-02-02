@@ -8,6 +8,12 @@
   color: $black;
   background: $notelist-bg-color;
 
+  &--active {
+    pointer-events: none;
+    cursor: default;
+    background: darken($notelist-bg-color, 10%);
+  }
+
   &:hover {
     background: darken($notelist-bg-color, 10%);
   }

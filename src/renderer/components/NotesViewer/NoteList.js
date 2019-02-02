@@ -5,7 +5,8 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { folderPathnameRegex, sidebarShortcuts } from '../lib/consts';
+import { folderPathnameRegex } from '../lib/consts';
+import getSearchKey from '../lib/getSearchKey';
 
 import NoteItem from './NoteItem';
 
@@ -24,9 +25,16 @@ class NoteList extends Component {
   }
 
   renderNotes() {
+    const { location } = this.props;
     const notes = this.getNotes();
+    const locationKey = getSearchKey(location);
 
-    return notes ? notes.map(note => <NoteItem key={note.key} note={note} />) : null;
+    return notes
+      ? notes.map((note) => {
+        const isActive = locationKey === note.key;
+        return <NoteItem key={note.key} isActive={isActive} note={note} />;
+      })
+      : null;
   }
 
   render() {
