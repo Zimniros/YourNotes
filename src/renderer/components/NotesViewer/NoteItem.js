@@ -5,9 +5,13 @@ import { noteType, locationType } from '../../types';
 import { formatUpdatedAt } from '../lib/timeHelpers';
 
 const NoteItem = ({ note, location }) => {
-  const { key, title, updatedAt } = note;
+  const {
+    key, value, title, updatedAt,
+  } = note;
   const { pathname } = location;
+  const { text } = value.document;
 
+  console.log();
   return (
     <Link
       to={{
@@ -19,7 +23,7 @@ const NoteItem = ({ note, location }) => {
       <div className="note-item__title">{title || 'Untitled'}</div>
       <div className="note-item__updated-at">{formatUpdatedAt(updatedAt)}</div>
       <div className="note-item__content">
-        <span>Note value</span>
+        <span>{text || 'Note value'}</span>
       </div>
     </Link>
   );
