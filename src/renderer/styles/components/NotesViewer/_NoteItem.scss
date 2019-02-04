@@ -29,9 +29,39 @@
   }
 }
 
+.note-item__row {
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
 .note-item__title {
   font-size: 1.8rem;
   font-weight: 600;
+}
+
+.note-item__icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  fill: currentColor;
+  cursor: pointer;
+  display: none;
+  pointer-events: auto;
+
+  &:hover {
+    fill: $main-bg-color;
+  }
+}
+
+.note-item__star-icon {
+  fill: $yellow;
+}
+
+.note-item:hover .note-item__icon,
+.note-item--active .note-item__icon,
+.note-item__star-icon--starred.note-item__icon {
+  display: block;
 }
 
 .note-item__updated-at {

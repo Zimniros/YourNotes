@@ -25,7 +25,7 @@ function updateNote(note) {
 
   Object.assign(noteData, note, {
     key,
-    updatedAt: new Date(),
+    updatedAt: new Date().getTime(),
   });
 
   const data = JSON.stringify(Object.assign({}, noteData, { value: JSON.stringify(noteData.value.toJSON()) }));
