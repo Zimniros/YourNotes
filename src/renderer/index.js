@@ -6,6 +6,7 @@ import { HashRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import Map from '../lib/Map';
+import Set from '../lib/Set';
 
 import './styles/main.scss';
 import App from './components/App';
@@ -16,16 +17,27 @@ import resolveStorage from '../lib/resolveStorage';
 const initStore = async () => {
   const storeData = {
     folders: new Map(),
-    notes: new Map(),
+    notesData: {
+      allNotes: new Map(),
+      starredNotes: new Set(),
+    },
   };
 
   const folders = await resolveStorage();
   const notes = await resolveNotes();
 
-  folders.map(folder => storeData.folders.set(folder.id, folder));
-  notes.map(note => storeData.notes.set(note.key, note));
+  folders.forEach(folder => storeData.folders.set(folder.id, folder));
+  notes.forEach((note) => {
+    storeData.notesData.allNotes.set(note.key, note);
+
+    if (note.isStarred) {
+      storeData.notesData.starredNotes.add(note.key);
+    }
+  });
 
   const store = createStore(reducers, storeData);
+
+  console.log('store', store.getState());
 
   ReactDOM.render(
     <Provider store={store}>

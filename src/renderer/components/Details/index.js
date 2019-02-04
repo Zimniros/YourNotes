@@ -33,6 +33,6 @@ class Details extends Component {
   }
 }
 
-const mapStateToProps = state => ({ notes: state.notes });
+const mapStateToProps = state => ({ notes: state.notesData.allNotes });
 
 export default withRouter(connect(mapStateToProps)(Details));

@@ -42,6 +42,6 @@ class NoteList extends Component {
   }
 }
 
-const mapStateToProps = state => ({ notes: state.notes.toArray() });
+const mapStateToProps = state => ({ notes: state.notesData.allNotes.toArray() });
 
 export default withRouter(connect(mapStateToProps)(NoteList));
