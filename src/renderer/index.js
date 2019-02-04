@@ -37,8 +37,6 @@ const initStore = async () => {
 
   const store = createStore(reducers, storeData);
 
-  console.log('store', store.getState());
-
   ReactDOM.render(
     <Provider store={store}>
       <Router>

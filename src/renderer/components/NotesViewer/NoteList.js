@@ -12,16 +12,21 @@ import NoteItem from './NoteItem';
 
 class NoteList extends Component {
   getNotes() {
-    const { location, notes } = this.props;
+    const { location, notesData } = this.props;
+    const { allNotes, starredNotes } = notesData;
     const { pathname } = location;
 
     const match = pathname.match(folderPathnameRegex);
 
-    if (match) {
-      return notes.filter(({ folder }) => folder === match[1]);
+    if (pathname === '/starred') {
+      return starredNotes.map(key => allNotes.get(key));
     }
 
-    return notes;
+    if (match) {
+      return allNotes.toArray().filter(({ folder }) => folder === match[1]);
+    }
+
+    return allNotes.toArray();
   }
 
   renderNotes() {
@@ -42,6 +47,6 @@ class NoteList extends Component {
   }
 }
 
-const mapStateToProps = state => ({ notes: state.notesData.allNotes.toArray() });
+const mapStateToProps = state => ({ notesData: state.notesData });
 
 export default withRouter(connect(mapStateToProps)(NoteList));
