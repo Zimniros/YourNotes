@@ -1,20 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Icon from '@mdi/react';
 import { mdiFolderOutline as folderIcon } from '@mdi/js';
 
-import { folderType, notesDataType } from '../../types';
+import { folderType, notesDataType, locationType } from '../../types';
 
 import getNotesAmount from '../lib/getNotesAmount';
 
-const FolderItem = ({ folder, notesData }) => {
-  const pathname = `/folder/${folder.id}`;
-  const notesCount = getNotesAmount(pathname, notesData);
+const FolderItem = ({ folder, notesData, location }) => {
+  const pathnameTo = `/folder/${folder.id}`;
+  const notesCount = getNotesAmount(pathnameTo, notesData);
+  const { pathname: currentPathname } = location;
+  const isActive = currentPathname === pathnameTo;
+
+  const className = `folder-list__folder${isActive ? ' folder-list__folder--active' : ''}`;
 
   return (
-    <Link to={pathname} className="folder-list__folder">
+    <Link to={pathnameTo} className={className}>
       <Icon className="folder__icon" path={folderIcon} />
       <span title={folder.name} className="folder__name">
         {folder.name}
@@ -29,6 +33,7 @@ const mapStateToProps = state => ({ notesData: state.notesData });
 export default connect(mapStateToProps)(FolderItem);
 
 FolderItem.propTypes = {
+  location: locationType.isRequired,
   folder: folderType.isRequired,
   notesData: notesDataType.isRequired,
 };

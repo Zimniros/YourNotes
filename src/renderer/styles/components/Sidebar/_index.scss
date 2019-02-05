@@ -30,6 +30,10 @@
     background: $sidebar-hover-color;
   }
 
+  &--active {
+    pointer-events: none;
+  }
+
   &--active,
   &:active {
     background: $sidebar-active-color;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Icon from '@mdi/react';
@@ -7,16 +7,23 @@ import Icon from '@mdi/react';
 import { sidebarShortcuts } from '../lib/consts';
 import FolderList from './FolderList';
 import getNotesAmount from '../lib/getNotesAmount';
-import { notesDataType } from '../../types';
+import { notesDataType, locationType } from '../../types';
 
-const Sidebar = ({ notesData }) => {
-  const shortcuts = sidebarShortcuts.map(el => (
-    <Link key={el.route} to={el.route} className="menu__item">
-      <Icon className="menu__icon" path={el.icon} />
-      <span className="menu__text">{el.name}</span>
-      <span className="menu__count">{getNotesAmount(el.route, notesData)}</span>
-    </Link>
-  ));
+const Sidebar = ({ notesData, location }) => {
+  const shortcuts = sidebarShortcuts.map((el) => {
+    const { pathname } = location;
+    const isActive = pathname === el.route;
+
+    const className = `menu__item${isActive ? ' menu__item--active' : ''}`;
+
+    return (
+      <Link key={el.route} to={el.route} className={className}>
+        <Icon className="menu__icon" path={el.icon} />
+        <span className="menu__text">{el.name}</span>
+        <span className="menu__count">{getNotesAmount(el.route, notesData)}</span>
+      </Link>
+    );
+  });
 
   return (
     <div className="sidebar">
@@ -38,8 +45,9 @@ const Sidebar = ({ notesData }) => {
 
 const mapStateToProps = state => ({ notesData: state.notesData });
 
-export default connect(mapStateToProps)(Sidebar);
+export default withRouter(connect(mapStateToProps)(Sidebar));
 
 Sidebar.propTypes = {
+  location: locationType.isRequired,
   notesData: notesDataType.isRequired,
 };

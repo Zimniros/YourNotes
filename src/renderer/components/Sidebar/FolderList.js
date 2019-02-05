@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { func, instanceOf } from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import Icon from '@mdi/react';
 import { mdiChevronRight as chevron, mdiPlus as plus } from '@mdi/js';
@@ -10,6 +11,7 @@ import { mdiChevronRight as chevron, mdiPlus as plus } from '@mdi/js';
 import FolderItem from './FolderItem';
 import { showModal } from '../../actions';
 import Map from '../../../lib/Map';
+import { locationType } from '../../types';
 
 class FolderList extends Component {
   state = {
@@ -17,6 +19,7 @@ class FolderList extends Component {
   };
 
   static propTypes = {
+    location: locationType.isRequired,
     folders: instanceOf(Map).isRequired,
     dispatch: func.isRequired,
   };
@@ -36,9 +39,11 @@ class FolderList extends Component {
 
   render() {
     const { isOpen } = this.state;
-    const { folders } = this.props;
+    const { folders, location } = this.props;
 
-    const folderList = folders && folders.size ? folders.map(folder => <FolderItem key={folder.id} folder={folder} />) : null;
+    const folderList = folders && folders.size
+      ? folders.map(folder => <FolderItem key={folder.id} folder={folder} location={location} />)
+      : null;
     const className = `sidebar__folder-list ${isOpen ? 'sidebar__folder-list--is-open' : ''}`;
 
     return (
@@ -64,4 +69,4 @@ class FolderList extends Component {
 
 const mapStateToProps = state => ({ folders: state.folders });
 
-export default connect(mapStateToProps)(FolderList);
+export default withRouter(connect(mapStateToProps)(FolderList));
