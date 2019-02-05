@@ -23,10 +23,11 @@ function updateNote(note) {
     noteData = noteDefault;
   }
 
-  Object.assign(noteData, note, {
-    key,
-    updatedAt: new Date().getTime(),
-  });
+  if (noteData.title !== note.title || noteData.value !== note.value) {
+    noteData.updatedAt = new Date().getTime();
+  }
+
+  Object.assign(noteData, note);
 
   const data = JSON.stringify(Object.assign({}, noteData, { value: JSON.stringify(noteData.value.toJSON()) }));
   fs.writeFileSync(notePath, data);
