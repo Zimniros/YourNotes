@@ -1,17 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Icon from '@mdi/react';
 
 import { sidebarShortcuts } from '../lib/consts';
 import FolderList from './FolderList';
+import getNotesAmount from '../lib/getNotesAmount';
+import { notesDataType } from '../../types';
 
-const Sidebar = () => {
+const Sidebar = ({ notesData }) => {
   const shortcuts = sidebarShortcuts.map(el => (
     <Link key={el.route} to={el.route} className="menu__item">
       <Icon className="menu__icon" path={el.icon} />
       <span className="menu__text">{el.name}</span>
-      <span className="menu__count">0</span>
+      <span className="menu__count">{getNotesAmount(el.route, notesData)}</span>
     </Link>
   ));
 
@@ -33,4 +36,10 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+const mapStateToProps = state => ({ notesData: state.notesData });
+
+export default connect(mapStateToProps)(Sidebar);
+
+Sidebar.propTypes = {
+  notesData: notesDataType.isRequired,
+};

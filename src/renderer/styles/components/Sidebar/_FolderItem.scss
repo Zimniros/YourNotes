@@ -3,7 +3,7 @@
   align-items: center;
   text-decoration: none;
   color: currentColor;
-  padding: $small-space / 2 $small-space $small-space / 2 $space;
+  padding: $small-space / 2 1.5rem $small-space / 2 $space;
 
   &:hover {
     background: $sidebar-hover-color;
@@ -30,4 +30,9 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   line-height: 1;
+  margin-right: $small-space;
+}
+
+.folder__notes-count {
+  margin-left: auto;
 }

@@ -1,6 +1,9 @@
 import {
-  shape, string, arrayOf, bool, number, oneOf, oneOfType, object, func, array,
+  instanceOf, shape, string, arrayOf, bool, number, oneOf, oneOfType, object, func, array,
 } from 'prop-types';
+import Map from '../../lib/Map';
+
+import Set from '../../lib/Set';
 
 export const folderType = shape({
   id: string.isRequired,
@@ -36,6 +39,11 @@ export const noteDefault = {
   isTrashed: false,
 };
 
+export const notesDataType = shape({
+  allNotes: instanceOf(Map).isRequired,
+  starredNotes: instanceOf(Set).isRequired,
+});
+
 export const locationType = shape({
   hash: string.isRequired,
   key: string, // only in createBrowserHistory and createMemoryHistory
@@ -66,6 +74,7 @@ export default {
   folderDefault,
   noteType,
   noteDefault,
+  notesDataType,
   locationType,
   historyType,
 };
