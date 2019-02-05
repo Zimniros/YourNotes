@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import { Editor } from 'slate-react';
 import { isKeyHotkey } from 'is-hotkey';
 import { connect } from 'react-redux';
-import { isEqual } from 'lodash';
 
 import Icon from '@mdi/react';
 import {
@@ -81,6 +80,16 @@ class NoteEditor extends Component {
     const { note } = this.state;
     const { value } = note;
     return value.blocks.some(node => node.type === type);
+  };
+
+  onInputChange = (event) => {
+    const { note } = this.state;
+    const { value: title } = event.target;
+    const updatedAt = new Date().getTime();
+
+    this.setState({ note: Object.assign({}, note, { title, updatedAt }) }, () => {
+      this.saveNote();
+    });
   };
 
   onChange = ({ value }) => {
@@ -268,7 +277,7 @@ class NoteEditor extends Component {
 
     if (!note) return <div />;
 
-    const { value, key } = note;
+    const { value, title } = note;
 
     return (
       <div className="details">
@@ -284,7 +293,13 @@ class NoteEditor extends Component {
           {this.renderBlockButton('numbered-list', numberedList)}
           {this.renderBlockButton('bulleted-list', bulletedList)}
         </Toolbar>
-        <input type="text" className="details__title" placeholder="Untitled" value={key} />
+        <input
+          type="text"
+          className="details__title"
+          placeholder="Untitled"
+          value={title}
+          onChange={this.onInputChange}
+        />
 
         <Editor
           className={this.className}
