@@ -22,6 +22,7 @@ import {
   mdiCodeTags as code,
 } from '@mdi/js';
 
+import TitleBar from './TitleBar';
 import Toolbar from './Toolbar';
 import Button from './Button';
 import { updateNote } from '../../actions';
@@ -59,14 +60,9 @@ class NoteEditor extends Component {
 
     if (isNewNote) {
       this.saveNoteNow();
-      this.setState({ note: nextProps.note });
     }
-  }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.note && this.state.note) {
-      this.isReady = prevState.note.value.document !== this.state.note.value.document;
-    }
+    this.setState({ note: nextProps.note });
   }
 
   hasMark = (type) => {
@@ -237,12 +233,10 @@ class NoteEditor extends Component {
   };
 
   renderMarkButton = (type, icon) => {
-    const { isEditorFocused } = this.state;
-    const isDisabled = !isEditorFocused;
     const isActive = this.hasMark(type);
 
     return (
-      <Button isActive={isActive} onMouseDown={event => this.onClickMark(event, type)} isDisabled={isDisabled}>
+      <Button isActive={isActive} onMouseDown={event => this.onClickMark(event, type)} isDisabled={false}>
         <Icon path={icon} />
       </Button>
     );
@@ -250,8 +244,6 @@ class NoteEditor extends Component {
 
   renderBlockButton = (type, icon) => {
     let isActive = this.hasBlock(type);
-    const { isEditorFocused } = this.state;
-    const isDisabled = !isEditorFocused;
 
     if (['numbered-list', 'bulleted-list'].includes(type)) {
       const { note } = this.state;
@@ -266,7 +258,7 @@ class NoteEditor extends Component {
     }
 
     return (
-      <Button isActive={isActive} onMouseDown={event => this.onClickBlock(event, type)} isDisabled={isDisabled}>
+      <Button isActive={isActive} onMouseDown={event => this.onClickBlock(event, type)} isDisabled={false}>
         <Icon path={icon} />
       </Button>
     );
@@ -277,10 +269,12 @@ class NoteEditor extends Component {
 
     if (!note) return <div />;
 
-    const { value, title } = note;
+    const { value, title, isStarred } = note;
 
     return (
       <div className="details">
+        <TitleBar onInputChange={this.onInputChange} title={title} isStarred={isStarred} />
+
         <Toolbar>
           {this.renderMarkButton('bold', bold)}
           {this.renderMarkButton('italic', italic)}
@@ -293,13 +287,6 @@ class NoteEditor extends Component {
           {this.renderBlockButton('numbered-list', numberedList)}
           {this.renderBlockButton('bulleted-list', bulletedList)}
         </Toolbar>
-        <input
-          type="text"
-          className="details__title"
-          placeholder="Untitled"
-          value={title}
-          onChange={this.onInputChange}
-        />
 
         <Editor
           className={this.className}

@@ -12,7 +12,11 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case 'ADD_NOTE': {
       const { note } = action;
-      const newState = Object.assign({}, state);
+
+      const allNotes = new Map(state.allNotes);
+      const starredNotes = new Set(state.starredNotes);
+      const newState = Object.assign({}, { allNotes, starredNotes });
+
       newState.allNotes.set(note.key, note);
       return newState;
     }
@@ -20,7 +24,10 @@ export default (state = initialState, action) => {
     case 'UPDATE_NOTE': {
       const { note } = action;
       const oldNote = state.allNotes.get(note.key);
-      const newState = Object.assign({}, state);
+
+      const allNotes = new Map(state.allNotes);
+      const starredNotes = new Set(state.starredNotes);
+      const newState = Object.assign({}, { allNotes, starredNotes });
 
       newState.allNotes.set(note.key, note);
 
