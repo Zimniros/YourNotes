@@ -6,6 +6,7 @@ import Set from '../../lib/Set';
 const initialState = {
   allNotes: new Map(),
   starredNotes: new Set(),
+  trashedNotes: new Set(),
 };
 
 export default (state = initialState, action) => {
@@ -15,7 +16,8 @@ export default (state = initialState, action) => {
 
       const allNotes = new Map(state.allNotes);
       const starredNotes = new Set(state.starredNotes);
-      const newState = Object.assign({}, { allNotes, starredNotes });
+      const trashedNotes = new Set(state.trashedNotes);
+      const newState = Object.assign({}, { allNotes, starredNotes, trashedNotes });
 
       newState.allNotes.set(note.key, note);
       return newState;
@@ -27,7 +29,8 @@ export default (state = initialState, action) => {
 
       const allNotes = new Map(state.allNotes);
       const starredNotes = new Set(state.starredNotes);
-      const newState = Object.assign({}, { allNotes, starredNotes });
+      const trashedNotes = new Set(state.trashedNotes);
+      const newState = Object.assign({}, { allNotes, starredNotes, trashedNotes });
 
       newState.allNotes.set(note.key, note);
 
@@ -35,6 +38,14 @@ export default (state = initialState, action) => {
         if (note.isStarred) {
           newState.starredNotes.add(note.key);
         } else {
+          newState.starredNotes.delete(note.key);
+        }
+      }
+
+      if (isEmpty(oldNote) || note.isTrashed) {
+        newState.trashedNotes.add(note.key);
+
+        if (note.isStarred) {
           newState.starredNotes.delete(note.key);
         }
       }

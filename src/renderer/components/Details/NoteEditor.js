@@ -6,6 +6,7 @@
 /* eslint-disable react/no-unused-vars */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -73,6 +74,28 @@ class NoteEditor extends Component {
       .catch(error => console.log('Error in onStarClick() in NoteItem component', error));
   };
 
+  onTrashClick = (event) => {
+    event.preventDefault();
+
+    const {
+      dispatch, note, history, location,
+    } = this.props;
+    const { pathname } = location;
+
+    const newNote = Object.assign({}, note, { isStarred: false, isTrashed: true });
+
+    updateNoteApi(newNote).then((data) => {
+      dispatch(updateNote(data));
+
+      history
+        .replace({
+          pathname,
+        })
+
+        .catch(error => console.log('Error in onStarClick() in NoteItem component', error));
+    });
+  };
+
   saveNote() {
     clearTimeout(this.delayTimer);
     this.delayTimer = setTimeout(() => {
@@ -102,6 +125,7 @@ class NoteEditor extends Component {
       <div className="details">
         <TitleBar
           onStarClick={this.onStarClick}
+          onTrashClick={this.onTrashClick}
           onInputChange={this.onInputChange}
           title={title}
           isStarred={isStarred}
@@ -113,4 +137,4 @@ class NoteEditor extends Component {
   }
 }
 
-export default connect(null)(NoteEditor);
+export default withRouter(connect(null)(NoteEditor));

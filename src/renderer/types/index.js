@@ -42,6 +42,7 @@ export const noteDefault = {
 export const notesDataType = shape({
   allNotes: instanceOf(Map).isRequired,
   starredNotes: instanceOf(Set).isRequired,
+  trashedNotes: instanceOf(Set).isRequired,
 });
 
 export const locationType = shape({

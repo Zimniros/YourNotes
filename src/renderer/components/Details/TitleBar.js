@@ -10,7 +10,7 @@ import {
 } from '@mdi/js';
 
 const TitleBar = ({
-  onStarClick, onInputChange, title, isStarred,
+  onStarClick, onTrashClick, onInputChange, title, isStarred,
 }) => {
   const starIcon = isStarred ? star : starOutline;
   const starIconClassName = `details__icon details__icon__star-icon${
@@ -23,7 +23,7 @@ const TitleBar = ({
 
       <div className="details__icons-group">
         <Icon className={starIconClassName} onClick={onStarClick} path={starIcon} />
-        <Icon className="details__icon" path={trash} />
+        <Icon className="details__icon" onClick={onTrashClick} path={trash} />
         <Icon className="details__icon" path={info} />
       </div>
     </div>
@@ -34,6 +34,7 @@ export default TitleBar;
 
 TitleBar.propTypes = {
   onStarClick: func.isRequired,
+  onTrashClick: func.isRequired,
   onInputChange: func.isRequired,
   title: string.isRequired,
   isStarred: bool.isRequired,

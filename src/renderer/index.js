@@ -20,6 +20,7 @@ const initStore = async () => {
     notesData: {
       allNotes: new Map(),
       starredNotes: new Set(),
+      trashedNotes: new Set(),
     },
   };
 
@@ -32,6 +33,10 @@ const initStore = async () => {
 
     if (note.isStarred) {
       storeData.notesData.starredNotes.add(note.key);
+    }
+
+    if (note.isTrashed) {
+      storeData.notesData.trashedNotes.add(note.key);
     }
   });
 
