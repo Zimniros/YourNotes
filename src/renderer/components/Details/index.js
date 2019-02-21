@@ -5,7 +5,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Value } from 'slate';
 
 import NoteEditor from './NoteEditor';
 import getSearchKey from '../lib/getSearchKey';

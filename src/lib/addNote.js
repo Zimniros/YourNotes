@@ -6,8 +6,6 @@ import mkdirp from 'mkdirp';
 import consts from './consts';
 import resolveStorage from './resolveStorage';
 
-import { initialEditorValue } from '../renderer/components/lib/consts';
-
 function addNote(folderId) {
   return resolveStorage().then((folders) => {
     if (folderId && !folders.some(({ id }) => id === folderId)) {
@@ -16,7 +14,7 @@ function addNote(folderId) {
 
     const newNote = {
       title: '',
-      value: initialEditorValue,
+      value: '<p><br></p>',
       createdAt: new Date().getTime(),
       updatedAt: new Date().getTime(),
       folder: folderId || '',
@@ -27,7 +25,7 @@ function addNote(folderId) {
 
     const id = v4();
     const notePath = path.join(consts.NOTES_PATH, `${id}.json`);
-    const data = JSON.stringify(Object.assign({}, newNote, { value: JSON.stringify(newNote.value.toJSON()) }));
+    const data = JSON.stringify(Object.assign({}, newNote));
 
     return new Promise((resolve, reject) => {
       mkdirp(consts.NOTES_PATH, (err) => {

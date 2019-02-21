@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { isEmpty } from 'lodash';
-import { Value } from 'slate';
 
 import consts from './consts';
 import { noteDefault } from '../renderer/types';
@@ -17,7 +16,6 @@ function updateNote(note) {
 
   try {
     noteData = JSON.parse(fs.readFileSync(notePath));
-    noteData.value = Value.fromJSON(JSON.parse(noteData.value));
   } catch (error) {
     console.warn("Can't find note json file.", error);
     noteData = noteDefault;
@@ -29,7 +27,7 @@ function updateNote(note) {
 
   Object.assign(noteData, note);
 
-  const data = JSON.stringify(Object.assign({}, noteData, { value: JSON.stringify(noteData.value.toJSON()) }));
+  const data = JSON.stringify(Object.assign({}, noteData));
   fs.writeFileSync(notePath, data);
 
   return Promise.resolve(noteData);

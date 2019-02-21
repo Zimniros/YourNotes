@@ -18,7 +18,7 @@ export const folderDefault = {
 export const noteType = shape({
   key: string.isRequired,
   title: string.isRequired,
-  value: object.isRequired,
+  value: string.isRequired,
   createdAt: number.isRequired,
   updatedAt: number.isRequired,
   folder: string.isRequired,

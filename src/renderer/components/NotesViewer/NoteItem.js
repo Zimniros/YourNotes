@@ -31,14 +31,22 @@ class NoteItem extends Component {
       .catch(error => console.log('Error in onStarClick() in NoteItem component', error));
   };
 
+  htmlToText = (html) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || '';
+  };
+
   render() {
     const { note, location, isActive } = this.props;
     const {
       key, value, title, updatedAt, isStarred,
     } = note;
     const { pathname } = location;
-    const { text } = value.document;
-    const className = `note-item${isActive ? ' note-item--active' : ''}`;
+
+    const noteContent = this.htmlToText(value);
+    const noteContentClassName = `note-item__content${!noteContent ? ' note-item__content--empty' : ''}`;
+
+    const noteClassName = `note-item${isActive ? ' note-item--active' : ''}`;
     const starIcon = isStarred ? star : starOutline;
     const starIconClassName = `note-item__icon note-item__star-icon${
       isStarred ? ' note-item__star-icon--starred' : ''
@@ -50,7 +58,7 @@ class NoteItem extends Component {
           pathname,
           search: `?key=${key}`,
         }}
-        className={className}
+        className={noteClassName}
       >
         <div className="note-item__row">
           <div className="note-item__title">{title || 'Untitled'}</div>
@@ -58,8 +66,8 @@ class NoteItem extends Component {
         </div>
 
         <div className="note-item__updated-at">{formatUpdatedAt(updatedAt)}</div>
-        <div className="note-item__content">
-          <span>{text || 'Note value'}</span>
+        <div className={noteContentClassName}>
+          <span>{noteContent || 'Empty note'}</span>
         </div>
       </Link>
     );

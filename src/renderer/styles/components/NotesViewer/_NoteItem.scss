@@ -81,4 +81,8 @@
   overflow: hidden;
   word-break: break-all;
   font-size: 1.4rem;
+
+  &--empty {
+    font-style: italic;
+  }
 }

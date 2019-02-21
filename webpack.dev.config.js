@@ -39,9 +39,14 @@ const fonts = {
   include: defaultInclude,
 };
 
+const css = {
+  test: /\.css$/,
+  use: ['style-loader', 'css-loader'],
+};
+
 module.exports = {
   module: {
-    rules: [scss, javascript, images, fonts],
+    rules: [css, scss, javascript, images, fonts],
   },
   entry: [path.resolve(__dirname, 'src', 'renderer', 'index.js')],
   target: 'electron-renderer',
