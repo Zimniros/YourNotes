@@ -61,6 +61,18 @@ class NoteEditor extends Component {
     });
   };
 
+  onStarClick = (event) => {
+    event.preventDefault();
+
+    const { dispatch, note } = this.props;
+
+    const newNote = Object.assign({}, note, { isStarred: !note.isStarred });
+
+    updateNoteApi(newNote)
+      .then(data => dispatch(updateNote(data)))
+      .catch(error => console.log('Error in onStarClick() in NoteItem component', error));
+  };
+
   saveNote() {
     clearTimeout(this.delayTimer);
     this.delayTimer = setTimeout(() => {
@@ -88,7 +100,12 @@ class NoteEditor extends Component {
 
     return (
       <div className="details">
-        <TitleBar onInputChange={this.onInputChange} title={title} isStarred={isStarred} />
+        <TitleBar
+          onStarClick={this.onStarClick}
+          onInputChange={this.onInputChange}
+          title={title}
+          isStarred={isStarred}
+        />
 
         <ReactQuill className={this.className} value={value} onChange={this.onChange} />
       </div>
