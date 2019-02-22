@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { func, instanceOf } from 'prop-types';
 import { connect } from 'react-redux';
@@ -33,8 +31,9 @@ class FolderList extends Component {
 
   onNewClick(event) {
     event.preventDefault();
+    const { dispatch } = this.props;
 
-    this.props.dispatch(showModal());
+    dispatch(showModal());
   }
 
   render() {

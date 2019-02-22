@@ -1,52 +1,33 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-import React, { Component } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { folderPathnameRegex } from '../lib/consts';
 import getSearchKey from '../lib/getSearchKey';
+import getNotes from '../lib/getNotes';
+import { notesDataType, locationType } from '../../types';
 
 import NoteItem from './NoteItem';
 
-class NoteList extends Component {
-  getNotes() {
-    const { location, notesData } = this.props;
-    const { allNotes, starredNotes } = notesData;
-    const { pathname } = location;
+const NoteList = ({ notesData, location }) => {
+  const { pathname } = location;
+  const notes = getNotes(pathname, notesData);
+  const locationKey = getSearchKey(location);
 
-    const match = pathname.match(folderPathnameRegex);
+  const noteList = notes
+    ? notes.map((note) => {
+      const isActive = locationKey === note.key;
+      return <NoteItem key={note.key} isActive={isActive} note={note} />;
+    })
+    : null;
 
-    if (pathname === '/starred') {
-      return starredNotes.map(key => allNotes.get(key));
-    }
-
-    if (match) {
-      return allNotes.toArray().filter(({ folder }) => folder === match[1]);
-    }
-
-    return allNotes.toArray();
-  }
-
-  renderNotes() {
-    const { location } = this.props;
-    const notes = this.getNotes();
-    const locationKey = getSearchKey(location);
-
-    return notes
-      ? notes.map((note) => {
-        const isActive = locationKey === note.key;
-        return <NoteItem key={note.key} isActive={isActive} note={note} />;
-      })
-      : null;
-  }
-
-  render() {
-    return <div className="notelist">{this.renderNotes()}</div>;
-  }
-}
+  return <div className="notelist">{noteList}</div>;
+};
 
 const mapStateToProps = state => ({ notesData: state.notesData });
 
 export default withRouter(connect(mapStateToProps)(NoteList));
+
+NoteList.propTypes = {
+  notesData: notesDataType.isRequired,
+  location: locationType.isRequired,
+};

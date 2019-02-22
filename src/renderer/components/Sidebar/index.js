@@ -6,6 +6,7 @@ import Icon from '@mdi/react';
 
 import { sidebarShortcuts } from '../lib/consts';
 import FolderList from './FolderList';
+import getNotes from '../lib/getNotes';
 import getNotesAmount from '../lib/getNotesAmount';
 import { notesDataType, locationType } from '../../types';
 
@@ -13,6 +14,8 @@ const Sidebar = ({ notesData, location }) => {
   const shortcuts = sidebarShortcuts.map((el) => {
     const { pathname } = location;
     const isActive = pathname === el.route;
+    const notes = getNotes(el.route, notesData);
+    const notesAmount = getNotesAmount(notes);
 
     const className = `menu__item${isActive ? ' menu__item--active' : ''}`;
 
@@ -20,7 +23,7 @@ const Sidebar = ({ notesData, location }) => {
       <Link key={el.route} to={el.route} className={className}>
         <Icon className="menu__icon" path={el.icon} />
         <span className="menu__text">{el.name}</span>
-        <span className="menu__count">{getNotesAmount(el.route, notesData)}</span>
+        <span className="menu__count">{notesAmount}</span>
       </Link>
     );
   });
