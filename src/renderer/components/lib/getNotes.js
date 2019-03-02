@@ -24,7 +24,7 @@ function getNotes(pathname, notesData) {
   }
 
   if (match) {
-    notes = allNotes.filter(({ folder }) => folder === match[1]);
+    notes = allNotes.toArray().filter(({ folder }) => folder === match[1]);
     return filterTrashed(notes);
   }
 
