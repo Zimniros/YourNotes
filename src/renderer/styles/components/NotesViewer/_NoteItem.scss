@@ -4,12 +4,12 @@
   flex-direction: column;
   height: 12rem;
   padding: $space;
-  text-decoration: none;
+  cursor: pointer;
   color: $black;
   background: $notelist-bg-color;
 
   &--active {
-    pointer-events: none;
+    pointer-events: initial;
     cursor: default;
     background: darken($notelist-bg-color, 10%);
   }

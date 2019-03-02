@@ -7,6 +7,8 @@ import getSearchKey from '../lib/getSearchKey';
 import getNotes from '../lib/getNotes';
 import { notesDataType, locationType, historyType } from '../../types';
 
+import context from '../../../lib/context';
+
 import NoteItem from './NoteItem';
 
 class NoteList extends Component {
@@ -17,6 +19,13 @@ class NoteList extends Component {
   };
 
   notes = [];
+
+  constructor() {
+    super();
+
+    this.handleNoteClick = this.handleNoteClick.bind(this);
+    this.handleNoteContextMenu = this.handleNoteContextMenu.bind(this);
+  }
 
   componentDidMount() {
     const { location, history } = this.props;
@@ -50,6 +59,55 @@ class NoteList extends Component {
     }
   }
 
+  handleNoteClick(event, noteKey) {
+    const { location, history } = this.props;
+    const searchKey = getSearchKey(location);
+    const { pathname } = location;
+
+    if (noteKey && searchKey !== noteKey) {
+      history.push({
+        pathname,
+        search: `key=${noteKey}`,
+      });
+    }
+  }
+
+  handleNoteContextMenu(event, noteKey) {
+    const { location } = this.props;
+    const searchKey = getSearchKey(location);
+    const { pathname } = location;
+
+    if (searchKey !== noteKey) {
+      this.handleNoteClick(event, noteKey);
+    }
+
+    const deleteNoteLabel = 'Delete Note';
+    const restoreNoteLabel = 'Restore Note';
+    const moveToTrashLabel = 'Move to trash';
+
+    const templates = [];
+
+    if (pathname === '/trash') {
+      templates.push(
+        {
+          label: restoreNoteLabel,
+          click: () => console.log(restoreNoteLabel),
+        },
+        {
+          label: deleteNoteLabel,
+          click: () => console.log(deleteNoteLabel),
+        },
+      );
+    } else {
+      templates.push({
+        label: moveToTrashLabel,
+        click: () => console.log(moveToTrashLabel),
+      });
+    }
+
+    context.popup(templates);
+  }
+
   render() {
     const { location, notesData } = this.props;
     const { pathname } = location;
@@ -60,7 +118,15 @@ class NoteList extends Component {
     const noteList = notes
       ? notes.map((note) => {
         const isActive = locationKey === note.key;
-        return <NoteItem key={note.key} isActive={isActive} note={note} />;
+        return (
+          <NoteItem
+            key={note.key}
+            isActive={isActive}
+            note={note}
+            handleNoteClick={this.handleNoteClick}
+            handleNoteContextMenu={this.handleNoteContextMenu}
+          />
+        );
       })
       : null;
 

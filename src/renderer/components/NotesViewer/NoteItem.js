@@ -1,12 +1,14 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bool, func } from 'prop-types';
 
 import Icon from '@mdi/react';
 import { mdiStarOutline as starOutline, mdiStar as star } from '@mdi/js';
 
-import { noteType, locationType } from '../../types';
+import { noteType } from '../../types';
 import { formatUpdatedAt } from '../lib/timeHelpers';
 import { updateNote } from '../../actions';
 import updateNoteApi from '../../../lib/updateNote';
@@ -15,8 +17,9 @@ class NoteItem extends Component {
   static propTypes = {
     isActive: bool.isRequired,
     note: noteType.isRequired,
-    location: locationType.isRequired,
     dispatch: func.isRequired,
+    handleNoteClick: func.isRequired,
+    handleNoteContextMenu: func.isRequired,
   };
 
   onStarClick = (event) => {
@@ -37,11 +40,12 @@ class NoteItem extends Component {
   };
 
   render() {
-    const { note, location, isActive } = this.props;
+    const {
+      note, isActive, handleNoteClick, handleNoteContextMenu,
+    } = this.props;
     const {
       key, value, title, updatedAt, isStarred,
     } = note;
-    const { pathname } = location;
 
     const noteContent = this.htmlToText(value);
     const noteContentClassName = `note-item__content${!noteContent ? ' note-item__content--empty' : ''}`;
@@ -53,12 +57,10 @@ class NoteItem extends Component {
     }`;
 
     return (
-      <Link
-        to={{
-          pathname,
-          search: `?key=${key}`,
-        }}
+      <div
         className={noteClassName}
+        onClick={event => handleNoteClick(event, key)}
+        onContextMenu={event => handleNoteContextMenu(event, key)}
       >
         <div className="note-item__row">
           <div className="note-item__title">{title || 'Untitled'}</div>
@@ -69,7 +71,7 @@ class NoteItem extends Component {
         <div className={noteContentClassName}>
           <span>{noteContent || 'Empty note'}</span>
         </div>
-      </Link>
+      </div>
     );
   }
 }
