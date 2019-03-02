@@ -7,11 +7,13 @@ import { mdiFolderOutline as folderIcon } from '@mdi/js';
 
 import { folderType, notesDataType, locationType } from '../../types';
 
+import getNotes from '../lib/getNotes';
 import getNotesAmount from '../lib/getNotesAmount';
 
 const FolderItem = ({ folder, notesData, location }) => {
   const pathnameTo = `/folder/${folder.id}`;
-  const notesCount = getNotesAmount(pathnameTo, notesData);
+  const notes = getNotes(pathnameTo, notesData);
+  const notesCount = getNotesAmount(notes);
   const { pathname: currentPathname } = location;
   const isActive = currentPathname === pathnameTo;
 
