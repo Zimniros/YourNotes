@@ -1,5 +1,6 @@
-export const showModal = () => ({
+export const showAddFolderModal = () => ({
   type: 'SHOW_MODAL',
+  modalType: 'ADD_FOLDER',
 });
 
 export const closeModal = () => ({

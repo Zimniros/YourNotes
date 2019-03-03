@@ -6,7 +6,7 @@ import Sidebar from './Sidebar';
 import NotesViewer from './NotesViewer';
 import Details from './Details';
 
-import AddFolderModal from './modals/AddFolderModal';
+import ModalRoot from './modals';
 
 class App extends Component {
   componentDidMount() {
@@ -23,7 +23,7 @@ class App extends Component {
         <Sidebar />
         <NotesViewer />
         <Details />
-        <AddFolderModal />
+        <ModalRoot />
       </div>
     );
   }

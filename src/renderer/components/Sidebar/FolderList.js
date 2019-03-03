@@ -11,7 +11,7 @@ import context from '../../../lib/context';
 import Map from '../../../lib/Map';
 
 import FolderItem from './FolderItem';
-import { showModal } from '../../actions';
+import { showAddFolderModal } from '../../actions';
 import { locationType } from '../../types';
 
 class FolderList extends Component {
@@ -42,7 +42,7 @@ class FolderList extends Component {
     event.preventDefault();
     const { dispatch } = this.props;
 
-    dispatch(showModal());
+    dispatch(showAddFolderModal());
   }
 
   handleFolderContextMenu(folder) {

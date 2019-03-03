@@ -1,12 +1,14 @@
 const initialState = {
-  isOpen: false,
+  modalType: null,
+  modalProps: {},
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case 'SHOW_MODAL':
       return {
-        isOpen: true,
+        modalType: action.modalType,
+        modalProps: action.modalProps,
       };
     case 'CLOSE_MODAL':
       return initialState;
