@@ -44,7 +44,7 @@ class NoteItem extends Component {
       note, isActive, handleNoteClick, handleNoteContextMenu,
     } = this.props;
     const {
-      key, value, title, updatedAt, isStarred,
+      key, value, title, updatedAt, isStarred, isTrashed,
     } = note;
 
     const noteContent = this.htmlToText(value);
@@ -64,7 +64,7 @@ class NoteItem extends Component {
       >
         <div className="note-item__row">
           <div className="note-item__title">{title || 'Untitled'}</div>
-          <Icon className={starIconClassName} path={starIcon} onClick={this.onStarClick} />
+          {isTrashed ? null : <Icon className={starIconClassName} path={starIcon} onClick={this.onStarClick} />}
         </div>
 
         <div className="note-item__updated-at">{formatUpdatedAt(updatedAt)}</div>

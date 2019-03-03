@@ -119,7 +119,9 @@ class NoteEditor extends Component {
 
     if (!note) return <div />;
 
-    const { value, title, isStarred } = note;
+    const {
+      value, title, isStarred, isTrashed,
+    } = note;
 
     return (
       <div className="details">
@@ -129,9 +131,10 @@ class NoteEditor extends Component {
           onInputChange={this.onInputChange}
           title={title}
           isStarred={isStarred}
+          isTrashed={isTrashed}
         />
 
-        <ReactQuill className={this.className} value={value} onChange={this.onChange} />
+        <ReactQuill className={this.className} value={value} onChange={this.onChange} readOnly={isTrashed} />
       </div>
     );
   }

@@ -10,22 +10,50 @@ import {
 } from '@mdi/js';
 
 const TitleBar = ({
-  onStarClick, onTrashClick, onInputChange, title, isStarred,
+  onStarClick, onTrashClick, onInputChange, title, isStarred, isTrashed,
 }) => {
   const starIcon = isStarred ? star : starOutline;
   const starIconClassName = `details__icon details__icon__star-icon${
     isStarred ? ' details__icon__star-icon--starred' : ''
   }`;
 
+  const infoGroup = isTrashed ? (
+    <>
+      <button
+        type="button"
+        className="details__button details__button--restore"
+        onClick={() => console.log('Restore note')}
+      >
+        {'Restore note'}
+      </button>
+      <button
+        type="button"
+        className="details__button details__button--delete"
+        onClick={() => console.log('Delete note')}
+      >
+        {'Delete note'}
+      </button>
+    </>
+  ) : (
+    <>
+      <Icon className={starIconClassName} onClick={onStarClick} path={starIcon} />
+      <Icon className="details__icon" onClick={onTrashClick} path={trash} />
+      <Icon className="details__icon" path={info} />
+    </>
+  );
+
   return (
     <div className="detailt__top-bar">
-      <input type="text" className="details__title" placeholder="Untitled" value={title} onChange={onInputChange} />
+      <input
+        type="text"
+        className="details__title"
+        placeholder="Untitled"
+        value={title}
+        onChange={onInputChange}
+        disabled={isTrashed}
+      />
 
-      <div className="details__icons-group">
-        <Icon className={starIconClassName} onClick={onStarClick} path={starIcon} />
-        <Icon className="details__icon" onClick={onTrashClick} path={trash} />
-        <Icon className="details__icon" path={info} />
-      </div>
+      <div className="details__info-group">{infoGroup}</div>
     </div>
   );
 };
@@ -38,4 +66,5 @@ TitleBar.propTypes = {
   onInputChange: func.isRequired,
   title: string.isRequired,
   isStarred: bool.isRequired,
+  isTrashed: bool.isRequired,
 };
