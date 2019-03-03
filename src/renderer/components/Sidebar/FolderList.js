@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import React, { Component } from 'react';
 import { func, instanceOf } from 'prop-types';
 import { connect } from 'react-redux';
@@ -6,21 +7,29 @@ import { withRouter } from 'react-router-dom';
 import Icon from '@mdi/react';
 import { mdiChevronRight as chevron, mdiPlus as plus } from '@mdi/js';
 
+import context from '../../../lib/context';
+import Map from '../../../lib/Map';
+
 import FolderItem from './FolderItem';
 import { showModal } from '../../actions';
-import Map from '../../../lib/Map';
 import { locationType } from '../../types';
 
 class FolderList extends Component {
-  state = {
-    isOpen: false,
-  };
-
   static propTypes = {
     location: locationType.isRequired,
     folders: instanceOf(Map).isRequired,
     dispatch: func.isRequired,
   };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isOpen: false,
+    };
+
+    this.handleFolderContextMenu = this.handleFolderContextMenu.bind(this);
+  }
 
   onChevronClick(event) {
     event.preventDefault();
@@ -36,12 +45,39 @@ class FolderList extends Component {
     dispatch(showModal());
   }
 
+  handleFolderContextMenu(folder) {
+    const deleteFolderLabel = 'Delete folder';
+    const renameFolderLabel = 'Rename folder';
+
+    const templates = [];
+
+    templates.push(
+      {
+        label: renameFolderLabel,
+        click: () => console.log(renameFolderLabel, folder),
+      },
+      {
+        label: deleteFolderLabel,
+        click: () => console.log(deleteFolderLabel, folder),
+      },
+    );
+
+    context.popup(templates);
+  }
+
   render() {
     const { isOpen } = this.state;
     const { folders, location } = this.props;
 
     const folderList = folders && folders.size
-      ? folders.map(folder => <FolderItem key={folder.id} folder={folder} location={location} />)
+      ? folders.map(folder => (
+        <FolderItem
+          key={folder.id}
+          folder={folder}
+          location={location}
+          handleFolderContextMenu={this.handleFolderContextMenu}
+        />
+      ))
       : null;
     const className = `sidebar__folder-list ${isOpen ? 'sidebar__folder-list--is-open' : ''}`;
 
