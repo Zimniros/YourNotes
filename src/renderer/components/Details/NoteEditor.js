@@ -96,6 +96,16 @@ class NoteEditor extends Component {
     });
   };
 
+  handleRestore= () => {
+    const { dispatch, note } = this.props;
+
+    const newNote = Object.assign({}, note, { isTrashed: false });
+
+    updateNoteApi(newNote)
+      .then(data => dispatch(updateNote(data)))
+      .catch(error => console.log('Error in handleRestore() in NoteItem component', error));
+  }
+
   saveNote() {
     clearTimeout(this.delayTimer);
     this.delayTimer = setTimeout(() => {
@@ -129,6 +139,7 @@ class NoteEditor extends Component {
           onStarClick={this.onStarClick}
           onTrashClick={this.onTrashClick}
           onInputChange={this.onInputChange}
+          handleRestore={this.handleRestore}
           title={title}
           isStarred={isStarred}
           isTrashed={isTrashed}

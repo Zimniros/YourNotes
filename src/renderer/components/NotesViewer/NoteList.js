@@ -2,10 +2,14 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { func } from 'prop-types';
 
 import getSearchKey from '../lib/getSearchKey';
 import getNotes from '../lib/getNotes';
 import { notesDataType, locationType, historyType } from '../../types';
+
+import { updateNote } from '../../actions';
+import updateNoteApi from '../../../lib/updateNote';
 
 import context from '../../../lib/context';
 
@@ -16,6 +20,7 @@ class NoteList extends Component {
     notesData: notesDataType.isRequired,
     location: locationType.isRequired,
     history: historyType.isRequired,
+    dispatch: func.isRequired,
   };
 
   notes = [];
@@ -23,6 +28,9 @@ class NoteList extends Component {
   constructor() {
     super();
 
+    this.handleStarClick = this.handleStarClick.bind(this);
+    this.handleRestore = this.handleRestore.bind(this);
+    this.handleTrash = this.handleTrash.bind(this);
     this.handleNoteClick = this.handleNoteClick.bind(this);
     this.handleNoteContextMenu = this.handleNoteContextMenu.bind(this);
   }
@@ -41,11 +49,14 @@ class NoteList extends Component {
     }
   }
 
+  // TODO: if locationKey is not in this.notes
+  // TODO: no notes
   componentDidUpdate(prevProps) {
     const { location, history } = this.props;
     const { pathname } = location;
-    const locationKey = getSearchKey(prevProps.location);
-    const noteWithLocationKey = this.notes.find(el => el.key === locationKey);
+    const locationKey = getSearchKey(location);
+    const prevLocationKey = getSearchKey(prevProps.location);
+    const noteWithLocationKey = this.notes.find(el => el.key === prevLocationKey);
     const note = this.notes[0];
 
     if (prevProps.location.pathname !== pathname) {
@@ -59,7 +70,7 @@ class NoteList extends Component {
     }
   }
 
-  handleNoteClick(event, noteKey) {
+  handleNoteClick(noteKey) {
     const { location, history } = this.props;
     const searchKey = getSearchKey(location);
     const { pathname } = location;
@@ -72,13 +83,14 @@ class NoteList extends Component {
     }
   }
 
-  handleNoteContextMenu(event, noteKey) {
+  handleNoteContextMenu(note) {
     const { location } = this.props;
     const searchKey = getSearchKey(location);
     const { pathname } = location;
+    const { key } = note;
 
-    if (searchKey !== noteKey) {
-      this.handleNoteClick(event, noteKey);
+    if (searchKey !== key) {
+      this.handleNoteClick(key);
     }
 
     const deleteNoteLabel = 'Delete Note';
@@ -91,7 +103,7 @@ class NoteList extends Component {
       templates.push(
         {
           label: restoreNoteLabel,
-          click: () => console.log(restoreNoteLabel),
+          click: () => this.handleRestore(note),
         },
         {
           label: deleteNoteLabel,
@@ -101,11 +113,41 @@ class NoteList extends Component {
     } else {
       templates.push({
         label: moveToTrashLabel,
-        click: () => console.log(moveToTrashLabel),
+        click: () => this.handleTrash(note),
       });
     }
 
     context.popup(templates);
+  }
+
+  handleStarClick(note) {
+    const { dispatch } = this.props;
+
+    const newNote = Object.assign({}, note, { isStarred: !note.isStarred });
+
+    updateNoteApi(newNote)
+      .then(data => dispatch(updateNote(data)))
+      .catch(error => console.log('Error in handleStarClick() in NoteItem component', error));
+  }
+
+  handleTrash(note) {
+    const { dispatch } = this.props;
+
+    const newNote = Object.assign({}, note, { isStarred: false, isTrashed: true });
+
+    updateNoteApi(newNote)
+      .then(data => dispatch(updateNote(data)))
+      .catch(error => console.log('Error in handleTrash() in NoteItem component', error));
+  }
+
+  handleRestore(note) {
+    const { dispatch } = this.props;
+
+    const newNote = Object.assign({}, note, { isTrashed: false });
+
+    updateNoteApi(newNote)
+      .then(data => dispatch(updateNote(data)))
+      .catch(error => console.log('Error in handleRestore() in NoteItem component', error));
   }
 
   render() {
@@ -123,6 +165,7 @@ class NoteList extends Component {
             key={note.key}
             isActive={isActive}
             note={note}
+            handleStarClick={this.handleStarClick}
             handleNoteClick={this.handleNoteClick}
             handleNoteContextMenu={this.handleNoteContextMenu}
           />

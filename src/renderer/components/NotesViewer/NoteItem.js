@@ -10,28 +10,14 @@ import { mdiStarOutline as starOutline, mdiStar as star } from '@mdi/js';
 
 import { noteType } from '../../types';
 import { formatUpdatedAt } from '../lib/timeHelpers';
-import { updateNote } from '../../actions';
-import updateNoteApi from '../../../lib/updateNote';
 
 class NoteItem extends Component {
   static propTypes = {
     isActive: bool.isRequired,
     note: noteType.isRequired,
-    dispatch: func.isRequired,
+    handleStarClick: func.isRequired,
     handleNoteClick: func.isRequired,
     handleNoteContextMenu: func.isRequired,
-  };
-
-  onStarClick = (event) => {
-    event.preventDefault();
-
-    const { dispatch, note } = this.props;
-
-    const newNote = Object.assign({}, note, { isStarred: !note.isStarred });
-
-    updateNoteApi(newNote)
-      .then(data => dispatch(updateNote(data)))
-      .catch(error => console.log('Error in onStarClick() in NoteItem component', error));
   };
 
   htmlToText = (html) => {
@@ -41,7 +27,7 @@ class NoteItem extends Component {
 
   render() {
     const {
-      note, isActive, handleNoteClick, handleNoteContextMenu,
+      note, isActive, handleStarClick, handleNoteClick, handleNoteContextMenu,
     } = this.props;
     const {
       key, value, title, updatedAt, isStarred, isTrashed,
@@ -59,12 +45,14 @@ class NoteItem extends Component {
     return (
       <div
         className={noteClassName}
-        onClick={event => handleNoteClick(event, key)}
-        onContextMenu={event => handleNoteContextMenu(event, key)}
+        onClick={() => handleNoteClick(key)}
+        onContextMenu={() => handleNoteContextMenu(note)}
       >
         <div className="note-item__row">
           <div className="note-item__title">{title || 'Untitled'}</div>
-          {isTrashed ? null : <Icon className={starIconClassName} path={starIcon} onClick={this.onStarClick} />}
+          {isTrashed ? null : (
+            <Icon className={starIconClassName} path={starIcon} onClick={() => handleStarClick(note)} />
+          )}
         </div>
 
         <div className="note-item__updated-at">{formatUpdatedAt(updatedAt)}</div>

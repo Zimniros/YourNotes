@@ -42,11 +42,15 @@ export default (state = initialState, action) => {
         }
       }
 
-      if (isEmpty(oldNote) || note.isTrashed) {
-        newState.trashedNotes.add(note.key);
+      if (isEmpty(oldNote) || oldNote.isTrashed !== note.isTrashed) {
+        if (note.isTrashed) {
+          newState.trashedNotes.add(note.key);
 
-        if (note.isStarred) {
-          newState.starredNotes.delete(note.key);
+          if (note.isStarred) {
+            newState.starredNotes.delete(note.key);
+          }
+        } else {
+          newState.trashedNotes.delete(note.key);
         }
       }
 

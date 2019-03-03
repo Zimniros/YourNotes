@@ -10,7 +10,7 @@ import {
 } from '@mdi/js';
 
 const TitleBar = ({
-  onStarClick, onTrashClick, onInputChange, title, isStarred, isTrashed,
+  onStarClick, onTrashClick, onInputChange, handleRestore, title, isStarred, isTrashed,
 }) => {
   const starIcon = isStarred ? star : starOutline;
   const starIconClassName = `details__icon details__icon__star-icon${
@@ -19,11 +19,7 @@ const TitleBar = ({
 
   const infoGroup = isTrashed ? (
     <>
-      <button
-        type="button"
-        className="details__button details__button--restore"
-        onClick={() => console.log('Restore note')}
-      >
+      <button type="button" className="details__button details__button--restore" onClick={handleRestore}>
         {'Restore note'}
       </button>
       <button
@@ -64,6 +60,7 @@ TitleBar.propTypes = {
   onStarClick: func.isRequired,
   onTrashClick: func.isRequired,
   onInputChange: func.isRequired,
+  handleRestore: func.isRequired,
   title: string.isRequired,
   isStarred: bool.isRequired,
   isTrashed: bool.isRequired,
