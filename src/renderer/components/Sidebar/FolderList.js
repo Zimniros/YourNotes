@@ -59,17 +59,17 @@ class FolderList extends Component {
       },
       {
         label: deleteFolderLabel,
-        click: this.handleDeleteFolder,
+        click: () => this.handleDeleteFolder(folder),
       },
     );
 
     context.popup(templates);
   }
 
-  handleDeleteFolder() {
+  handleDeleteFolder(folder) {
     const { dispatch } = this.props;
 
-    dispatch(showDeleteFolderConfirmationModal());
+    dispatch(showDeleteFolderConfirmationModal(folder));
   }
 
   render() {

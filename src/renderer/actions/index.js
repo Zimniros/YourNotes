@@ -3,10 +3,18 @@ export const showAddFolderModal = () => ({
   modalType: 'ADD_FOLDER',
 });
 
-export const showDeleteFolderConfirmationModal = () => ({
+export const showDeleteFolderConfirmationModal = folder => ({
   type: 'SHOW_MODAL',
   modalType: 'DELETE_FOLDER_CONFIRMATION',
+  modalProps: { folder },
 });
+
+export const showDeleteNoteConfirmationModal = note => ({
+  type: 'SHOW_MODAL',
+  modalType: 'DELETE_NOTE_CONFIRMATION',
+  modalProps: { note },
+});
+
 export const closeModal = () => ({
   type: 'CLOSE_MODAL',
 });

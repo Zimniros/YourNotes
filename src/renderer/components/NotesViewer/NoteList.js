@@ -8,7 +8,7 @@ import getSearchKey from '../lib/getSearchKey';
 import getNotes from '../lib/getNotes';
 import { notesDataType, locationType, historyType } from '../../types';
 
-import { updateNote } from '../../actions';
+import { updateNote, showDeleteNoteConfirmationModal } from '../../actions';
 import updateNoteApi from '../../../lib/updateNote';
 
 import context from '../../../lib/context';
@@ -28,6 +28,7 @@ class NoteList extends Component {
   constructor() {
     super();
 
+    this.handleDeleteNote = this.handleDeleteNote.bind(this);
     this.handleStarClick = this.handleStarClick.bind(this);
     this.handleRestore = this.handleRestore.bind(this);
     this.handleTrash = this.handleTrash.bind(this);
@@ -70,6 +71,14 @@ class NoteList extends Component {
     }
   }
 
+  handleDeleteNote(note) {
+    const { dispatch } = this.props;
+
+    console.log('note', note);
+
+    dispatch(showDeleteNoteConfirmationModal(note));
+  }
+
   handleNoteClick(noteKey) {
     const { location, history } = this.props;
     const searchKey = getSearchKey(location);
@@ -107,7 +116,7 @@ class NoteList extends Component {
         },
         {
           label: deleteNoteLabel,
-          click: () => console.log(deleteNoteLabel),
+          click: () => this.handleDeleteNote(note),
         },
       );
     } else {

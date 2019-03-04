@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import React from 'react';
 import { string, func, bool } from 'prop-types';
 
@@ -10,7 +11,14 @@ import {
 } from '@mdi/js';
 
 const TitleBar = ({
-  onStarClick, onTrashClick, onInputChange, handleRestore, title, isStarred, isTrashed,
+  onStarClick,
+  onTrashClick,
+  onInputChange,
+  handleRestore,
+  handleDelete,
+  title,
+  isStarred,
+  isTrashed,
 }) => {
   const starIcon = isStarred ? star : starOutline;
   const starIconClassName = `details__icon details__icon__star-icon${
@@ -20,14 +28,10 @@ const TitleBar = ({
   const infoGroup = isTrashed ? (
     <>
       <button type="button" className="details__button details__button--restore" onClick={handleRestore}>
-        {'Restore note'}
+        Restore note
       </button>
-      <button
-        type="button"
-        className="details__button details__button--delete"
-        onClick={() => console.log('Delete note')}
-      >
-        {'Delete note'}
+      <button type="button" className="details__button details__button--delete" onClick={handleDelete}>
+        Delete note
       </button>
     </>
   ) : (
@@ -61,6 +65,7 @@ TitleBar.propTypes = {
   onTrashClick: func.isRequired,
   onInputChange: func.isRequired,
   handleRestore: func.isRequired,
+  handleDelete: func.isRequired,
   title: string.isRequired,
   isStarred: bool.isRequired,
   isTrashed: bool.isRequired,

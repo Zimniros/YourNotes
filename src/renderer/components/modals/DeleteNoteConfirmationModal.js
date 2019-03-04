@@ -6,13 +6,13 @@ import Modal from 'react-modal';
 import { func } from 'prop-types';
 import { connect } from 'react-redux';
 
-import { folderType } from '../../types';
+import { noteType } from '../../types';
 import { closeModal } from '../../actions';
 
-class DeleteFolderConfirmationModal extends Component {
+class DeleteNoteConfirmationModal extends Component {
   static propTypes = {
     dispatch: func.isRequired,
-    folder: folderType.isRequired,
+    note: noteType.isRequired,
   };
 
   constructor() {
@@ -26,9 +26,9 @@ class DeleteFolderConfirmationModal extends Component {
   onSubmit(event) {
     event.preventDefault();
 
-    const { dispatch, folder } = this.props;
+    const { dispatch, note } = this.props;
 
-    console.log('onSubmit | folder', folder);
+    console.log('onSubmit | note', note);
 
     // addFolderAPI(this.state.folderName)
     //   .then((folder) => {
@@ -45,10 +45,7 @@ class DeleteFolderConfirmationModal extends Component {
   }
 
   render() {
-    const { folder } = this.props;
     const { error } = this.state;
-
-    const { name } = folder;
 
     const errorMessage = error ? <span className="add-folder-modal__error">{error}</span> : null;
 
@@ -61,19 +58,16 @@ class DeleteFolderConfirmationModal extends Component {
         ariaHideApp={false}
       >
         <div className="modal__top-row">
-          <h2 className="modal__header">Delete Folder</h2>
+          <h2 className="modal__header">Delete Note</h2>
           <div className="modal__close" onClick={() => this.onClose()} />
         </div>
 
-        <p className="modal__text-content">
-          Are you sure you want to delete <span className="modal__text-content--bold">{name}</span> folder? All of the
-          notes in the folder will be moved to the Trash.
-        </p>
+        <p className="modal__text-content">Are you sure you want to delete this note?</p>
 
         <form className="modal__form" onSubmit={event => this.onSubmit(event)}>
           <div className="modal__bottom-row">
             <button className="btn btn--danger " type="submit">
-              Delete Folder
+              Delete Note
             </button>
             <button className="btn btn--cancel" type="button" onClick={event => this.onClose(event)}>
               Cancel
@@ -85,4 +79,4 @@ class DeleteFolderConfirmationModal extends Component {
   }
 }
 
-export default connect(null)(DeleteFolderConfirmationModal);
+export default connect(null)(DeleteNoteConfirmationModal);

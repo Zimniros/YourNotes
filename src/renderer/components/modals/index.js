@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 
 import AddFolderModal from './AddFolderModal';
 import DeleteFolderConfirmationModal from './DeleteFolderConfirmationModal';
+import ShowDeleteNoteConfirmationModal from './DeleteNoteConfirmationModal';
 
 const MODAL_COMPONENTS = {
   ADD_FOLDER: AddFolderModal,
   DELETE_FOLDER_CONFIRMATION: DeleteFolderConfirmationModal,
+  DELETE_NOTE_CONFIRMATION: ShowDeleteNoteConfirmationModal,
 };
 
 const ModalRoot = ({ modalType, modalProps }) => {

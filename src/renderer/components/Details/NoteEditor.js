@@ -12,7 +12,7 @@ import 'react-quill/dist/quill.snow.css';
 
 import TitleBar from './TitleBar';
 
-import { updateNote } from '../../actions';
+import { updateNote, showDeleteNoteConfirmationModal } from '../../actions';
 import updateNoteApi from '../../../lib/updateNote';
 
 class NoteEditor extends Component {
@@ -106,6 +106,11 @@ class NoteEditor extends Component {
       .catch(error => console.log('Error in handleRestore() in NoteItem component', error));
   }
 
+  handleDelete = () => {
+    const { dispatch, note } = this.props;
+    dispatch(showDeleteNoteConfirmationModal(note));
+  }
+
   saveNote() {
     clearTimeout(this.delayTimer);
     this.delayTimer = setTimeout(() => {
@@ -140,6 +145,7 @@ class NoteEditor extends Component {
           onTrashClick={this.onTrashClick}
           onInputChange={this.onInputChange}
           handleRestore={this.handleRestore}
+          handleDelete={this.handleDelete}
           title={title}
           isStarred={isStarred}
           isTrashed={isTrashed}
