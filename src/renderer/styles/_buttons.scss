@@ -1,11 +1,13 @@
 .btn {
+  position: relative;
   padding: $small-space $space;
-  border: 1px solid $dark-grey;
-  border-radius: 0.2rem;
+  border: none;
+  border-radius: 0.8rem;
   font-size: 1.6rem;
   cursor: pointer;
   background: $main-bg-color;
   color: $black;
+  transition: all 0.2s ease;
 
   &:hover {
     background: darken($main-bg-color, 5%);
@@ -26,5 +28,50 @@
 
   &:active {
     background: darken($brand-color, 10%);
+  }
+}
+
+.btn--cancel {
+  background: transparent;
+  color: $dark-grey;
+
+  &::before {
+    content: "";
+    opacity: 0;
+    position: absolute;
+    width: 60%;
+    left: 50%;
+    bottom: $small-space / 2;
+    transform: translateX(-50%);
+    height: 2px;
+    display: block;
+    background: $black;
+
+    transition: all 0.2s ease;
+  }
+
+  &:hover,
+  &:active {
+    background: transparent;
+    color: $black;
+  }
+
+  &:hover::before,
+  &:active::before {
+    opacity: 1;
+  }
+}
+
+.btn--danger {
+  background: $red;
+  color: $main-bg-color;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: lighten($red, 7%);
+  }
+
+  &:active {
+    background: lighten($red, 15%);
   }
 }

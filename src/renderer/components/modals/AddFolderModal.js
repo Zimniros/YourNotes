@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/label-has-for */
@@ -43,7 +42,7 @@ class AddFolderModal extends Component {
     const { dispatch } = this.props;
 
     this.setState({ folderName: folderName.trim() }, () => {
-      addFolderAPI(this.state.folderName)
+      addFolderAPI(folderName)
         .then((folder) => {
           dispatch(addFolder(folder));
           this.onClose(event);
@@ -61,27 +60,24 @@ class AddFolderModal extends Component {
   render() {
     const { folderName, error } = this.state;
 
-    const errorMessage = error ? <span className="add-folder-modal__error">{error}</span> : null;
-    const inputClassName = error ? 'add-folder-modal__input add-folder-modal__input--error' : 'add-folder-modal__input';
+    const errorMessage = error ? <span className="modal__error">{error}</span> : null;
+    const inputClassName = error ? 'modal__input modal__input--error' : 'modal__input';
 
     return (
       <Modal
         isOpen
         onAfterOpen={() => this.onOpen()}
         onRequestClose={() => this.onClose()}
-        className="add-folder-modal"
-        overlayClassName="add-folder-modal__overlay"
+        className="modal"
+        overlayClassName="modal__overlay"
         ariaHideApp={false}
       >
-        <div className="add-folder-modal__top-row">
-          <h2 className="add-folder-modal__header">Add new folder</h2>
-          <div className="add-folder-modal__close" onClick={() => this.onClose()} />
+        <div className="modal__top-row">
+          <h2 className="modal__header">Add new folder</h2>
+          <div className="modal__close" onClick={() => this.onClose()} />
         </div>
-        <form className="add-folder-modal__form" onSubmit={event => this.onSubmit(event)}>
-          <div className="add-folder-modal__group">
-            <label className="add-folder-modal__label" htmlFor="name-input">
-              Folder name
-            </label>
+        <form className="modal__form" onSubmit={event => this.onSubmit(event)}>
+          <div className="modal__group">
             <input
               className={inputClassName}
               onChange={event => this.onInputChange(event)}
@@ -89,16 +85,21 @@ class AddFolderModal extends Component {
               type="text"
               id="name-input"
               ref={this.inputRef}
+              placeholder="New Folder"
               required
             />
+
+            <label className="modal__label" htmlFor="name-input">
+              Folder name
+            </label>
             {errorMessage}
           </div>
 
-          <div className="add-folder-modal__bottom-row">
+          <div className="modal__bottom-row">
             <button className="btn btn--primary " type="submit">
               Confirm
             </button>
-            <button className="btn" type="button" onClick={event => this.onClose(event)}>
+            <button className="btn btn--cancel" type="button" onClick={event => this.onClose(event)}>
               Cancel
             </button>
           </div>

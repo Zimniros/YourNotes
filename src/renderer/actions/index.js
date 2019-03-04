@@ -3,6 +3,10 @@ export const showAddFolderModal = () => ({
   modalType: 'ADD_FOLDER',
 });
 
+export const showDeleteFolderConfirmationModal = () => ({
+  type: 'SHOW_MODAL',
+  modalType: 'DELETE_FOLDER_CONFIRMATION',
+});
 export const closeModal = () => ({
   type: 'CLOSE_MODAL',
 });

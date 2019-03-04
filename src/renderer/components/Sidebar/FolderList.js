@@ -11,7 +11,7 @@ import context from '../../../lib/context';
 import Map from '../../../lib/Map';
 
 import FolderItem from './FolderItem';
-import { showAddFolderModal } from '../../actions';
+import { showAddFolderModal, showDeleteFolderConfirmationModal } from '../../actions';
 import { locationType } from '../../types';
 
 class FolderList extends Component {
@@ -28,6 +28,7 @@ class FolderList extends Component {
       isOpen: false,
     };
 
+    this.handleDeleteFolder = this.handleDeleteFolder.bind(this);
     this.handleFolderContextMenu = this.handleFolderContextMenu.bind(this);
   }
 
@@ -58,11 +59,17 @@ class FolderList extends Component {
       },
       {
         label: deleteFolderLabel,
-        click: () => console.log(deleteFolderLabel, folder),
+        click: this.handleDeleteFolder,
       },
     );
 
     context.popup(templates);
+  }
+
+  handleDeleteFolder() {
+    const { dispatch } = this.props;
+
+    dispatch(showDeleteFolderConfirmationModal());
   }
 
   render() {
