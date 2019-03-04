@@ -7,7 +7,9 @@ import { func } from 'prop-types';
 import { connect } from 'react-redux';
 
 import { noteType } from '../../types';
-import { closeModal } from '../../actions';
+import { deleteNote, closeModal } from '../../actions';
+
+import DeleteNoteApi from '../../../lib/deleteNote';
 
 class DeleteNoteConfirmationModal extends Component {
   static propTypes = {
@@ -27,15 +29,14 @@ class DeleteNoteConfirmationModal extends Component {
     event.preventDefault();
 
     const { dispatch, note } = this.props;
+    const { key } = note;
 
-    console.log('onSubmit | note', note);
-
-    // addFolderAPI(this.state.folderName)
-    //   .then((folder) => {
-    //     dispatch(addFolder(folder));
-    //     this.onClose(event);
-    //   })
-    //   .catch(error => this.setState({ error: error.message }));
+    DeleteNoteApi(key)
+      .then((noteKey) => {
+        dispatch(deleteNote(noteKey));
+        this.onClose(event);
+      })
+      .catch(error => this.setState({ error: error.message }));
   }
 
   onClose() {
@@ -47,7 +48,7 @@ class DeleteNoteConfirmationModal extends Component {
   render() {
     const { error } = this.state;
 
-    const errorMessage = error ? <span className="add-folder-modal__error">{error}</span> : null;
+    const errorMessage = error ? <span className="modal__error">{error}</span> : null;
 
     return (
       <Modal
@@ -61,6 +62,8 @@ class DeleteNoteConfirmationModal extends Component {
           <h2 className="modal__header">Delete Note</h2>
           <div className="modal__close" onClick={() => this.onClose()} />
         </div>
+
+        {errorMessage}
 
         <p className="modal__text-content">Are you sure you want to delete this note?</p>
 

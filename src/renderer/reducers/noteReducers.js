@@ -57,6 +57,28 @@ export default (state = initialState, action) => {
       return newState;
     }
 
+    case 'DELETE_NOTE': {
+      const { key } = action;
+      const note = state.allNotes.get(key);
+
+      const allNotes = new Map(state.allNotes);
+      const starredNotes = new Set(state.starredNotes);
+      const trashedNotes = new Set(state.trashedNotes);
+      const newState = Object.assign({}, { allNotes, starredNotes, trashedNotes });
+
+      newState.allNotes.delete(key);
+
+      if (note.isStarred) {
+        newState.starredNotes.delete(key);
+      }
+
+      if (note.isTrashed) {
+        newState.trashedNotes.delete(key);
+      }
+
+      return newState;
+    }
+
     default:
       return state;
   }

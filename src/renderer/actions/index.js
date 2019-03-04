@@ -33,3 +33,8 @@ export const updateNote = note => ({
   type: 'UPDATE_NOTE',
   note,
 });
+
+export const deleteNote = key => ({
+  type: 'DELETE_NOTE',
+  key,
+});

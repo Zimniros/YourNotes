@@ -19,6 +19,10 @@ class ExtendedMap {
     return this._map.set(...args);
   }
 
+  delete(...args) {
+    return this._map.delete(...args);
+  }
+
   forEach(...args) {
     return this._map.forEach(...args);
   }
