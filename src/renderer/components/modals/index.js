@@ -2,11 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import AddFolderModal from './AddFolderModal';
+import RenameFolderModal from './RenameFolderModal';
 import DeleteFolderConfirmationModal from './DeleteFolderConfirmationModal';
 import ShowDeleteNoteConfirmationModal from './DeleteNoteConfirmationModal';
 
 const MODAL_COMPONENTS = {
   ADD_FOLDER: AddFolderModal,
+  RENAME_FOLDER: RenameFolderModal,
   DELETE_FOLDER_CONFIRMATION: DeleteFolderConfirmationModal,
   DELETE_NOTE_CONFIRMATION: ShowDeleteNoteConfirmationModal,
 };

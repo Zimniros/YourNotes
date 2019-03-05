@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable class-methods-use-this */
 import React, { Component } from 'react';
 import { func, instanceOf } from 'prop-types';
@@ -12,7 +14,7 @@ import Map from '../../../lib/Map';
 
 import FolderItem from './FolderItem';
 import { folderPathnameRegex } from '../lib/consts';
-import { showAddFolderModal, showDeleteFolderConfirmationModal } from '../../actions';
+import { showAddFolderModal, showRenameFolderModal, showDeleteFolderConfirmationModal } from '../../actions';
 import { locationType, historyType } from '../../types';
 
 class FolderList extends Component {
@@ -31,6 +33,7 @@ class FolderList extends Component {
     };
 
     this.handleDeleteFolder = this.handleDeleteFolder.bind(this);
+    this.handleRenameFolder = this.handleRenameFolder.bind(this);
     this.handleFolderContextMenu = this.handleFolderContextMenu.bind(this);
   }
 
@@ -47,7 +50,7 @@ class FolderList extends Component {
     }
   }
 
-  onChevronClick(event) {
+  onTitleClick(event) {
     event.preventDefault();
     const { isOpen } = this.state;
 
@@ -56,6 +59,8 @@ class FolderList extends Component {
 
   onNewClick(event) {
     event.preventDefault();
+    event.stopPropagation();
+
     const { dispatch } = this.props;
 
     dispatch(showAddFolderModal());
@@ -70,7 +75,7 @@ class FolderList extends Component {
     templates.push(
       {
         label: renameFolderLabel,
-        click: () => console.log(renameFolderLabel, folder),
+        click: () => this.handleRenameFolder(folder),
       },
       {
         label: deleteFolderLabel,
@@ -85,6 +90,12 @@ class FolderList extends Component {
     const { dispatch } = this.props;
 
     dispatch(showDeleteFolderConfirmationModal(folder));
+  }
+
+  handleRenameFolder(folder) {
+    const { dispatch } = this.props;
+
+    dispatch(showRenameFolderModal(folder));
   }
 
   render() {
@@ -105,12 +116,8 @@ class FolderList extends Component {
 
     return (
       <div className={className}>
-        <div className="folder-list__title">
-          <Icon
-            onClick={event => this.onChevronClick(event)}
-            className="folder-list__icon folder-list__icon--chevron"
-            path={chevron}
-          />
+        <div className="folder-list__title" onClick={event => this.onTitleClick(event)}>
+          <Icon className="folder-list__icon folder-list__icon--chevron" path={chevron} />
           <span className="folder-list__text">Folders</span>
           <Icon
             onClick={event => this.onNewClick(event)}
