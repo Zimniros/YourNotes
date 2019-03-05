@@ -9,7 +9,9 @@ import { func } from 'prop-types';
 import { connect } from 'react-redux';
 
 import { folderType } from '../../types';
-import { closeModal } from '../../actions';
+import { closeModal, updateFolder } from '../../actions';
+
+import UpdateFolderApi from '../../../lib/updateFolder';
 
 class RenameFolderModal extends Component {
   static propTypes = {
@@ -46,20 +48,17 @@ class RenameFolderModal extends Component {
   onSubmit(event) {
     event.preventDefault();
 
-    const { folderName } = this.state;
+    const { folderName: name } = this.state;
     const { dispatch, folder } = this.props;
 
-    console.log('Folder', folder);
-    console.log('folderName', folderName);
+    const newFolder = Object.assign({}, folder, { name });
 
-    // this.setState({ folderName: folderName.trim() }, () => {
-    //   addFolderAPI(folderName)
-    //     .then((folder) => {
-    //       dispatch(addFolder(folder));
-    //       this.onClose(event);
-    //     })
-    //     .catch(error => this.setState({ error: error.message }));
-    // });
+    UpdateFolderApi(newFolder)
+      .then((data) => {
+        dispatch(updateFolder(data));
+        this.onClose();
+      })
+      .catch(error => this.setState({ error: error.message }));
   }
 
   onClose() {

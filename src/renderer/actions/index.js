@@ -30,6 +30,11 @@ export const addFolder = folder => ({
   folder,
 });
 
+export const updateFolder = folder => ({
+  type: 'UPDATE_FOLDER',
+  folder,
+});
+
 export const deleteFolder = folderId => ({
   type: 'DELETE_FOLDER',
   folderId,
