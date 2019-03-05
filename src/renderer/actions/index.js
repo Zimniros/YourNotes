@@ -24,6 +24,11 @@ export const addFolder = folder => ({
   folder,
 });
 
+export const deleteFolder = folderId => ({
+  type: 'DELETE_FOLDER',
+  folderId,
+});
+
 export const addNote = note => ({
   type: 'ADD_NOTE',
   note,

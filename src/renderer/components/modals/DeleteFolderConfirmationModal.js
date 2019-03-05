@@ -7,7 +7,7 @@ import { func } from 'prop-types';
 import { connect } from 'react-redux';
 
 import { folderType } from '../../types';
-import { closeModal } from '../../actions';
+import { deleteFolder, closeModal } from '../../actions';
 
 import deleteFolderApi from '../../../lib/deleteFolder';
 
@@ -33,9 +33,8 @@ class DeleteFolderConfirmationModal extends Component {
 
     deleteFolderApi(id)
       .then((folderId) => {
-        console.log('after Api call', folderId);
-        //   dispatch(addFolder(folder));
-        //   this.onClose(event);
+        dispatch(deleteFolder(folderId));
+        this.onClose();
       })
       .catch(error => this.setState({ error: error.message }));
   }
