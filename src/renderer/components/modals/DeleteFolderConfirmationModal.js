@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import { folderType } from '../../types';
 import { closeModal } from '../../actions';
 
+import deleteFolderApi from '../../../lib/deleteFolder';
+
 class DeleteFolderConfirmationModal extends Component {
   static propTypes = {
     dispatch: func.isRequired,
@@ -27,15 +29,15 @@ class DeleteFolderConfirmationModal extends Component {
     event.preventDefault();
 
     const { dispatch, folder } = this.props;
+    const { id } = folder;
 
-    console.log('onSubmit | folder', folder);
-
-    // addFolderAPI(this.state.folderName)
-    //   .then((folder) => {
-    //     dispatch(addFolder(folder));
-    //     this.onClose(event);
-    //   })
-    //   .catch(error => this.setState({ error: error.message }));
+    deleteFolderApi(id)
+      .then((folderId) => {
+        console.log('after Api call', folderId);
+        //   dispatch(addFolder(folder));
+        //   this.onClose(event);
+      })
+      .catch(error => this.setState({ error: error.message }));
   }
 
   onClose() {
