@@ -11,12 +11,14 @@ import context from '../../../lib/context';
 import Map from '../../../lib/Map';
 
 import FolderItem from './FolderItem';
+import { folderPathnameRegex } from '../lib/consts';
 import { showAddFolderModal, showDeleteFolderConfirmationModal } from '../../actions';
-import { locationType } from '../../types';
+import { locationType, historyType } from '../../types';
 
 class FolderList extends Component {
   static propTypes = {
     location: locationType.isRequired,
+    history: historyType.isRequired,
     folders: instanceOf(Map).isRequired,
     dispatch: func.isRequired,
   };
@@ -30,6 +32,19 @@ class FolderList extends Component {
 
     this.handleDeleteFolder = this.handleDeleteFolder.bind(this);
     this.handleFolderContextMenu = this.handleFolderContextMenu.bind(this);
+  }
+
+  componentDidUpdate() {
+    const { location, history, folders } = this.props;
+    const { pathname } = location;
+
+    const match = pathname.match(folderPathnameRegex);
+
+    if (match) {
+      const folder = folders.get(match[1]);
+
+      if (!folder) history.push('/home');
+    }
   }
 
   onChevronClick(event) {
