@@ -13,6 +13,15 @@
   margin-bottom: $small-space;
 }
 
+.top-bar__button {
+  color: currentColor;
+
+  &:disabled {
+    color: $red;
+    pointer-events: none;
+  }
+}
+
 .top-bar__icon {
   flex-shrink: 0;
   width: 2.5rem;

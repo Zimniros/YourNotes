@@ -24,10 +24,16 @@ class TopBar extends Component {
     selectedFolder: folderDefault,
   };
 
-  state = {
-    locationName: '',
-    folderId: '',
-  };
+  constructor() {
+    super();
+
+    this.state = {
+      locationName: '',
+      folderId: '',
+    };
+
+    this.newNoteButtonRef = React.createRef();
+  }
 
   componentDidMount() {
     this.setLocation();
@@ -43,6 +49,9 @@ class TopBar extends Component {
     const { location, history, dispatch } = this.props;
     const { folderId } = this.state;
 
+    const newNoteButton = this.newNoteButtonRef.current;
+    newNoteButton.setAttribute('disabled', 'disabled');
+
     addNoteApi(folderId)
       .then((note) => {
         dispatch(addNote(note));
@@ -51,8 +60,13 @@ class TopBar extends Component {
           pathname: location.pathname,
           search: `?key=${note.key}`,
         });
+
+        newNoteButton.removeAttribute('disabled');
       })
-      .catch(err => console.log('err', err));
+      .catch((err) => {
+        console.log('err', err);
+        newNoteButton.removeAttribute('disabled');
+      });
   }
 
   setLocation() {
@@ -81,7 +95,15 @@ class TopBar extends Component {
           <div title={locationName} className="top-bar__location-name">
             {locationName}
           </div>
-          <Icon className="top-bar__icon" path={newNote} onClick={() => this.onNewNoteClick()} />
+
+          <button
+            className="top-bar__button"
+            ref={this.newNoteButtonRef}
+            type="button"
+            onClick={() => this.onNewNoteClick()}
+          >
+            <Icon className="top-bar__icon" path={newNote} />
+          </button>
         </div>
         <SearchBar />
       </div>
