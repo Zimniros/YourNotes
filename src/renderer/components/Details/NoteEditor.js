@@ -135,7 +135,7 @@ class NoteEditor extends Component {
     if (!note) return <div />;
 
     const {
-      value, title, isStarred, isTrashed,
+      value, title, folder, isStarred, isTrashed,
     } = note;
 
     return (
@@ -147,6 +147,7 @@ class NoteEditor extends Component {
           handleRestore={this.handleRestore}
           handleDelete={this.handleDelete}
           title={title}
+          folderId={folder}
           isStarred={isStarred}
           isTrashed={isTrashed}
         />

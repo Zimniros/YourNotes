@@ -1,0 +1,26 @@
+.storage-info {
+}
+
+.storage-info__folder {
+  display: flex;
+  color: $dark-grey;
+  cursor: pointer;
+  align-items: center;
+
+  &:hover {
+    color: $black;
+  }
+}
+
+.storage-info__icon {
+  fill: currentColor;
+  flex-shrink: 0;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.storage-info__name {
+  margin-left: $small-space / 2;
+  color: inherit;
+  font-weight: 500;
+}

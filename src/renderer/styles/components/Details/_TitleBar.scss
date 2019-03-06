@@ -1,0 +1,86 @@
+.detailt__title-bar {
+  padding: $small-space 0;
+  border-bottom: 2px solid $light-grey;
+
+  align-items: center;
+}
+
+.title-bar__row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title-bar__info-group {
+  margin-left: $space;
+}
+
+.title-bar__icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  fill: currentColor;
+  cursor: pointer;
+  margin-left: $small-space;
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+
+  &:hover {
+    fill: $brand-color;
+  }
+}
+
+.title-bar__star-icon {
+  @extend .title-bar__icon;
+
+  &:hover {
+    fill: $yellow;
+  }
+
+  &--starred {
+    fill: $yellow;
+  }
+}
+
+.title-bar__button {
+  border-radius: 4px;
+  border: 1px solid $dark-grey;
+  color: $dark-grey;
+  padding: $small-space / 2;
+  margin-left: $small-space;
+  cursor: pointer;
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+
+  &--restore:hover {
+    color: $main-bg-color;
+    background: $brand-color;
+    border-color: $brand-color;
+  }
+
+  &--delete:hover {
+    color: $main-bg-color;
+    background: $red;
+    border-color: $red;
+  }
+}
+
+.title-bar__title {
+  border: none;
+  outline: none;
+  font-size: 2rem;
+  transition: 0.3s all ease-in-out;
+
+  flex: 1 1 auto;
+
+  &:disabled {
+    background: transparent;
+  }
+}
+
+.title-bar__storage-info {
+  margin-top: $small-space;
+}

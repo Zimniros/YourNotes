@@ -1,8 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { bool, func } from 'prop-types';
 
 import Icon from '@mdi/react';
@@ -51,7 +49,7 @@ const NoteItem = ({
   );
 };
 
-export default withRouter(connect(null)(NoteItem));
+export default NoteItem;
 
 NoteItem.propTypes = {
   isActive: bool.isRequired,

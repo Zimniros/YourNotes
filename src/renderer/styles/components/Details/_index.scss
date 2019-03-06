@@ -1,85 +1,11 @@
+@import "TitleBar";
+@import "StorageInfoBar";
+
 .details {
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 0 $space;
-}
-
-.detailt__top-bar {
-  padding: $small-space 0;
-  border-bottom: 2px solid $light-grey;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.details__info-group {
-  margin-left: $space;
-}
-
-.details__icon {
-  flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
-  fill: currentColor;
-  cursor: pointer;
-  margin-left: $small-space;
-
-  &:first-of-type {
-    margin-left: 0;
-  }
-
-  &:hover {
-    fill: $brand-color;
-  }
-}
-
-.details__icon__star-icon {
-  &:hover {
-    fill: $yellow;
-  }
-}
-
-.details__icon__star-icon--starred {
-  fill: $yellow;
-}
-
-.details__button {
-  border-radius: 4px;
-  border: 1px solid $dark-grey;
-  color: $dark-grey;
-  padding: $small-space / 2;
-  margin-left: $small-space;
-  cursor: pointer;
-
-  &:first-of-type {
-    margin-left: 0;
-  }
-
-  &--restore:hover {
-    color: $main-bg-color;
-    background: $brand-color;
-    border-color: $brand-color;
-  }
-
-  &--delete:hover {
-    color: $main-bg-color;
-    background: $red;
-    border-color: $red;
-  }
-}
-
-.details__title {
-  border: none;
-  outline: none;
-  font-size: 2rem;
-  transition: 0.3s all ease-in-out;
-
-  flex: 1 1 auto;
-
-  &:disabled {
-    background: transparent;
-  }
 }
 
 .details__editor {
