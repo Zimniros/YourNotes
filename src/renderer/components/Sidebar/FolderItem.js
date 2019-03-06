@@ -20,15 +20,15 @@ const FolderItem = ({
   const { pathname: currentPathname } = location;
   const isActive = currentPathname === pathnameTo;
 
-  const className = `folder-list__folder${isActive ? ' folder-list__folder--active' : ''}`;
+  const className = `shortcuts__shortcut${isActive ? ' shortcuts__shortcut--active' : ''}`;
 
   return (
     <Link to={pathnameTo} className={className} onContextMenu={() => handleFolderContextMenu(folder)}>
-      <Icon className="folder__icon" path={folderIcon} />
-      <span title={folder.name} className="folder__name">
+      <Icon className="shortcut__icon" path={folderIcon} />
+      <span title={folder.name} className="shortcut__name">
         {folder.name}
       </span>
-      <span className="folder__notes-count">{notesCount}</span>
+      <span className="shortcut__notes-count">{notesCount}</span>
     </Link>
   );
 };

@@ -6,6 +6,8 @@ import Icon from '@mdi/react';
 
 import { sidebarShortcuts } from '../lib/consts';
 import FolderList from './FolderList';
+import TagList from './TagList';
+
 import getNotes from '../lib/getNotes';
 import getNotesAmount from '../lib/getNotesAmount';
 import { notesDataType, locationType } from '../../types';
@@ -34,14 +36,7 @@ const Sidebar = ({ notesData, location }) => {
 
       <FolderList />
 
-      <div className="sidebar__tag-shortcuts">
-        <div className="tag-shortcuts__title">Tags</div>
-        <ul className="tag-shortcuts__list">
-          <li className="tag-shortcuts__item">Tag 1</li>
-          <li className="tag-shortcuts__item">Tag 2</li>
-          <li className="tag-shortcuts__item">Tag 3</li>
-        </ul>
-      </div>
+      <TagList />
     </div>
   );
 };

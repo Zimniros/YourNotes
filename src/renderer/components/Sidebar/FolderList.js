@@ -112,16 +112,16 @@ class FolderList extends Component {
         />
       ))
       : null;
-    const className = `sidebar__folder-list ${isOpen ? 'sidebar__folder-list--is-open' : ''}`;
+    const className = `sidebar__shortcuts ${isOpen ? 'sidebar__shortcuts--is-open' : ''}`;
 
     return (
       <div className={className}>
-        <div className="folder-list__title" onClick={event => this.onTitleClick(event)}>
-          <Icon className="folder-list__icon folder-list__icon--chevron" path={chevron} />
-          <span className="folder-list__text">Folders</span>
+        <div className="shortcuts__title" onClick={event => this.onTitleClick(event)}>
+          <Icon className="shortcuts__icon shortcuts__icon--chevron" path={chevron} />
+          <span className="shortcuts__text">Folders</span>
           <Icon
             onClick={event => this.onNewClick(event)}
-            className="folder-list__icon folder-list__icon--new"
+            className="shortcuts__icon shortcuts__icon--new"
             path={plus}
           />
         </div>

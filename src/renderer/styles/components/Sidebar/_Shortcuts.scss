@@ -1,0 +1,91 @@
+.sidebar__shortcuts {
+  width: 100%;
+}
+
+.shortcuts__title {
+  display: flex;
+  align-items: center;
+  padding: $small-space $small-space / 2 0 $small-space / 2;
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.shortcuts__icon {
+  height: 2.5rem;
+  width: 2.5rem;
+  fill: currentColor;
+  transition: all 0.2s;
+
+  &--chevron {
+    &:hover,
+    &:active {
+      color: $brand-color;
+    }
+  }
+
+  &--new {
+    margin-left: auto;
+
+    &:hover,
+    &:active {
+      color: $brand-color;
+    }
+  }
+}
+
+.sidebar__shortcuts--is-open .shortcuts__icon--chevron {
+  transform: rotate(90deg);
+}
+
+.shortcuts__name {
+  margin-left: $small-space / 2;
+  line-height: 1;
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shortcuts__shortcut {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: currentColor;
+  padding: $small-space / 2 1.5rem $small-space / 2 $space;
+
+  &:hover {
+    background: $sidebar-hover-color;
+  }
+
+  &--active {
+    pointer-events: initial;
+  }
+
+  &--active,
+  &:active {
+    color: $black;
+    background: $sidebar-active-color;
+  }
+}
+
+.shortcut__icon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  fill: currentColor;
+}
+
+.shortcut__name {
+  overflow: hidden;
+  flex: 0 1 auto;
+  margin-left: $small-space / 2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1.5;
+  margin-right: $small-space;
+}
+
+.shortcut__notes-count {
+  margin-left: auto;
+  line-height: 1.5;
+}
