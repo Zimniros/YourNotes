@@ -15,6 +15,11 @@ export const folderDefault = {
   name: '',
 };
 
+export const tagType = shape({
+  id: string.isRequired,
+  name: string.isRequired,
+});
+
 export const noteType = shape({
   key: string.isRequired,
   title: string.isRequired,

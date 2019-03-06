@@ -1,17 +1,23 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { Component } from 'react';
-import { func } from 'prop-types';
+import { func, instanceOf } from 'prop-types';
 import { connect } from 'react-redux';
 
 import Icon from '@mdi/react';
 import { mdiChevronRight as chevron, mdiPlus as plus } from '@mdi/js';
 
 import context from '../../../lib/context';
+import Map from '../../../lib/Map';
+
+import { showAddTagModal } from '../../actions';
+
+import TagItem from './TagItem';
 
 class TagList extends Component {
   static propTypes = {
     dispatch: func.isRequired,
+    tags: instanceOf(Map).isRequired,
   };
 
   constructor() {
@@ -20,6 +26,8 @@ class TagList extends Component {
     this.state = {
       isOpen: false,
     };
+
+    this.handleTagContextMenu = this.handleTagContextMenu.bind(this);
   }
 
   onTitleClick(event) {
@@ -34,9 +42,11 @@ class TagList extends Component {
     event.stopPropagation();
 
     const { dispatch } = this.props;
+
+    dispatch(showAddTagModal());
   }
 
-  handleFolderContextMenu(tag) {
+  handleTagContextMenu(tag) {
     const deleteTagLabel = 'Delete tag';
     const renameTagLabel = 'Rename tag';
 
@@ -66,6 +76,13 @@ class TagList extends Component {
 
   render() {
     const { isOpen } = this.state;
+    const { tags } = this.props;
+
+    console.log('tags', tags);
+
+    const tagList = tags && tags.size
+      ? tags.map(tag => <TagItem key={tag.id} tag={tag} handleFolderContextMenu={this.handleTagContextMenu} />)
+      : null;
 
     const className = `sidebar__shortcuts ${isOpen ? 'sidebar__shortcuts--is-open' : ''}`;
 
@@ -80,8 +97,13 @@ class TagList extends Component {
             path={plus}
           />
         </div>
+
+        {isOpen ? tagList : null}
       </div>
     );
   }
 }
-export default connect(null)(TagList);
+
+const mapStateToProps = state => ({ tags: state.tags });
+
+export default connect(mapStateToProps)(TagList);
