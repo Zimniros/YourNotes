@@ -5,7 +5,8 @@ const initialState = new Map();
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case 'ADD_TAG': {
+    case 'ADD_TAG':
+    case 'UPDATE_TAG': {
       const { tag } = action;
       const newState = new Map(state);
       newState.set(tag.id, tag);

@@ -20,6 +20,12 @@ export const showAddTagModal = () => ({
   modalType: 'ADD_TAG',
 });
 
+export const showRenameTagModal = tag => ({
+  type: 'SHOW_MODAL',
+  modalType: 'RENAME_TAG',
+  modalProps: { tag },
+});
+
 export const showDeleteNoteConfirmationModal = note => ({
   type: 'SHOW_MODAL',
   modalType: 'DELETE_NOTE_CONFIRMATION',
@@ -43,6 +49,11 @@ export const addTag = tag => ({
 export const updateFolder = folder => ({
   type: 'UPDATE_FOLDER',
   folder,
+});
+
+export const updateTag = tag => ({
+  type: 'UPDATE_TAG',
+  tag,
 });
 
 export const deleteFolder = folderId => ({

@@ -5,15 +5,18 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { Component } from 'react';
 import Modal from 'react-modal';
-import PropTypes from 'prop-types';
+import { func } from 'prop-types';
 import { connect } from 'react-redux';
 
-import { closeModal, addTag } from '../../actions';
-import addTagAPI from '../../../lib/addTag';
+import { tagType } from '../../types';
+import { closeModal, updateTag } from '../../actions';
 
-class AddTagModal extends Component {
+import UpdateTagApi from '../../../lib/updateTag';
+
+class RenameTagModal extends Component {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
+    dispatch: func.isRequired,
+    tag: tagType.isRequired,
   };
 
   constructor(props) {
@@ -27,6 +30,13 @@ class AddTagModal extends Component {
     this.inputRef = React.createRef();
   }
 
+  componentDidMount() {
+    const { tag } = this.props;
+    const { name } = tag;
+
+    this.setState({ tagName: name });
+  }
+
   onOpen() {
     this.inputRef.current.focus();
   }
@@ -38,17 +48,17 @@ class AddTagModal extends Component {
   onSubmit(event) {
     event.preventDefault();
 
-    const { tagName } = this.state;
-    const { dispatch } = this.props;
+    const { tagName: name } = this.state;
+    const { dispatch, tag } = this.props;
 
-    this.setState({ tagName: tagName.trim() }, () => {
-      addTagAPI(tagName)
-        .then((tag) => {
-          dispatch(addTag(tag));
-          this.onClose();
-        })
-        .catch(error => this.setState({ error: error.message }));
-    });
+    const newTag = Object.assign({}, tag, { name });
+
+    UpdateTagApi(newTag)
+      .then((data) => {
+        dispatch(updateTag(data));
+        this.onClose();
+      })
+      .catch(error => this.setState({ error: error.message }));
   }
 
   onClose() {
@@ -73,7 +83,7 @@ class AddTagModal extends Component {
         ariaHideApp={false}
       >
         <div className="modal__top-row">
-          <h2 className="modal__header">Add new tag</h2>
+          <h2 className="modal__header">Rename tag</h2>
           <div className="modal__close" onClick={() => this.onClose()} />
         </div>
         <form className="modal__form" onSubmit={event => this.onSubmit(event)}>
@@ -85,7 +95,7 @@ class AddTagModal extends Component {
               type="text"
               id="name-input"
               ref={this.inputRef}
-              placeholder="New Tag"
+              placeholder="New Tag Name"
               required
             />
 
@@ -97,7 +107,7 @@ class AddTagModal extends Component {
 
           <div className="modal__bottom-row">
             <button className="btn btn--primary " type="submit">
-              Confirm
+              Rename tag
             </button>
             <button className="btn btn--cancel" type="button" onClick={event => this.onClose(event)}>
               Cancel
@@ -109,4 +119,4 @@ class AddTagModal extends Component {
   }
 }
 
-export default connect(null)(AddTagModal);
+export default connect(null)(RenameTagModal);

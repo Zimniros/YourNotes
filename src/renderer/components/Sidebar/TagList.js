@@ -10,7 +10,7 @@ import { mdiChevronRight as chevron, mdiPlus as plus } from '@mdi/js';
 import context from '../../../lib/context';
 import Map from '../../../lib/Map';
 
-import { showAddTagModal } from '../../actions';
+import { showAddTagModal, showRenameTagModal } from '../../actions';
 
 import TagItem from './TagItem';
 
@@ -28,6 +28,7 @@ class TagList extends Component {
     };
 
     this.handleTagContextMenu = this.handleTagContextMenu.bind(this);
+    this.handleRenameTag = this.handleRenameTag.bind(this);
   }
 
   onTitleClick(event) {
@@ -54,11 +55,11 @@ class TagList extends Component {
 
     templates.push(
       {
-        label: deleteTagLabel,
+        label: renameTagLabel,
         click: () => this.handleRenameTag(tag),
       },
       {
-        label: renameTagLabel,
+        label: deleteTagLabel,
         click: () => this.handleDeleteTag(tag),
       },
     );
@@ -72,13 +73,13 @@ class TagList extends Component {
 
   handleRenameTag(tag) {
     const { dispatch } = this.props;
+
+    dispatch(showRenameTagModal(tag));
   }
 
   render() {
     const { isOpen } = this.state;
     const { tags } = this.props;
-
-    console.log('tags', tags);
 
     const tagList = tags && tags.size
       ? tags.map(tag => <TagItem key={tag.id} tag={tag} handleFolderContextMenu={this.handleTagContextMenu} />)
