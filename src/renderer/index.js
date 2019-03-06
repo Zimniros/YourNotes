@@ -16,6 +16,7 @@ import resolveStorage from '../lib/resolveStorage';
 
 const initStore = async () => {
   const storeData = {
+    tags: new Map(),
     folders: new Map(),
     notesData: {
       allNotes: new Map(),
@@ -24,10 +25,11 @@ const initStore = async () => {
     },
   };
 
-  const folders = await resolveStorage();
+  const { folders, tags } = await resolveStorage();
   const notes = await resolveNotes();
 
   folders.forEach(folder => storeData.folders.set(folder.id, folder));
+  tags.forEach(tag => storeData.tags.set(tag.id, tag));
   notes.forEach((note) => {
     storeData.notesData.allNotes.set(note.key, note);
 

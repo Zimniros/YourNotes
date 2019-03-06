@@ -19,17 +19,19 @@ function updateFolder(folder) {
     return Promise.reject(new Error('Name must be at least 1 character long.'));
   }
 
-  return resolveStorage().then((data) => {
-    if (data.some(el => el.name === name && el.id !== id)) {
+  return resolveStorage().then((storageData) => {
+    const { folders } = storageData;
+
+    if (folders.some(el => el.name === name && el.id !== id)) {
       return Promise.reject(new Error(`A folder with the name '${name}' already exists.`));
     }
 
-    const newData = cloneDeep(data);
+    const newFolderData = cloneDeep(folders);
 
-    const targetFolder = newData.find(el => el.id === id);
+    const targetFolder = newFolderData.find(el => el.id === id);
     targetFolder.name = name;
 
-    const newStorageData = Object.assign({}, { folders: newData });
+    const newStorageData = Object.assign({}, storageData, { folders: newFolderData });
 
     try {
       fs.writeFileSync(consts.JSON_PATH, JSON.stringify(newStorageData));

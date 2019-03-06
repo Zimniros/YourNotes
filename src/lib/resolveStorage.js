@@ -7,17 +7,16 @@ function resolveStorage() {
     let storageData;
 
     try {
-      const jsonData = JSON.parse(fs.readFileSync(consts.JSON_PATH));
-      storageData = jsonData.folders;
+      storageData = JSON.parse(fs.readFileSync(consts.JSON_PATH));
     } catch (err) {
       if (err.code === 'ENOENT') {
-        fs.writeFileSync(consts.JSON_PATH, JSON.stringify({ folders: [] }));
+        fs.writeFileSync(consts.JSON_PATH, JSON.stringify({ folders: [], tags: [] }));
       } else {
         console.error(err);
         return reject(err);
       }
 
-      storageData = [];
+      storageData = { folders: [], tags: [] };
     }
 
     return resolve(storageData);

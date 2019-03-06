@@ -9,7 +9,8 @@ function deleteFolder(folderId) {
     return Promise.reject(new Error('FolderId is not provided.'));
   }
 
-  return resolveStorage().then((folders) => {
+  return resolveStorage().then((storageData) => {
+    const { folders } = storageData;
     const targetFolder = folders.find(folder => folder.id === folderId);
 
     if (!targetFolder) {
@@ -18,7 +19,7 @@ function deleteFolder(folderId) {
 
     remove(folders, folder => folder.id === folderId);
 
-    const newStorageData = Object.assign({}, { folders });
+    const newStorageData = Object.assign({}, storageData, { folders });
 
     try {
       fs.writeFileSync(consts.JSON_PATH, JSON.stringify(newStorageData));
