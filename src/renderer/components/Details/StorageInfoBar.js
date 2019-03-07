@@ -2,18 +2,22 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { string, instanceOf } from 'prop-types';
+import { func, instanceOf } from 'prop-types';
 import Icon from '@mdi/react';
 import { mdiFolder as folderIcon } from '@mdi/js';
 
-import FolderSelect from './FolderSelect';
-
+import { updateNote } from '../../actions';
+import updateNoteApi from '../../../lib/updateNote';
 import Map from '../../../lib/Map';
+
+import FolderSelect from './FolderSelect';
+import { noteType } from '../../types';
 
 class StorageInfoBar extends Component {
   static propTypes = {
-    folderId: string.isRequired,
+    note: noteType.isRequired,
     folders: instanceOf(Map).isRequired,
+    dispatch: func.isRequired,
   };
 
   constructor() {
@@ -24,10 +28,10 @@ class StorageInfoBar extends Component {
     };
 
     this.onClose = this.onClose.bind(this);
-    this.getFolderParentSelector = this.getFolderParentSelector.bind(this);
+    this.onFolderItemClick = this.onFolderItemClick.bind(this);
   }
 
-  onFolderClick() {
+  onFolderSelectClick() {
     const { isFolderSelectOpen } = this.state;
     this.setState({ isFolderSelectOpen: !isFolderSelectOpen });
   }
@@ -36,24 +40,33 @@ class StorageInfoBar extends Component {
     this.setState({ isFolderSelectOpen: false });
   }
 
-  getFolderParentSelector() {
-    return this.folderInfoRef.current;
+  onFolderItemClick(newFolderId) {
+    const { note, dispatch } = this.props;
+
+    const newNote = Object.assign({}, note, { folder: newFolderId });
+
+    updateNoteApi(newNote)
+      .then(data => dispatch(updateNote(data)))
+      .catch(error => console.log('Error in onFolderItemClick() in StorageInfoBar component', error));
   }
 
   render() {
     const { isFolderSelectOpen } = this.state;
-    const { folders, folderId } = this.props;
+    const { folders, note } = this.props;
+    const { folder: folderId } = note;
 
     const folder = folders.get(folderId);
     const folderName = folder ? folder.name : 'All Notes';
 
     return (
       <div className="title-bar__storage-info storage-info">
-        <div className="storage-info__folder" onClick={() => this.onFolderClick()}>
+        <div className="storage-info__folder" onClick={() => this.onFolderSelectClick()}>
           <Icon className="storage-info__icon" path={folderIcon} />
           <span className="storage-info__name">{folderName}</span>
 
-          {isFolderSelectOpen && <FolderSelect onClose={this.onClose} folders={folders} />}
+          {isFolderSelectOpen && (
+            <FolderSelect onFolderItemClick={this.onFolderItemClick} onClose={this.onClose} folders={folders} />
+          )}
         </div>
       </div>
     );

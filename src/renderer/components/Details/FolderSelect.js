@@ -10,6 +10,7 @@ import Map from '../../../lib/Map';
 class FolderSelect extends Component {
   static propTypes = {
     onClose: func.isRequired,
+    onFolderItemClick: func.isRequired,
     folders: instanceOf(Map).isRequired,
   };
 
@@ -38,12 +39,12 @@ class FolderSelect extends Component {
   }
 
   render() {
-    const { folders } = this.props;
+    const { folders, onFolderItemClick } = this.props;
 
     const folderList = folders
       && folders.size
       && folders.map(({ id, name }) => (
-        <div key={id} className="folder-select__item">
+        <div key={id} className="folder-select__item" onClick={() => onFolderItemClick(id)}>
           <Icon className="folder-select__icon" path={folderIcon} />
           <span className="folder-select__name">{name}</span>
         </div>

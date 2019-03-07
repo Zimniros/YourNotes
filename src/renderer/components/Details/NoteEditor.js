@@ -147,7 +147,7 @@ class NoteEditor extends Component {
             isTrashed={isTrashed}
           />
 
-          <StorageInfoBar folderId={folder} />
+          <StorageInfoBar note={note} />
         </div>
 
         <ReactQuill className={this.className} value={value} onChange={this.onChange} readOnly={isTrashed} />
