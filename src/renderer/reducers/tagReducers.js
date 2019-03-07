@@ -13,6 +13,15 @@ export default (state = initialState, action) => {
       return newState;
     }
 
+    case 'DELETE_TAG': {
+      const { tagId } = action;
+      const newState = new Map(state);
+
+      newState.delete(tagId);
+
+      return newState;
+    }
+
     default:
       return state;
   }
