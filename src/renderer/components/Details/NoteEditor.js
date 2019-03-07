@@ -11,6 +11,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import TitleBar from './TitleBar';
+import StorageInfoBar from './StorageInfoBar';
 
 import { updateNote, showDeleteNoteConfirmationModal } from '../../actions';
 import updateNoteApi from '../../../lib/updateNote';
@@ -21,16 +22,11 @@ class NoteEditor extends Component {
     this.className = 'details__editor';
 
     this.state = {
-      note: null,
+      note: props.note,
     };
 
     this.delayTimer = null;
     this.isReady = false;
-  }
-
-  componentDidMount() {
-    const { note } = this.props;
-    this.setState({ note });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -96,7 +92,7 @@ class NoteEditor extends Component {
     });
   };
 
-  handleRestore= () => {
+  handleRestore = () => {
     const { dispatch, note } = this.props;
 
     const newNote = Object.assign({}, note, { isTrashed: false });
@@ -104,12 +100,12 @@ class NoteEditor extends Component {
     updateNoteApi(newNote)
       .then(data => dispatch(updateNote(data)))
       .catch(error => console.log('Error in handleRestore() in NoteItem component', error));
-  }
+  };
 
   handleDelete = () => {
     const { dispatch, note } = this.props;
     dispatch(showDeleteNoteConfirmationModal(note));
-  }
+  };
 
   saveNote() {
     clearTimeout(this.delayTimer);
@@ -132,25 +128,27 @@ class NoteEditor extends Component {
   render() {
     const { note } = this.state;
 
-    if (!note) return <div />;
-
     const {
       value, title, folder, isStarred, isTrashed,
     } = note;
 
     return (
       <div className="details">
-        <TitleBar
-          onStarClick={this.onStarClick}
-          onTrashClick={this.onTrashClick}
-          onInputChange={this.onInputChange}
-          handleRestore={this.handleRestore}
-          handleDelete={this.handleDelete}
-          title={title}
-          folderId={folder}
-          isStarred={isStarred}
-          isTrashed={isTrashed}
-        />
+        <div className="details__title-bar">
+          <TitleBar
+            onStarClick={this.onStarClick}
+            onTrashClick={this.onTrashClick}
+            onInputChange={this.onInputChange}
+            handleRestore={this.handleRestore}
+            handleDelete={this.handleDelete}
+            title={title}
+            folderId={folder}
+            isStarred={isStarred}
+            isTrashed={isTrashed}
+          />
+
+          <StorageInfoBar folderId={folder} />
+        </div>
 
         <ReactQuill className={this.className} value={value} onChange={this.onChange} readOnly={isTrashed} />
       </div>

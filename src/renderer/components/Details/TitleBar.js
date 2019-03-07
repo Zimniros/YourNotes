@@ -9,8 +9,6 @@ import {
   mdiInformationOutline as infoIcon,
 } from '@mdi/js';
 
-import StorageInfoBar from './StorageInfoBar';
-
 const TitleBar = ({
   onStarClick,
   onTrashClick,
@@ -18,7 +16,6 @@ const TitleBar = ({
   handleRestore,
   handleDelete,
   title,
-  folderId,
   isStarred,
   isTrashed,
 }) => {
@@ -43,21 +40,17 @@ const TitleBar = ({
   );
 
   return (
-    <div className="detailt__title-bar">
-      <div className="title-bar__row">
-        <input
-          type="text"
-          className="title-bar__title"
-          placeholder="Untitled"
-          value={title}
-          onChange={onInputChange}
-          disabled={isTrashed}
-        />
+    <div className="title-bar__row">
+      <input
+        type="text"
+        className="title-bar__title"
+        placeholder="Untitled"
+        value={title}
+        onChange={onInputChange}
+        disabled={isTrashed}
+      />
 
-        <div className="title-bar__info-group">{infoGroup}</div>
-      </div>
-
-      <StorageInfoBar folderId={folderId} />
+      <div className="title-bar__info-group">{infoGroup}</div>
     </div>
   );
 };
@@ -71,7 +64,6 @@ TitleBar.propTypes = {
   handleRestore: func.isRequired,
   handleDelete: func.isRequired,
   title: string.isRequired,
-  folderId: string.isRequired,
   isStarred: bool.isRequired,
   isTrashed: bool.isRequired,
 };
