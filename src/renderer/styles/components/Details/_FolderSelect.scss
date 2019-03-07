@@ -1,0 +1,46 @@
+.folder-select {
+  position: absolute;
+  z-index: 5;
+  bottom: -$small-space;
+  left: $small-space;
+  transform: translateY(100%);
+  background: $main-bg-color;
+  border: 1px solid $light-grey;
+  border-radius: 0.2rem;
+  display: flex;
+  flex-direction: column;
+  width: 20rem;
+}
+
+.folder-select__item {
+  color: $dark-grey;
+  padding: $small-space;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background: $light-grey;
+    color: $black;
+  }
+
+  &:hover .folder-select__icon {
+    fill: $brand-color;
+  }
+}
+
+.folder-select__icon {
+  fill: currentColor;
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.folder-select__name {
+  margin-left: $small-space / 2;
+  color: currentColor;
+
+  overflow: hidden;
+  flex: 0 1 auto;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

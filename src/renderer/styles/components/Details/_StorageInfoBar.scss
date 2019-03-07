@@ -3,6 +3,7 @@
 
 .storage-info__folder {
   display: flex;
+  position: relative;
   color: $dark-grey;
   cursor: pointer;
   align-items: center;
