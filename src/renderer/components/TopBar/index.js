@@ -1,35 +1,40 @@
-/* eslint-disable react/no-unused-state */
-/* eslint-disable react/no-unused-prop-types */
-/* eslint-disable react/prop-types */
-/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { instanceOf, func } from 'prop-types';
 
 import Icon from '@mdi/react';
-import { mdiFilePlus as newNote, mdiSortDescending as sort } from '@mdi/js';
+import {
+  mdiFilePlus as newNoteIcon,
+  mdiSortDescending as sortIcon,
+  mdiFolderOutline as folderIcon,
+  mdiTagOutline as tagIcon,
+} from '@mdi/js';
 
 import SearchBar from './SearchBar';
 import addNoteApi from '../../../lib/addNote';
-import { folderType, folderDefault } from '../../types';
-import { folderPathnameRegex, sidebarShortcuts } from '../lib/consts';
+import Map from '../../../lib/Map';
+
+import { folderPathnameRegex, tagPathnameRegex, sidebarShortcuts } from '../lib/consts';
 import { addNote } from '../../actions';
+import { historyType, locationType } from '../../types';
 
 class TopBar extends Component {
   static propTypes = {
-    selectedFolder: folderType,
-  };
-
-  static defaultProps = {
-    selectedFolder: folderDefault,
+    tags: instanceOf(Map).isRequired,
+    folders: instanceOf(Map).isRequired,
+    history: historyType.isRequired,
+    location: locationType.isRequired,
+    dispatch: func.isRequired,
   };
 
   constructor() {
     super();
 
     this.state = {
+      type: '',
       locationName: '',
-      folderId: '',
+      locationId: '',
     };
 
     this.newNoteButtonRef = React.createRef();
@@ -40,19 +45,22 @@ class TopBar extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.location.pathname !== this.props.location.pathname) {
+    const { location } = this.props;
+    const { pathname } = location;
+
+    if (prevProps.location.pathname !== pathname) {
       this.setLocation();
     }
   }
 
   onNewNoteClick() {
     const { location, history, dispatch } = this.props;
-    const { folderId } = this.state;
+    const { type, locationId } = this.state;
 
     const newNoteButton = this.newNoteButtonRef.current;
     newNoteButton.setAttribute('disabled', 'disabled');
 
-    addNoteApi(folderId)
+    addNoteApi(type, locationId)
       .then((note) => {
         dispatch(addNote(note));
 
@@ -70,30 +78,45 @@ class TopBar extends Component {
   }
 
   setLocation() {
-    const { location, folders } = this.props;
+    const { location, folders, tags } = this.props;
     const { pathname } = location;
 
-    const match = pathname.match(folderPathnameRegex);
+    const folderMatch = pathname.match(folderPathnameRegex);
 
-    if (match) {
-      const { name, id } = folders.get(match[1]);
+    const tagMatch = pathname.match(tagPathnameRegex);
 
-      this.setState({ locationName: name, folderId: id });
-    } else {
-      const routeObj = sidebarShortcuts.find(({ route }) => route === pathname);
-      const locationName = routeObj ? routeObj.name : '';
-      this.setState({ locationName, folderId: '' });
+    if (folderMatch) {
+      const { name, id } = folders.get(folderMatch[1]);
+
+      return this.setState({ type: 'folder', locationName: name, locationId: id });
     }
+
+    if (tagMatch) {
+      const { name, id } = tags.get(tagMatch[1]);
+
+      return this.setState({ type: 'tag', locationName: name, locationId: id });
+    }
+
+    const routeObj = sidebarShortcuts.find(({ route }) => route === pathname);
+    const locationName = routeObj ? routeObj.name : '';
+    return this.setState({ type: '', locationName, locationId: '' });
   }
 
   render() {
-    const { locationName } = this.state;
+    const { type, locationName } = this.state;
+    let locationIcon;
+
+    if (type === 'folder') locationIcon = folderIcon;
+
+    if (type === 'tag') locationIcon = tagIcon;
+
     return (
       <div className="top-bar">
         <div className="top-bar__row">
-          <Icon className="top-bar__icon" path={sort} />
-          <div title={locationName} className="top-bar__location-name">
-            {locationName}
+          <Icon className="top-bar__icon" path={sortIcon} />
+          <div title={locationName} className="top-bar__location">
+            {locationIcon && <Icon className="top-bar__location-icon" path={locationIcon} />}
+            <span className="top-bar__location-name">{locationName}</span>
           </div>
 
           <button
@@ -102,7 +125,7 @@ class TopBar extends Component {
             type="button"
             onClick={() => this.onNewNoteClick()}
           >
-            <Icon className="top-bar__icon" path={newNote} />
+            <Icon className="top-bar__icon" path={newNoteIcon} />
           </button>
         </div>
         <SearchBar />
@@ -111,6 +134,6 @@ class TopBar extends Component {
   }
 }
 
-const mapStateToProps = state => ({ folders: state.folders });
+const mapStateToProps = state => ({ folders: state.folders, tags: state.tags });
 
 export default withRouter(connect(mapStateToProps)(TopBar));

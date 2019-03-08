@@ -6,10 +6,22 @@ import mkdirp from 'mkdirp';
 import consts from './consts';
 import resolveStorage from './resolveStorage';
 
-function addNote(folderId) {
-  return resolveStorage().then((folders) => {
-    if (folderId && !folders.some(({ id }) => id === folderId)) {
-      return Promise.reject(new Error(`A folder with the id '${folderId}' doesn't exist.`));
+function addNote(type, locationId) {
+  return resolveStorage().then((storageData) => {
+    const { folders, tags } = storageData;
+
+    if (type && locationId) {
+      if (type === 'folder') {
+        if (!folders.some(({ id }) => id === locationId)) {
+          return Promise.reject(new Error(`A folder with the id '${locationId}' doesn't exist.`));
+        }
+      }
+
+      if (type === 'tag') {
+        if (!tags.some(({ id }) => id === locationId)) {
+          return Promise.reject(new Error(`A tag with the id '${locationId}' doesn't exist.`));
+        }
+      }
     }
 
     const newNote = {
@@ -17,11 +29,19 @@ function addNote(folderId) {
       value: '<p><br></p>',
       createdAt: new Date().getTime(),
       updatedAt: new Date().getTime(),
-      folder: folderId || '',
+      folder: '',
       tags: [],
       isStarred: false,
       isTrashed: false,
     };
+
+    if (type === 'folder') {
+      newNote.folder = locationId;
+    }
+
+    if (type === 'tag') {
+      newNote.tags.push(locationId);
+    }
 
     const id = v4();
     const notePath = path.join(consts.NOTES_PATH, `${id}.json`);

@@ -11,6 +11,7 @@
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: $small-space;
+  align-items: center;
 }
 
 .top-bar__button {
@@ -35,8 +36,21 @@
   }
 }
 
-.top-bar__location-name {
+.top-bar__location {
+  display: flex;
   margin: 0 $small-space;
+  align-items: center;
+}
+
+.top-bar__location-icon {
+  fill: currentColor;
+  height: 2rem;
+  width: 2rem;
+  flex-shrink: 0;
+}
+
+.top-bar__location-name {
+  margin-left: $small-space / 2;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
