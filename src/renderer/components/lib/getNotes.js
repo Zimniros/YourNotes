@@ -1,4 +1,4 @@
-import { folderPathnameRegex } from './consts';
+import { folderPathnameRegex, tagPathnameRegex } from './consts';
 import Map from '../../../lib/Map';
 
 function filterTrashed(notes) {
@@ -11,7 +11,9 @@ function getNotes(pathname, notesData) {
   if (!pathname || !notesData) return null;
 
   const { allNotes, starredNotes, trashedNotes } = notesData;
-  const match = pathname.match(folderPathnameRegex);
+  const folderMatch = pathname.match(folderPathnameRegex);
+  const tagMatch = pathname.match(tagPathnameRegex);
+
   let notes;
 
   if (pathname === '/starred') {
@@ -23,8 +25,13 @@ function getNotes(pathname, notesData) {
     return trashedNotes.map(key => allNotes.get(key));
   }
 
-  if (match) {
-    notes = allNotes.toArray().filter(({ folder }) => folder === match[1]);
+  if (folderMatch) {
+    notes = allNotes.toArray().filter(({ folder }) => folder === folderMatch[1]);
+    return filterTrashed(notes);
+  }
+
+  if (tagMatch) {
+    notes = allNotes.toArray().filter(({ tags }) => tags.some(tag => tag === tagMatch[1]));
     return filterTrashed(notes);
   }
 

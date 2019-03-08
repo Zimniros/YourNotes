@@ -58,13 +58,15 @@ class StorageInfoBar extends Component {
     const folder = folders.get(folderId);
     const folderName = folder ? folder.name : 'All Notes';
 
+    const isSelectOpen = isFolderSelectOpen && folders && !!folders.size;
+
     return (
       <div className="title-bar__storage-info storage-info">
         <div className="storage-info__folder" onClick={() => this.onFolderSelectClick()}>
           <Icon className="storage-info__icon" path={folderIcon} />
           <span className="storage-info__name">{folderName}</span>
 
-          {isFolderSelectOpen && (
+          {isSelectOpen && (
             <FolderSelect onFolderItemClick={this.onFolderItemClick} onClose={this.onClose} folders={folders} />
           )}
         </div>

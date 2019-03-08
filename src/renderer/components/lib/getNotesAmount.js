@@ -3,7 +3,7 @@ function getNotesAmount(notes) {
 
   const count = notes.length;
 
-  return count >= 100 ? '99+' : count;
+  return count >= 100 ? '99+' : `${count}`;
 }
 
 export default getNotesAmount;

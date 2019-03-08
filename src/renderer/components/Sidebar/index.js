@@ -1,18 +1,21 @@
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { instanceOf } from 'prop-types';
 
 import Icon from '@mdi/react';
 
 import { sidebarShortcuts } from '../lib/consts';
-import FolderList from './FolderList';
-import TagList from './TagList';
+import ShortcutList from './ShortcutList';
 
 import getNotes from '../lib/getNotes';
 import getNotesAmount from '../lib/getNotesAmount';
 import { notesDataType, locationType } from '../../types';
+import Map from '../../../lib/Map';
 
-const Sidebar = ({ notesData, location }) => {
+const Sidebar = ({
+  notesData, location, tags, folders,
+}) => {
   const shortcuts = sidebarShortcuts.map((el) => {
     const { pathname } = location;
     const isActive = pathname === el.route;
@@ -34,18 +37,20 @@ const Sidebar = ({ notesData, location }) => {
     <div className="sidebar">
       <div className="sidebar__menu">{shortcuts}</div>
 
-      <FolderList />
+      <ShortcutList list={folders} title="Folders" listType="folderList" notesData={notesData} />
 
-      <TagList />
+      <ShortcutList list={tags} title="Tags" listType="tagList" notesData={notesData} />
     </div>
   );
 };
 
-const mapStateToProps = state => ({ notesData: state.notesData });
+const mapStateToProps = state => ({ notesData: state.notesData, tags: state.tags, folders: state.folders });
 
 export default withRouter(connect(mapStateToProps)(Sidebar));
 
 Sidebar.propTypes = {
   location: locationType.isRequired,
   notesData: notesDataType.isRequired,
+  tags: instanceOf(Map).isRequired,
+  folders: instanceOf(Map).isRequired,
 };
