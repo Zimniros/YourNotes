@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { instanceOf } from 'prop-types';
 
 import Icon from '@mdi/react';
@@ -44,9 +43,7 @@ const Sidebar = ({
   );
 };
 
-const mapStateToProps = state => ({ notesData: state.notesData, tags: state.tags, folders: state.folders });
-
-export default withRouter(connect(mapStateToProps)(Sidebar));
+export default Sidebar;
 
 Sidebar.propTypes = {
   location: locationType.isRequired,

@@ -1,22 +1,26 @@
-/* eslint-disable react/no-unused-state */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable react/prop-types */
-/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { instanceOf } from 'prop-types';
 
-import NoteEditor from './NoteEditor';
+import { locationType } from '../../types';
+import Map from '../../../lib/Map';
 import getSearchKey from '../lib/getSearchKey';
 
+import NoteEditor from './NoteEditor';
+
 class Details extends Component {
+  static propTypes = {
+    allNotes: instanceOf(Map).isRequired,
+    location: locationType.isRequired,
+  };
+
   getNote() {
-    const { location, notes } = this.props;
+    const { location, allNotes } = this.props;
     const key = getSearchKey(location);
 
     if (!key) return null;
 
-    const note = notes.get(key);
+    const note = allNotes.get(key);
 
     return note || null;
   }
@@ -32,6 +36,4 @@ class Details extends Component {
   }
 }
 
-const mapStateToProps = state => ({ notes: state.notesData.allNotes });
-
-export default withRouter(connect(mapStateToProps)(Details));
+export default withRouter(Details);

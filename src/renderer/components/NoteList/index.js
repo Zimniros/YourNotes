@@ -165,6 +165,4 @@ class NoteList extends Component {
   }
 }
 
-const mapStateToProps = state => ({ notesData: state.notesData });
-
-export default withRouter(connect(mapStateToProps)(NoteList));
+export default withRouter(connect(null)(NoteList));

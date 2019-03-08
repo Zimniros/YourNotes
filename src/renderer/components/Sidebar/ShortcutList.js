@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable class-methods-use-this */
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { string, func, instanceOf } from 'prop-types';

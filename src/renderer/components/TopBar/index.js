@@ -11,13 +11,13 @@ import {
   mdiTagOutline as tagIcon,
 } from '@mdi/js';
 
-import SearchBar from './SearchBar';
 import addNoteApi from '../../../lib/addNote';
 import Map from '../../../lib/Map';
-
-import { folderPathnameRegex, tagPathnameRegex, sidebarShortcuts } from '../lib/consts';
 import { addNote } from '../../actions';
+import { folderPathnameRegex, tagPathnameRegex, sidebarShortcuts } from '../lib/consts';
 import { historyType, locationType } from '../../types';
+
+import SearchBar from './SearchBar';
 
 class TopBar extends Component {
   static propTypes = {
@@ -136,6 +136,4 @@ class TopBar extends Component {
   }
 }
 
-const mapStateToProps = state => ({ folders: state.folders, tags: state.tags });
-
-export default withRouter(connect(mapStateToProps)(TopBar));
+export default withRouter(connect(null)(TopBar));

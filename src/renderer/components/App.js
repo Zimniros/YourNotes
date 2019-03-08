@@ -1,16 +1,27 @@
-/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { instanceOf } from 'prop-types';
+
+import { tagPathnameRegex, folderPathnameRegex } from './lib/consts';
+import { notesDataType, locationType, historyType } from '../types';
+import Map from '../../lib/Map';
 
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 import NoteList from './NoteList';
-
 import Details from './Details';
-
 import ModalRoot from './modals';
 
 class App extends Component {
+  static propTypes = {
+    location: locationType.isRequired,
+    history: historyType.isRequired,
+    notesData: notesDataType.isRequired,
+    tags: instanceOf(Map).isRequired,
+    folders: instanceOf(Map).isRequired,
+  };
+
   componentDidMount() {
     const { location, history } = this.props;
     const { pathname } = location;
@@ -19,19 +30,50 @@ class App extends Component {
     if (pathname === '/') push('/home');
   }
 
+  componentDidUpdate() {
+    const {
+      location, history, tags, folders,
+    } = this.props;
+    const { pathname } = location;
+
+    const folderMatch = pathname.match(folderPathnameRegex);
+    const tagMatch = pathname.match(tagPathnameRegex);
+
+    if (folderMatch) {
+      const targetFolder = folders.get(folderMatch[1]);
+
+      return !targetFolder && history.replace('/home');
+    }
+
+    if (tagMatch) {
+      const targetTag = tags.get(tagMatch[1]);
+
+      return !targetTag && history.replace('/home');
+    }
+
+    return null;
+  }
+
   render() {
+    const {
+      notesData, location, tags, folders,
+    } = this.props;
+    const { allNotes } = notesData;
+
     return (
       <div className="app">
-        <Sidebar />
+        <Sidebar notesData={notesData} location={location} tags={tags} folders={folders} />
         <div className="notes-viewer">
-          <TopBar />
-          <NoteList />
+          <TopBar tags={tags} folders={folders} />
+          <NoteList notesData={notesData} />
         </div>
-        <Details />
+        <Details allNotes={allNotes} />
         <ModalRoot />
       </div>
     );
   }
 }
 
-export default withRouter(App);
+const mapStateToProps = state => ({ notesData: state.notesData, tags: state.tags, folders: state.folders });
+
+export default withRouter(connect(mapStateToProps)(App));
