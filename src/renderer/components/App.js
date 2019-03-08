@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import Sidebar from './Sidebar';
-import NotesViewer from './NotesViewer';
+import TopBar from './TopBar';
+import NoteList from './NoteList';
+
 import Details from './Details';
 
 import ModalRoot from './modals';
@@ -21,7 +23,10 @@ class App extends Component {
     return (
       <div className="app">
         <Sidebar />
-        <NotesViewer />
+        <div className="notes-viewer">
+          <TopBar />
+          <NoteList />
+        </div>
         <Details />
         <ModalRoot />
       </div>

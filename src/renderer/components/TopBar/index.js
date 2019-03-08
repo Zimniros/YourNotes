@@ -86,15 +86,17 @@ class TopBar extends Component {
     const tagMatch = pathname.match(tagPathnameRegex);
 
     if (folderMatch) {
-      const { name, id } = folders.get(folderMatch[1]);
+      const targetFolder = folders.get(folderMatch[1]);
 
-      return this.setState({ type: 'folder', locationName: name, locationId: id });
+      return (
+        targetFolder && this.setState({ type: 'folder', locationName: targetFolder.name, locationId: targetFolder.id })
+      );
     }
 
     if (tagMatch) {
-      const { name, id } = tags.get(tagMatch[1]);
+      const targetTag = tags.get(tagMatch[1]);
 
-      return this.setState({ type: 'tag', locationName: name, locationId: id });
+      return targetTag && this.setState({ type: 'tag', locationName: targetTag.name, locationId: targetTag.id });
     }
 
     const routeObj = sidebarShortcuts.find(({ route }) => route === pathname);

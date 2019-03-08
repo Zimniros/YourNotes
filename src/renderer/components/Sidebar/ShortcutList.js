@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable class-methods-use-this */
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { string, func, instanceOf } from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -29,7 +30,6 @@ import ShortcutItem from './ShortcutItem';
 class ShortcutList extends Component {
   static propTypes = {
     list: instanceOf(Map).isRequired,
-
     notesData: notesDataType.isRequired,
     title: string.isRequired,
     listType: string.isRequired,
@@ -173,4 +173,4 @@ class ShortcutList extends Component {
   }
 }
 
-export default connect(null)(ShortcutList);
+export default withRouter(connect(null)(ShortcutList));

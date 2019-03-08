@@ -36,45 +36,25 @@ class NoteList extends Component {
     this.handleNoteContextMenu = this.handleNoteContextMenu.bind(this);
   }
 
-  componentDidMount() {
-    const { location, history } = this.props;
-    const { pathname } = location;
-    const locationKey = getSearchKey(location);
-    const note = this.notes[0];
-
-    if (note && !locationKey) {
-      history.replace({
-        pathname,
-        search: `key=${note.key}`,
-      });
-    }
-  }
-
-  // TODO: if locationKey is not in this.notes
-  // TODO: no notes
   componentDidUpdate(prevProps) {
     const { location, history } = this.props;
     const { pathname } = location;
-    const locationKey = getSearchKey(location);
-    const prevLocationKey = getSearchKey(prevProps.location);
-    const noteWithLocationKey = this.notes.find(el => el.key === prevLocationKey);
+    const visibleNoteKeys = this.notes.map(note => note.key);
     const note = this.notes[0];
+    const prevKey = getSearchKey(prevProps.location);
+    const curKey = getSearchKey(location);
+    const noteKey = visibleNoteKeys.includes(prevKey) ? prevKey : note && note.key;
 
-    if (prevProps.location.pathname !== pathname) {
-      if (noteWithLocationKey) {
-        return history.replace({ pathname, search: `key=${noteWithLocationKey.key}` });
-      }
-
-      if (note) {
-        return history.replace({ pathname, search: `key=${note.key}` });
-      }
+    if (note && curKey === null) {
+      history.replace({
+        pathname,
+        search: `key=${noteKey}`,
+      });
     }
   }
 
   handleDeleteNote(note) {
     const { dispatch } = this.props;
-
-    console.log('note', note);
 
     dispatch(showDeleteNoteConfirmationModal(note));
   }
@@ -163,11 +143,11 @@ class NoteList extends Component {
     const { location, notesData } = this.props;
     const { pathname } = location;
     const notes = getNotes(pathname, notesData);
-    const locationKey = getSearchKey(location);
     this.notes = notes;
+    const locationKey = getSearchKey(location);
 
     const noteList = notes
-      ? notes.map((note) => {
+      && notes.map((note) => {
         const isActive = locationKey === note.key;
         return (
           <NoteItem
@@ -179,8 +159,7 @@ class NoteList extends Component {
             handleNoteContextMenu={this.handleNoteContextMenu}
           />
         );
-      })
-      : null;
+      });
 
     return <div className="notelist">{noteList}</div>;
   }
