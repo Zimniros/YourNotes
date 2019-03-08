@@ -1,5 +1,6 @@
 .sidebar__shortcuts {
   width: 100%;
+  margin-bottom: $small-space;
 }
 
 .shortcuts__title {
@@ -38,13 +39,11 @@
   transform: rotate(90deg);
 }
 
-.shortcuts__name {
-  margin-left: $small-space / 2;
-  line-height: 1;
-  flex: 0 1 auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.shortcuts__empty {
+  display: block;
+  padding: $small-space / 2 $small-space;
+  text-align: center;
+  font-size: 1.3rem;
 }
 
 .shortcuts__shortcut {

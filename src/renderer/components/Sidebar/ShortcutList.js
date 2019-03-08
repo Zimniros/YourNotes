@@ -6,7 +6,7 @@ import { string, func, instanceOf } from 'prop-types';
 import { connect } from 'react-redux';
 
 import Icon from '@mdi/react';
-import { mdiChevronRight as chevron, mdiPlus as plus } from '@mdi/js';
+import { mdiChevronRight as chevronIcon, mdiPlus as plusIcon } from '@mdi/js';
 
 import context from '../../../lib/context';
 import Map from '../../../lib/Map';
@@ -25,6 +25,19 @@ import {
 } from '../../actions';
 
 import ShortcutItem from './ShortcutItem';
+
+const LABELS = {
+  folderList: {
+    renameLabel: 'Rename folder',
+    deleteLabel: 'Delete folder',
+    emptyLabel: 'Your list of folders will show up here.',
+  },
+  tagList: {
+    renameLabel: 'Rename tag',
+    deleteLabel: 'Delete tag',
+    emptyLabel: 'Your list of tags will show up here.',
+  },
+};
 
 class ShortcutList extends Component {
   static propTypes = {
@@ -96,18 +109,7 @@ class ShortcutList extends Component {
   contextMenu(item) {
     const { listType } = this.props;
 
-    let renameLabel;
-    let deleteLabel;
-
-    if (listType === 'folderList') {
-      renameLabel = 'Rename folder';
-      deleteLabel = 'Delete folder';
-    }
-
-    if (listType === 'tagList') {
-      renameLabel = 'Rename tag';
-      deleteLabel = 'Delete tag';
-    }
+    const { deleteLabel, renameLabel } = LABELS[listType];
 
     const templates = [];
 
@@ -130,6 +132,8 @@ class ShortcutList extends Component {
     const {
       list, listType, title, notesData,
     } = this.props;
+
+    const { emptyLabel } = LABELS[listType];
 
     const listContent = list && list.size
       ? list.map((item) => {
@@ -162,11 +166,14 @@ class ShortcutList extends Component {
     return (
       <div className={className}>
         <div className="shortcuts__title" onClick={this.onTitleClick}>
-          <Icon className="shortcuts__icon shortcuts__icon--chevron" path={chevron} />
+          <Icon className="shortcuts__icon shortcuts__icon--chevron" path={chevronIcon} />
           <span className="shortcuts__text">{title}</span>
-          <Icon onClick={this.onNewClick} className="shortcuts__icon shortcuts__icon--new" path={plus} />
+          <Icon onClick={this.onNewClick} className="shortcuts__icon shortcuts__icon--new" path={plusIcon} />
         </div>
-        {isOpen ? listContent : null}
+
+        {isOpen && (
+          <div className="shortcuts__list">{listContent || <span className="shortcuts__empty">{emptyLabel}</span>}</div>
+        )}
       </div>
     );
   }
