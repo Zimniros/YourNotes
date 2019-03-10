@@ -157,7 +157,16 @@ class NoteEditor extends Component {
           </div>
         </div>
 
-        <ReactQuill className="details__editor" value={value} onChange={this.onChange} readOnly={isTrashed} />
+        <ReactQuill
+          className="details__editor"
+          value={value}
+          onChange={(newValue, delta, source) => {
+            if (source === 'user') {
+              this.onChange(newValue);
+            }
+          }}
+          readOnly={isTrashed}
+        />
       </div>
     );
   }
