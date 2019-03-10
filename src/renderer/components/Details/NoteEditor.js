@@ -1,25 +1,27 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/no-did-update-set-state */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/no-unused-state */
-/* eslint-disable react/no-unused-vars */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { func } from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-import TitleBar from './TitleBar';
-import StorageInfoBar from './StorageInfoBar';
-
 import { updateNote, showDeleteNoteConfirmationModal } from '../../actions';
 import updateNoteApi from '../../../lib/updateNote';
+import { noteType, historyType, locationType } from '../../types';
+
+import TitleBar from './TitleBar';
+import FolderSelect from './FolderSelect';
 
 class NoteEditor extends Component {
+  static propTypes = {
+    note: noteType.isRequired,
+    dispatch: func.isRequired,
+    history: historyType.isRequired,
+    location: locationType.isRequired,
+  };
+
   constructor(props) {
     super(props);
-    this.className = 'details__editor';
 
     this.state = {
       note: props.note,
@@ -30,7 +32,10 @@ class NoteEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const isNewNote = nextProps.note.key !== this.props.note.key;
+    const { note } = this.props;
+    const { key } = note;
+
+    const isNewNote = nextProps.note.key !== key;
 
     if (isNewNote) {
       this.saveNoteNow();
@@ -147,10 +152,12 @@ class NoteEditor extends Component {
             isTrashed={isTrashed}
           />
 
-          <StorageInfoBar note={note} />
+          <div className="title-bar__storage-info storage-info">
+            <FolderSelect note={note} />
+          </div>
         </div>
 
-        <ReactQuill className={this.className} value={value} onChange={this.onChange} readOnly={isTrashed} />
+        <ReactQuill className="details__editor" value={value} onChange={this.onChange} readOnly={isTrashed} />
       </div>
     );
   }
