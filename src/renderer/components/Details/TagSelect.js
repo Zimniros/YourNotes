@@ -1,24 +1,30 @@
+/* eslint-disable consistent-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { func, instanceOf } from 'prop-types';
-import { sortBy, filter } from 'lodash';
+import { sortBy, filter, cloneDeep } from 'lodash';
 import Autosuggest from 'react-autosuggest';
 
-import { updateNote } from '../../actions';
-import updateNoteApi from '../../../lib/updateNote';
+import { updateNote, addTag } from '../../actions';
 import { noteType, historyType } from '../../types';
+import addTagApi from '../../../lib/addTag';
+import updateNoteApi from '../../../lib/updateNote';
 import Map from '../../../lib/Map';
 
 class TagSelect extends Component {
   static propTypes = {
+    note: noteType.isRequired,
     tags: instanceOf(Map).isRequired,
+    dispatch: func.isRequired,
   };
 
   state = {
     value: '',
     suggestions: [],
   };
+
+  inputSuggestionRef = React.createRef();
 
   componentDidMount() {
     this.buildSuggestions();
@@ -28,6 +34,21 @@ class TagSelect extends Component {
     this.setState({
       value: newValue,
     });
+  };
+
+  onInputKeyDown = (event) => {
+    switch (event.keyCode) {
+      case 9:
+        event.preventDefault();
+        this.submitNewTag();
+        break;
+      case 13:
+        this.submitNewTag();
+        break;
+
+      default:
+        break;
+    }
   };
 
   onSuggestionsFetchRequested = ({ value }) => {
@@ -46,6 +67,54 @@ class TagSelect extends Component {
     });
   };
 
+  addNewTag(newTag) {
+    const { note, tags, dispatch } = this.props;
+    const { tags: noteTagIds } = note;
+
+    if (newTag.length <= 0) {
+      this.setState({ value: '' });
+      return null;
+    }
+
+    const targetTag = tags.toArray().find(tag => tag.name === newTag);
+
+    if (!targetTag) {
+      addTagApi(newTag)
+        .then((tag) => {
+          dispatch(addTag(tag));
+          return tag;
+        })
+        .then((tag) => {
+          const newNote = cloneDeep(note);
+          newNote.tags.push(tag.id);
+
+          this.handleUpdateNote(newNote);
+        })
+        .catch(error => console.log('Error in addNewTag() in TagSelect component', error));
+    } else {
+      const newNote = cloneDeep(note);
+      newNote.tags.push(targetTag.id);
+
+      this.handleUpdateNote(newNote);
+    }
+  }
+
+  handleUpdateNote(newNote) {
+    const { dispatch } = this.props;
+
+    updateNoteApi(newNote)
+      .then(data => dispatch(updateNote(data)))
+      .then(() => {
+        this.setState({ value: '' });
+        this.buildSuggestions();
+      })
+      .catch(error => console.log('Error in updateNoteApi() in TagSelect component', error));
+  }
+
+  submitNewTag() {
+    this.addNewTag(this.inputSuggestionRef.current.input.value);
+  }
+
   buildSuggestions() {
     const { tags } = this.props;
     this.suggestions = sortBy(tags.toArray(), 'name');
@@ -53,12 +122,13 @@ class TagSelect extends Component {
 
   render() {
     const { value, suggestions } = this.state;
+    const { note } = this.props;
 
     const inputProps = {
       placeholder: 'Add tag...',
       value,
       onChange: this.onChange,
-      // onKeyDown: this.onInputKeyDown,
+      onKeyDown: this.onInputKeyDown,
       //       onBlur: this.onInputBlur,
     };
 
@@ -66,6 +136,7 @@ class TagSelect extends Component {
       <div className="storage-info__tag-select tag-select">
         <div className="tagSelect__input">
           <Autosuggest
+            ref={this.inputSuggestionRef}
             suggestions={suggestions}
             onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
             onSuggestionsClearRequested={this.onSuggestionsClearRequested}
