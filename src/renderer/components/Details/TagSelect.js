@@ -1,23 +1,26 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable consistent-return */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { func, instanceOf } from 'prop-types';
 import {
-  sortBy, filter, cloneDeep, includes,
+  sortBy, filter, cloneDeep, includes, remove,
 } from 'lodash';
 import Autosuggest from 'react-autosuggest';
 import Icon from '@mdi/react';
 import { mdiPound as poundIcon } from '@mdi/js';
 
 import { updateNote, addTag } from '../../actions';
-import { noteType } from '../../types';
+import { noteType, historyType } from '../../types';
 import addTagApi from '../../../lib/addTag';
 import updateNoteApi from '../../../lib/updateNote';
 import Map from '../../../lib/Map';
 
 class TagSelect extends Component {
   static propTypes = {
+    history: historyType.isRequired,
     note: noteType.isRequired,
     tags: instanceOf(Map).isRequired,
     dispatch: func.isRequired,
@@ -94,6 +97,23 @@ class TagSelect extends Component {
     this.addNewTag(name);
   };
 
+  onTagClick = (tagId) => {
+    const { history } = this.props;
+    const pathname = `/tag/${tagId}`;
+
+    history.push(pathname);
+  };
+
+  onTagRemove = (event, tagId) => {
+    event.stopPropagation();
+
+    const { note } = this.props;
+    const newNote = cloneDeep(note);
+    remove(newNote.tags, tag => tag === tagId);
+
+    this.handleUpdateNote(newNote);
+  };
+
   addNewTag(newTag) {
     const { note, tags, dispatch } = this.props;
     const { tags: noteTagIds } = note;
@@ -125,6 +145,7 @@ class TagSelect extends Component {
       newNote.tags.push(targetTag.id);
 
       this.handleUpdateNote(newNote);
+      this.reset();
     }
   }
 
@@ -141,10 +162,6 @@ class TagSelect extends Component {
 
     updateNoteApi(newNote)
       .then(data => dispatch(updateNote(data)))
-      .then(() => {
-        this.setState({ value: '' });
-        this.buildSuggestions();
-      })
       .catch(error => console.log('Error in updateNoteApi() in TagSelect component', error));
   }
 
@@ -167,10 +184,10 @@ class TagSelect extends Component {
 
       return (
         targetTag && (
-          <div key={targetTag.id} className="tag-select__tag">
+          <div key={targetTag.id} className="tag-select__tag" onClick={() => this.onTagClick(targetTag.id)}>
             <Icon className="tag-select__tag-icon" path={poundIcon} />
             <span className="tag-select__tag-name">{targetTag.name}</span>
-            <div className="tag-select__tag-cross-icon" />
+            <div className="tag-select__tag-cross-icon" onClick={event => this.onTagRemove(event, targetTag.id)} />
           </div>
         )
       );
