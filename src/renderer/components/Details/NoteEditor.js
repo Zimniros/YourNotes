@@ -11,6 +11,7 @@ import { noteType, historyType, locationType } from '../../types';
 
 import TitleBar from './TitleBar';
 import FolderSelect from './FolderSelect';
+import TagSelect from './TagSelect';
 
 class NoteEditor extends Component {
   static propTypes = {
@@ -152,8 +153,9 @@ class NoteEditor extends Component {
             isTrashed={isTrashed}
           />
 
-          <div className="title-bar__storage-info storage-info">
+          <div className="details__storage-info storage-info">
             <FolderSelect note={note} />
+            <TagSelect note={note} />
           </div>
         </div>
 

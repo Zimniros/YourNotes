@@ -1,5 +1,6 @@
 @import "TitleBar";
 @import "FolderSelect";
+@import "TagSelect";
 
 .details {
   display: flex;
@@ -12,4 +13,16 @@
   padding: $small-space 0;
   overflow-y: auto;
   word-break: break-all;
+}
+
+.details__title-bar {
+  padding: $small-space 0;
+  border-bottom: 2px solid $light-grey;
+
+  align-items: center;
+}
+
+.details__storage-info {
+  margin-top: $small-space;
+  display: flex;
 }
