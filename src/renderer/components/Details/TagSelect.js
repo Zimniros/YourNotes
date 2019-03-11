@@ -3,11 +3,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { func, instanceOf } from 'prop-types';
-import { sortBy, filter, cloneDeep } from 'lodash';
+import {
+  sortBy, filter, cloneDeep, includes,
+} from 'lodash';
 import Autosuggest from 'react-autosuggest';
 
 import { updateNote, addTag } from '../../actions';
-import { noteType, historyType } from '../../types';
+import { noteType } from '../../types';
 import addTagApi from '../../../lib/addTag';
 import updateNoteApi from '../../../lib/updateNote';
 import Map from '../../../lib/Map';
@@ -36,6 +38,10 @@ class TagSelect extends Component {
     });
   };
 
+  onInputBlur = () => {
+    this.submitNewTag();
+  };
+
   onInputKeyDown = (event) => {
     switch (event.keyCode) {
       case 9:
@@ -52,9 +58,14 @@ class TagSelect extends Component {
   };
 
   onSuggestionsFetchRequested = ({ value }) => {
+    const { note } = this.props;
+    const { tags } = note;
     const inputValue = value.trim().toLowerCase();
 
-    const suggestions = filter(this.suggestions, tag => tag.name.toLowerCase().indexOf(inputValue) !== -1);
+    const suggestions = filter(
+      this.suggestions,
+      tag => !includes(tags, tag.id) && tag.name.toLowerCase().indexOf(inputValue) !== -1,
+    );
 
     this.setState({
       suggestions,
@@ -65,6 +76,12 @@ class TagSelect extends Component {
     this.setState({
       suggestions: [],
     });
+  };
+
+  onSuggestionSelected = (event, { suggestion }) => {
+    const { name } = suggestion;
+
+    this.addNewTag(name);
   };
 
   addNewTag(newTag) {
@@ -89,9 +106,12 @@ class TagSelect extends Component {
           newNote.tags.push(tag.id);
 
           this.handleUpdateNote(newNote);
+          return null;
         })
         .catch(error => console.log('Error in addNewTag() in TagSelect component', error));
-    } else {
+    }
+
+    if (!includes(noteTagIds, targetTag.id)) {
       const newNote = cloneDeep(note);
       newNote.tags.push(targetTag.id);
 
@@ -129,7 +149,7 @@ class TagSelect extends Component {
       value,
       onChange: this.onChange,
       onKeyDown: this.onInputKeyDown,
-      //       onBlur: this.onInputBlur,
+      onBlur: this.onInputBlur,
     };
 
     return (
@@ -140,6 +160,7 @@ class TagSelect extends Component {
             suggestions={suggestions}
             onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
             onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+            onSuggestionSelected={this.onSuggestionSelected}
             getSuggestionValue={suggestion => suggestion.name}
             renderSuggestion={suggestion => <div>{suggestion.name}</div>}
             inputProps={inputProps}
