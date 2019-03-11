@@ -7,6 +7,8 @@ import {
   sortBy, filter, cloneDeep, includes,
 } from 'lodash';
 import Autosuggest from 'react-autosuggest';
+import Icon from '@mdi/react';
+import { mdiPound as poundIcon } from '@mdi/js';
 
 import { updateNote, addTag } from '../../actions';
 import { noteType } from '../../types';
@@ -30,6 +32,14 @@ class TagSelect extends Component {
 
   componentDidMount() {
     this.buildSuggestions();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { note } = this.props;
+
+    if (note.key !== prevProps.note.key) {
+      this.reset();
+    }
   }
 
   onChange = (event, { newValue }) => {
@@ -89,8 +99,7 @@ class TagSelect extends Component {
     const { tags: noteTagIds } = note;
 
     if (newTag.length <= 0) {
-      this.setState({ value: '' });
-      return null;
+      this.reset();
     }
 
     const targetTag = tags.toArray().find(tag => tag.name === newTag);
@@ -119,6 +128,14 @@ class TagSelect extends Component {
     }
   }
 
+  reset() {
+    this.buildSuggestions();
+
+    this.setState({
+      value: '',
+    });
+  }
+
   handleUpdateNote(newNote) {
     const { dispatch } = this.props;
 
@@ -142,7 +159,22 @@ class TagSelect extends Component {
 
   render() {
     const { value, suggestions } = this.state;
-    const { note } = this.props;
+    const { note, tags } = this.props;
+    const { tags: tagsIds } = note;
+
+    const tagList = tagsIds.map((tagId) => {
+      const targetTag = tags.get(tagId);
+
+      return (
+        targetTag && (
+          <div key={targetTag.id} className="tag-select__tag">
+            <Icon className="tag-select__tag-icon" path={poundIcon} />
+            <span className="tag-select__tag-name">{targetTag.name}</span>
+            <div className="tag-select__tag-cross-icon" />
+          </div>
+        )
+      );
+    });
 
     const inputProps = {
       placeholder: 'Add tag...',
@@ -154,18 +186,17 @@ class TagSelect extends Component {
 
     return (
       <div className="storage-info__tag-select tag-select">
-        <div className="tagSelect__input">
-          <Autosuggest
-            ref={this.inputSuggestionRef}
-            suggestions={suggestions}
-            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-            onSuggestionSelected={this.onSuggestionSelected}
-            getSuggestionValue={suggestion => suggestion.name}
-            renderSuggestion={suggestion => <div>{suggestion.name}</div>}
-            inputProps={inputProps}
-          />
-        </div>
+        {tagList}
+        <Autosuggest
+          ref={this.inputSuggestionRef}
+          suggestions={suggestions}
+          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+          onSuggestionSelected={this.onSuggestionSelected}
+          getSuggestionValue={suggestion => suggestion.name}
+          renderSuggestion={suggestion => <div>{suggestion.name}</div>}
+          inputProps={inputProps}
+        />
       </div>
     );
   }

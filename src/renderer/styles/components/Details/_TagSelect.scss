@@ -1,7 +1,72 @@
 .tag-select {
   margin-left: $small-space;
+  display: flex;
+  overflow: hidden;
 }
 
+.tag-select__tag {
+  display: flex;
+  padding: 4px 6px;
+  align-items: center;
+  color: $main-bg-color;
+  font-size: 1.4rem;
+  cursor: pointer;
+  border-radius: 2rem;
+  background: lighten($brand-color, 25%);
+  margin-right: $small-space;
+
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
+
+.tag-select__tag-icon {
+  fill: currentColor;
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.tag-select__tag-name {
+  color: inherit;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.tag-select__tag-cross-icon {
+  margin-left: $small-space / 2;
+  position: relative;
+  width: 1.2rem;
+  height: 1.2rem;
+  opacity: 0.3;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:before,
+  &:after {
+    position: absolute;
+    content: " ";
+    left: 50%;
+    height: 1.2rem;
+    width: 3px;
+    background-color: $main-bg-color;
+  }
+
+  &:before {
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  &:after {
+    transform: translateX(-50%) rotate(-45deg);
+  }
+}
+
+/*
+  React Autosuggest styles
+*/
 .react-autosuggest__container {
   position: relative;
   color: $dark-grey;

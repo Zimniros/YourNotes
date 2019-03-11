@@ -5,6 +5,7 @@
   cursor: pointer;
   align-items: center;
   user-select: none;
+  flex-shrink: 0;
 
   &:hover {
     color: $black;
