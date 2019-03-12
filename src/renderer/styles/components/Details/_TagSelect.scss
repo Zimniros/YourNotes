@@ -1,43 +1,43 @@
 .tag-select {
-  margin-left: $small-space;
   display: flex;
+  overflow-x: auto;
+  align-items: center;
+  width: 100%;
+  white-space: nowrap;
+  vertical-align: middle;
 }
 
 .tag-select__tag {
   display: flex;
-  padding: 4px 6px;
+  padding: 0.2rem 0.4rem;
   align-items: center;
   color: $main-bg-color;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   cursor: pointer;
-  border-radius: 2rem;
+  border-radius: 0.4rem;
   background: lighten($brand-color, 25%);
-  margin-right: $small-space;
-
-  &:last-of-type {
-    margin-right: 0;
-  }
+  margin: 0 0.2rem 0.2rem;
 }
 
 .tag-select__tag-icon {
   fill: currentColor;
   flex-shrink: 0;
-  width: 1.6rem;
-  height: 1.6rem;
+  width: 1.3rem;
+  height: 1.3rem;
 }
 
 .tag-select__tag-name {
   color: inherit;
   font-weight: 500;
-  line-height: 1;
+  padding: 0.4rem 0.6rem 0.4rem 0;
 }
 
 .tag-select__tag-cross-icon {
-  margin-left: $small-space / 2;
+  margin-left: 0.1rem;
   position: relative;
-  width: 1.2rem;
-  height: 1.2rem;
-  opacity: 0.3;
+  width: 1.1rem;
+  height: 1.1rem;
+  opacity: 0.5;
   cursor: pointer;
 
   &:hover {
@@ -49,7 +49,7 @@
     position: absolute;
     content: " ";
     left: 50%;
-    height: 1.2rem;
+    height: 1.1rem;
     width: 3px;
     background-color: $main-bg-color;
   }

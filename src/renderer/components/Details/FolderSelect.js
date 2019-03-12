@@ -87,7 +87,7 @@ class FolderSelect extends Component {
     const folderName = folder ? folder.name : 'All Notes';
 
     return (
-      <div className="storage-info__folder-select folder-select" onClick={this.onFolderSelectClick}>
+      <div className="details__folder-select folder-select" onClick={this.onFolderSelectClick}>
         <Icon className="folder-select__icon" path={folderIcon} />
         <span className="folder-select__name">{folderName}</span>
 

@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { func } from 'prop-types';
 import { withRouter } from 'react-router-dom';
+
+import Icon from '@mdi/react';
+import {
+  mdiStarOutline as starOutline,
+  mdiStar as star,
+  mdiTrashCanOutline as trashIcon,
+  mdiInformationOutline as infoIcon,
+} from '@mdi/js';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -9,7 +17,6 @@ import { updateNote, showDeleteNoteConfirmationModal } from '../../actions';
 import updateNoteApi from '../../../lib/updateNote';
 import { noteType, historyType, locationType } from '../../types';
 
-import TitleBar from './TitleBar';
 import FolderSelect from './FolderSelect';
 import TagSelect from './TagSelect';
 
@@ -27,6 +34,30 @@ class NoteEditor extends Component {
     this.state = {
       note: props.note,
     };
+
+    this.modules = {
+      toolbar: [
+        [{ header: [1, 2, false] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+        ['link', 'image'],
+        ['clean'],
+      ],
+    };
+
+    this.formats = [
+      'header',
+      'bold',
+      'italic',
+      'underline',
+      'strike',
+      'blockquote',
+      'list',
+      'bullet',
+      'indent',
+      'link',
+      'image',
+    ];
 
     this.delayTimer = null;
     this.isReady = false;
@@ -135,33 +166,65 @@ class NoteEditor extends Component {
     const { note } = this.state;
 
     const {
-      value, title, folder, isStarred, isTrashed,
+      value, title, isStarred, isTrashed,
     } = note;
+
+    const starIcon = isStarred ? star : starOutline;
+    const starIconClassName = `control-group__star-icon${isStarred ? ' control-group__star-icon--starred' : ''}`;
+
+    const rightInfoGroup = isTrashed ? (
+      <>
+        <button
+          type="button"
+          className="control-group__button control-group__button--restore"
+          onClick={this.handleRestore}
+        >
+          Restore note
+        </button>
+        <button
+          type="button"
+          className="control-group__button control-group__button--delete"
+          onClick={this.handleDelete}
+        >
+          Delete note
+        </button>
+      </>
+    ) : (
+      <>
+        <Icon className={starIconClassName} onClick={this.onStarClick} path={starIcon} />
+        <Icon className="control-group__icon" onClick={this.onTrashClick} path={trashIcon} />
+        <Icon className="control-group__icon" path={infoIcon} />
+      </>
+    );
 
     return (
       <div className="details">
-        <div className="details__title-bar">
-          <TitleBar
-            onStarClick={this.onStarClick}
-            onTrashClick={this.onTrashClick}
-            onInputChange={this.onInputChange}
-            handleRestore={this.handleRestore}
-            handleDelete={this.handleDelete}
-            title={title}
-            folderId={folder}
-            isStarred={isStarred}
-            isTrashed={isTrashed}
-          />
-
-          <div className="details__storage-info storage-info">
+        <div className="details__info">
+          <div className="details__info-row">
             <FolderSelect note={note} />
-            <TagSelect note={note} />
+
+            <div className="details__control-group">{rightInfoGroup}</div>
           </div>
+
+          <TagSelect note={note} />
+        </div>
+
+        <div className="details__title-bar">
+          <input
+            type="text"
+            className="title-bar__title"
+            placeholder="Untitled"
+            value={title}
+            onChange={this.onInputChange}
+            disabled={isTrashed}
+          />
         </div>
 
         <ReactQuill
           className="details__editor"
           value={value}
+          modules={this.modules}
+          formats={this.formats}
           onChange={(newValue, delta, source) => {
             if (source === 'user') {
               this.onChange(newValue);

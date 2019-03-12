@@ -62,6 +62,7 @@ class TagSelect extends Component {
         this.submitNewTag();
         break;
       case 13:
+        event.preventDefault();
         this.submitNewTag();
         break;
 
@@ -120,6 +121,8 @@ class TagSelect extends Component {
 
     if (newTag.length <= 0) {
       this.reset();
+
+      return null;
     }
 
     const targetTag = tags.toArray().find(tag => tag.name === newTag);
@@ -128,6 +131,7 @@ class TagSelect extends Component {
       addTagApi(newTag)
         .then((tag) => {
           dispatch(addTag(tag));
+          this.reset();
           return tag;
         })
         .then((tag) => {
@@ -202,7 +206,7 @@ class TagSelect extends Component {
     };
 
     return (
-      <div className="storage-info__tag-select tag-select">
+      <div className="details__tag-select tag-select">
         {tagList}
         <Autosuggest
           ref={this.inputSuggestionRef}
