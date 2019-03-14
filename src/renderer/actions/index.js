@@ -86,3 +86,9 @@ export const deleteNote = key => ({
   type: 'DELETE_NOTE',
   key,
 });
+
+
+export const setSortBy = sortBy => ({
+  type: 'SET_SORT_BY',
+  sortBy,
+});

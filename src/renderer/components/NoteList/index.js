@@ -6,7 +6,9 @@ import { func } from 'prop-types';
 
 import getSearchKey from '../lib/getSearchKey';
 import getNotes from '../lib/getNotes';
-import { notesDataType, locationType, historyType } from '../../types';
+import {
+  notesDataType, locationType, historyType, sortByType,
+} from '../../types';
 
 import { updateNote, showDeleteNoteConfirmationModal } from '../../actions';
 import updateNoteApi from '../../../lib/updateNote';
@@ -15,12 +17,52 @@ import context from '../../../lib/context';
 
 import NoteItem from './NoteItem';
 
+function sortByUpdatedAtDesc(a, b) {
+  return new Date(b.updatedAt) - new Date(a.updatedAt);
+}
+
+function sortByUpdatedAtAsc(a, b) {
+  return new Date(a.updatedAt) - new Date(b.updatedAt);
+}
+
+function sortByCreatedAtDesc(a, b) {
+  return new Date(b.createdAt) - new Date(a.createdAt);
+}
+
+function sortByCreatedAtAsc(a, b) {
+  return new Date(a.createdAt) - new Date(b.createdAt);
+}
+
+function sortByAlphabeticalDesc(a, b) {
+  return b.title.localeCompare(a.title);
+}
+
+function sortByAlphabeticalAsc(a, b) {
+  return a.title.localeCompare(b.title);
+}
+
+const SORT_BY = {
+  UPDATED_AT: {
+    DESC: sortByUpdatedAtDesc,
+    ASC: sortByUpdatedAtAsc,
+  },
+  CREATED_AT: {
+    DESC: sortByCreatedAtDesc,
+    ASC: sortByCreatedAtAsc,
+  },
+  ALPHABETICAL: {
+    DESC: sortByAlphabeticalDesc,
+    ASC: sortByAlphabeticalAsc,
+  },
+};
+
 class NoteList extends Component {
   static propTypes = {
     notesData: notesDataType.isRequired,
     location: locationType.isRequired,
     history: historyType.isRequired,
     dispatch: func.isRequired,
+    sortBy: sortByType.isRequired,
   };
 
   notes = [];
@@ -140,10 +182,13 @@ class NoteList extends Component {
   }
 
   render() {
-    const { location, notesData } = this.props;
+    const { location, notesData, sortBy } = this.props;
     const { pathname } = location;
+    const { sortField, sortOrder } = sortBy;
+
     const notes = getNotes(pathname, notesData);
-    this.notes = notes;
+    const sortByFunction = SORT_BY[sortField][sortOrder];
+    this.notes = notes.sort(sortByFunction);
     const locationKey = getSearchKey(location);
 
     const noteList = notes

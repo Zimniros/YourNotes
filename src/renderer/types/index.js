@@ -75,6 +75,11 @@ export const historyType = shape({
   replace: func.isRequired,
 });
 
+export const sortByType = shape({
+  sortField: string.isRequired,
+  sortOrder: string.isRequired,
+});
+
 export default {
   folderType,
   folderDefault,
@@ -83,4 +88,5 @@ export default {
   notesDataType,
   locationType,
   historyType,
+  sortByType,
 };

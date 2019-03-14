@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { instanceOf } from 'prop-types';
 
 import { tagPathnameRegex, folderPathnameRegex } from './lib/consts';
-import { notesDataType, locationType, historyType } from '../types';
+import {
+  notesDataType, locationType, historyType, sortByType,
+} from '../types';
 import Map from '../../lib/Map';
 
 import Sidebar from './Sidebar';
@@ -20,6 +22,7 @@ class App extends Component {
     notesData: notesDataType.isRequired,
     tags: instanceOf(Map).isRequired,
     folders: instanceOf(Map).isRequired,
+    sortBy: sortByType.isRequired,
   };
 
   componentDidMount() {
@@ -56,7 +59,7 @@ class App extends Component {
 
   render() {
     const {
-      notesData, location, tags, folders,
+      notesData, location, tags, folders, sortBy,
     } = this.props;
     const { allNotes } = notesData;
 
@@ -65,7 +68,7 @@ class App extends Component {
         <Sidebar notesData={notesData} location={location} tags={tags} folders={folders} />
         <div className="notes-viewer">
           <TopBar tags={tags} folders={folders} />
-          <NoteList notesData={notesData} />
+          <NoteList notesData={notesData} sortBy={sortBy} />
         </div>
         <Details allNotes={allNotes} />
         <ModalRoot />
@@ -74,6 +77,11 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({ notesData: state.notesData, tags: state.tags, folders: state.folders });
+const mapStateToProps = state => ({
+  notesData: state.notesData,
+  tags: state.tags,
+  folders: state.folders,
+  sortBy: state.sortBy,
+});
 
 export default withRouter(connect(mapStateToProps)(App));
