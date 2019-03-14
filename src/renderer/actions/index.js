@@ -87,8 +87,8 @@ export const deleteNote = key => ({
   key,
 });
 
-
-export const setSortBy = sortBy => ({
+export const setSortBy = ({ sortField, sortOrder }) => ({
   type: 'SET_SORT_BY',
-  sortBy,
+  sortField,
+  sortOrder,
 });

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
-import { bool, func } from 'prop-types';
+import { bool, func, string } from 'prop-types';
 
 import Icon from '@mdi/react';
 import { mdiStarOutline as starOutline, mdiStar as star } from '@mdi/js';
@@ -15,14 +15,16 @@ function htmlToText(html) {
 }
 
 const NoteItem = ({
-  note, isActive, handleStarClick, handleNoteClick, handleNoteContextMenu,
+  note, sortField, isActive, handleStarClick, handleNoteClick, handleNoteContextMenu,
 }) => {
   const {
-    key, value, title, updatedAt, isStarred, isTrashed,
+    key, value, title, createdAt, updatedAt, isStarred, isTrashed,
   } = note;
 
   const noteContent = htmlToText(value);
   const noteContentClassName = `note-item__content${!noteContent ? ' note-item__content--empty' : ''}`;
+
+  const noteDisplayDate = sortField === 'CREATED_AT' ? createdAt : updatedAt;
 
   const noteClassName = `note-item${isActive ? ' note-item--active' : ''}`;
   const starIcon = isStarred ? star : starOutline;
@@ -41,7 +43,7 @@ const NoteItem = ({
         )}
       </div>
 
-      <div className="note-item__updated-at">{formatUpdatedAt(updatedAt)}</div>
+      <div className="note-item__displayed-date">{formatUpdatedAt(noteDisplayDate)}</div>
       <div className={noteContentClassName}>
         <span>{noteContent || 'Empty note'}</span>
       </div>
@@ -54,6 +56,7 @@ export default NoteItem;
 NoteItem.propTypes = {
   isActive: bool.isRequired,
   note: noteType.isRequired,
+  sortField: string.isRequired,
   handleStarClick: func.isRequired,
   handleNoteClick: func.isRequired,
   handleNoteContextMenu: func.isRequired,

@@ -202,6 +202,7 @@ class NoteList extends Component {
             handleStarClick={this.handleStarClick}
             handleNoteClick={this.handleNoteClick}
             handleNoteContextMenu={this.handleNoteContextMenu}
+            sortField={sortField}
           />
         );
       });
