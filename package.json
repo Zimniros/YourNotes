@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "author": "Anton Zimnitski",
   "description": "A note taking app for Mac, Windows and Linux.",
-  "main": "public/main.js",
-  "homepage": "https://github.com/Zimniros/YourNotes#readme",
+  "main": "public/electron.js",
+  "homepage": "./",
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
@@ -45,9 +45,11 @@
     "build": "craco build",
     "eject": "craco eject",
     "electron-dev": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron-pack": "build --em.main=build/main.js",
-    "preelectron-pack": "yarn build",
-    "precommit": "pretty-quick --staged"
+    "precommit": "pretty-quick --staged",
+    "postinstall": "electron-builder install-app-deps",
+    "build-linux": "yarn build && electron-builder build --linux",
+    "build-win": "yarn build && electron-builder build --win --x64",
+    "build-all": "yarn build && electron-builder build -wl"
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
@@ -66,16 +68,41 @@
     "prettier": "^1.16.4",
     "pretty-quick": "^1.10.0",
     "spectron": "^5.0.0",
+    "typescript": "^3.3.3333",
     "wait-on": "^3.2.0"
   },
   "build": {
     "appId": "com.yournotes",
+    "extends": null,
     "files": [
       "build/**/*",
-      "node_modules/**/*"
+      "public/electron.js",
+      "package.json"
     ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable",
+        "zip"
+      ],
+      "icon": "public/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "snap",
+        "AppImage"
+      ]
+    },
+    "nsis": {
+      "installerIcon": "public/icon.ico",
+      "license": "LICENSE",
+      "warningsAsErrors": false
+    },
     "directories": {
-      "buildResources": "assets"
+      "buildResources": "assets",
+      "output": "release"
     }
   },
   "browserslist": [
