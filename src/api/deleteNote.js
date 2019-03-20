@@ -1,19 +1,14 @@
-import fs from 'fs';
-import path from 'path';
+import { isEmpty } from 'lodash';
+import db from './db';
 
-import consts from './consts';
-
-function deleteNote(noteId) {
-  const notePath = path.join(consts.NOTES_PATH, `${noteId}.json`);
-
-  try {
-    fs.unlinkSync(notePath);
-  } catch (error) {
-    console.warn("Can't find note json file.", error);
-    Promise.reject(new Error("Can't find note json file."));
+async function deleteNote(key) {
+  if (isEmpty(key)) {
+    return Promise.reject(new Error('No note key was provided.'));
   }
 
-  return Promise.resolve(noteId);
+  await db.notes.remove({ key });
+
+  return Promise.resolve(key);
 }
 
 export default deleteNote;

@@ -1,19 +1,21 @@
-import notes from './getNotesDatastore';
-import folders from './getFoldersDatastore';
-import tags from './getTagsDatastore';
+import Datastore from 'nedb-promises';
+import { remote } from 'electron';
 
-function resolveDatastores() {
-  return Promise.all([notes.load(), folders.load(), tags.load()])
-    .then(() => {
-      const Datastore = {
-        notes,
-        folders,
-        tags
-      };
+const { app } = remote;
 
-      return Datastore;
-    })
-    .catch(error => new Error(error));
-}
+const dbFactory = fileName =>
+  Datastore.create({
+    filename: `${
+      process.env.NODE_ENV === 'dev' ? '.' : app.getAppPath('userData')
+    }/data/${fileName}`,
+    timestampData: true,
+    autoload: true
+  });
 
-export default resolveDatastores;
+const db = {
+  notes: dbFactory('notes.db'),
+  tags: dbFactory('tags.db'),
+  folders: dbFactory('folders.db')
+};
+
+export default db;

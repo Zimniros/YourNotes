@@ -1,11 +1,9 @@
 import v4 from 'uuid/v4';
-import fs from 'fs';
 import { isString } from 'lodash';
 
-import consts from './consts';
-import resolveStorage from './resolveStorage';
+import db from './db';
 
-function addFolder(name) {
+async function addFolder(name) {
   if (!isString(name)) {
     return Promise.reject(new Error('Name must be a string.'));
   }
@@ -14,27 +12,22 @@ function addFolder(name) {
     return Promise.reject(new Error('Name must be at least 1 character long.'));
   }
 
-  return resolveStorage().then((storageData) => {
-    const { folders } = storageData;
+  const targetFolder = await db.folders.findOne({ name });
 
-    if (folders.some(folder => folder.name === name)) {
-      return Promise.reject(new Error(`A folder with the name '${name}' already exists.`));
-    }
+  if (targetFolder) {
+    return Promise.reject(
+      new Error(`A folder with the name '${name}' already exists.`)
+    );
+  }
 
-    const newFolder = {
-      id: v4(),
-      name,
-    };
+  const newFolder = {
+    id: v4(),
+    name
+  };
 
-    return Promise.resolve(newFolder).then((folder) => {
-      const newFolders = [...folders, folder];
-      const newStorageData = Object.assign({}, storageData, { folders: newFolders });
+  await db.folders.insert(newFolder);
 
-      fs.writeFileSync(consts.JSON_PATH, JSON.stringify(newStorageData));
-
-      return folder;
-    });
-  });
+  return newFolder;
 }
 
 export default addFolder;

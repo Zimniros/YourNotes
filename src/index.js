@@ -10,7 +10,7 @@ import './styles/main.scss';
 import App from './components/App';
 import reducers from './reducers';
 
-import resolveDatastores from './api/db';
+import Datastore from './api/db';
 
 const initStore = async () => {
   const storeData = {
@@ -23,24 +23,25 @@ const initStore = async () => {
     }
   };
 
-  resolveDatastores().then(data => console.log('data', data));
+  const [notes, folders, tags] = await Promise.all([
+    Datastore.notes.find({}),
+    Datastore.folders.find({}),
+    Datastore.tags.find({})
+  ]);
 
-  // const { folders, tags } = await resolveStorage();
-  // const notes = await resolveNotes();
+  folders.forEach(folder => storeData.folders.set(folder.id, folder));
+  tags.forEach(tag => storeData.tags.set(tag.id, tag));
+  notes.forEach(note => {
+    storeData.notesData.allNotes.set(note.key, note);
 
-  // folders.forEach(folder => storeData.folders.set(folder.id, folder));
-  // tags.forEach(tag => storeData.tags.set(tag.id, tag));
-  // notes.forEach(note => {
-  //   storeData.notesData.allNotes.set(note.key, note);
+    if (note.isStarred) {
+      storeData.notesData.starredNotes.add(note.key);
+    }
 
-  //   if (note.isStarred) {
-  //     storeData.notesData.starredNotes.add(note.key);
-  //   }
-
-  //   if (note.isTrashed) {
-  //     storeData.notesData.trashedNotes.add(note.key);
-  //   }
-  // });
+    if (note.isTrashed) {
+      storeData.notesData.trashedNotes.add(note.key);
+    }
+  });
 
   const store = createStore(reducers, storeData);
 

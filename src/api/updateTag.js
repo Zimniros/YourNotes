@@ -1,10 +1,8 @@
-import fs from 'fs';
-import { isEmpty, isString, cloneDeep } from 'lodash';
+import { isEmpty, isString } from 'lodash';
 
-import consts from './consts';
-import resolveStorage from './resolveStorage';
+import db from './db';
 
-function updateTag(tag) {
+async function updateTag(tag) {
   if (isEmpty(tag)) {
     return Promise.reject(new Error('No input found.'));
   }
@@ -19,29 +17,17 @@ function updateTag(tag) {
     return Promise.reject(new Error('Name must be at least 1 character long.'));
   }
 
-  return resolveStorage().then((storageData) => {
-    const { tags } = storageData;
+  const targetTag = await db.tags.findOne({ name });
 
-    if (tags.some(el => el.name === name && el.id !== id)) {
-      return Promise.reject(new Error(`A folder with the name '${name}' already exists.`));
-    }
+  if (targetTag) {
+    return Promise.reject(
+      new Error(`A tag with the name '${name}' already exists.`)
+    );
+  }
 
-    const newTagData = cloneDeep(tags);
+  await db.tags.update({ id }, tag);
 
-    const targetTag = newTagData.find(el => el.id === id);
-
-    targetTag.name = name;
-
-    const newStorageData = Object.assign({}, storageData, { tags: newTagData });
-
-    try {
-      fs.writeFileSync(consts.JSON_PATH, JSON.stringify(newStorageData));
-    } catch (error) {
-      return Promise.reject(error);
-    }
-
-    return Promise.resolve(tag);
-  });
+  return Promise.resolve(tag);
 }
 
 export default updateTag;
