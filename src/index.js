@@ -1,16 +1,16 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { HashRouter as Router } from "react-router-dom";
-import { Provider } from "react-redux";
-import { createStore } from "redux";
-import Map from "./api/Map";
-import Set from "./api/Set";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { HashRouter as Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import Map from './api/Map';
+import Set from './api/Set';
 
-import "./styles/main.scss";
-import App from "./components/App";
-import reducers from "./reducers";
-import resolveNotes from "./api/resolveNotes";
-import resolveStorage from "./api/resolveStorage";
+import './styles/main.scss';
+import App from './components/App';
+import reducers from './reducers';
+
+import resolveDatastores from './api/db';
 
 const initStore = async () => {
   const storeData = {
@@ -23,22 +23,24 @@ const initStore = async () => {
     }
   };
 
-  const { folders, tags } = await resolveStorage();
-  const notes = await resolveNotes();
+  resolveDatastores().then(data => console.log('data', data));
 
-  folders.forEach(folder => storeData.folders.set(folder.id, folder));
-  tags.forEach(tag => storeData.tags.set(tag.id, tag));
-  notes.forEach(note => {
-    storeData.notesData.allNotes.set(note.key, note);
+  // const { folders, tags } = await resolveStorage();
+  // const notes = await resolveNotes();
 
-    if (note.isStarred) {
-      storeData.notesData.starredNotes.add(note.key);
-    }
+  // folders.forEach(folder => storeData.folders.set(folder.id, folder));
+  // tags.forEach(tag => storeData.tags.set(tag.id, tag));
+  // notes.forEach(note => {
+  //   storeData.notesData.allNotes.set(note.key, note);
 
-    if (note.isTrashed) {
-      storeData.notesData.trashedNotes.add(note.key);
-    }
-  });
+  //   if (note.isStarred) {
+  //     storeData.notesData.starredNotes.add(note.key);
+  //   }
+
+  //   if (note.isTrashed) {
+  //     storeData.notesData.trashedNotes.add(note.key);
+  //   }
+  // });
 
   const store = createStore(reducers, storeData);
 
@@ -48,7 +50,7 @@ const initStore = async () => {
         <App />
       </Router>
     </Provider>,
-    document.getElementById("root")
+    document.getElementById('root')
   );
 };
 
