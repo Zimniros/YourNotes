@@ -1,7 +1,6 @@
 const electron = require('electron');
 
-const { app } = electron;
-const { BrowserWindow } = electron;
+const { app, BrowserWindow, ipcMain } = electron;
 
 const path = require('path');
 const isDev = require('electron-is-dev');
@@ -52,4 +51,20 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+const db = require('./../src/api/db');
+
+ipcMain.on('init:start', () => {
+  Promise.all([db.notes.find({}), db.folders.find({}), db.tags.find({})]).then(
+    results => {
+      const data = {
+        notes: results[0],
+        folders: results[1],
+        tags: results[2]
+      };
+
+      mainWindow.webContents.send('init:finish', data);
+    }
+  );
 });

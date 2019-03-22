@@ -1,12 +1,11 @@
-import Datastore from 'nedb-promises';
-import { remote } from 'electron';
-
-const { app } = remote;
+const Datastore = require('nedb-promises');
+const { remote } = require('electron');
+const isDev = require('electron-is-dev');
 
 const dbFactory = fileName =>
   Datastore.create({
     filename: `${
-      process.env.NODE_ENV === 'dev' ? '.' : app.getAppPath('userData')
+      isDev ? '.' : remote.app.getAppPath('userData')
     }/data/${fileName}`,
     timestampData: true,
     autoload: true
@@ -18,4 +17,4 @@ const db = {
   folders: dbFactory('folders.db')
 };
 
-export default db;
+module.exports = db;
