@@ -78,7 +78,7 @@ export const addNote = location => dispatch =>
   new Promise((resolve, reject) => {
     ipcRenderer.send('note:create', location);
 
-    ipcRenderer.on('note:created', (event, note) => {
+    ipcRenderer.once('note:created', (event, note) => {
       dispatch({
         type: 'ADD_NOTE',
         note
@@ -87,15 +87,28 @@ export const addNote = location => dispatch =>
       resolve(note);
     });
 
-    ipcRenderer.on('note:error', (event, errorMessage) => {
+    ipcRenderer.once('note:created:error', (event, errorMessage) => {
       reject(new Error(errorMessage));
     });
   });
 
-export const updateNote = note => ({
-  type: 'UPDATE_NOTE',
-  note
-});
+export const updateNote = (noteKey, input) => dispatch =>
+  new Promise((resolve, reject) => {
+    ipcRenderer.send('note:update', { noteKey, input });
+
+    ipcRenderer.once('note:updated', (event, note) => {
+      dispatch({
+        type: 'UPDATE_NOTE',
+        note
+      });
+
+      resolve(note);
+    });
+
+    ipcRenderer.once('note:updated:error', (event, errorMessage) => {
+      reject(new Error(errorMessage));
+    });
+  });
 
 export const deleteNote = key => ({
   type: 'DELETE_NOTE',

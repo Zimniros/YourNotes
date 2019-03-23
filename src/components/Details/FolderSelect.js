@@ -1,18 +1,17 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { func, instanceOf } from "prop-types";
-import Icon from "@mdi/react";
-import { mdiNotebook as notebookIcon, mdiFolder as folderIcon } from "@mdi/js";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { func, instanceOf } from 'prop-types';
+import Icon from '@mdi/react';
+import { mdiNotebook as notebookIcon, mdiFolder as folderIcon } from '@mdi/js';
 
-import { updateNote } from "../../actions";
-import updateNoteApi from "../../api/updateNote";
-import { noteType, historyType } from "../../types";
+import { updateNote } from '../../actions';
+import { noteType, historyType } from '../../types';
 
-import Map from "../../api/Map";
+import Map from '../../api/Map';
 
 class FolderSelect extends Component {
   static propTypes = {
@@ -50,31 +49,32 @@ class FolderSelect extends Component {
 
   onFolderItemClick(newFolderId) {
     const { note, dispatch, history } = this.props;
+    const pathname = newFolderId ? `/folder/${newFolderId}` : '/home';
 
-    const pathname = newFolderId ? `/folder/${newFolderId}` : "/home";
+    const { key: noteKey } = note;
+    const input = {
+      folder: newFolderId || ''
+    };
 
-    const newNote = Object.assign({}, note, { folder: newFolderId || "" });
-
-    updateNoteApi(newNote)
-      .then(data => dispatch(updateNote(data)))
+    dispatch(updateNote(noteKey, input))
       .then(() => {
         this.onClose();
         history.replace(pathname);
       })
       .catch(error =>
         console.log(
-          "Error in onFolderItemClick() in FolderSelect component",
+          'Error in onFolderItemClick() in FolderSelect component',
           error
         )
       );
   }
 
   addListener() {
-    document.addEventListener("click", this.handleOutsideClick);
+    document.addEventListener('click', this.handleOutsideClick);
   }
 
   removeListener() {
-    document.removeEventListener("click", this.handleOutsideClick);
+    document.removeEventListener('click', this.handleOutsideClick);
   }
 
   handleOutsideClick(event) {
@@ -89,7 +89,7 @@ class FolderSelect extends Component {
     const { isOpen } = this.state;
     const folder = folders.get(folderId);
 
-    const folderName = folder ? folder.name : "All Notes";
+    const folderName = folder ? folder.name : 'All Notes';
 
     return (
       <div
@@ -108,7 +108,7 @@ class FolderSelect extends Component {
             <div
               key={0}
               className={`folder-select__item${
-                !folder ? " folder-select__item--selected" : ""
+                !folder ? ' folder-select__item--selected' : ''
               }`}
               onClick={() => this.onFolderItemClick()}
             >
@@ -117,7 +117,7 @@ class FolderSelect extends Component {
             </div>
             {folders.map(({ id, name }) => {
               const className = `folder-select__item${
-                folderId === id ? " folder-select__item--selected" : ""
+                folderId === id ? ' folder-select__item--selected' : ''
               } `;
 
               return (

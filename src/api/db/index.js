@@ -7,7 +7,6 @@ const dbFactory = fileName =>
     filename: `${
       isDev ? '.' : remote.app.getAppPath('userData')
     }/data/${fileName}`,
-    timestampData: true,
     autoload: true
   });
 

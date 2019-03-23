@@ -55,6 +55,7 @@ app.on('activate', () => {
 
 const db = require('./../src/api/db');
 const addNote = require('./../src/api/addNote');
+const updateNote = require('./../src/api/updateNote');
 
 ipcMain.on('init:start', () => {
   Promise.all([db.notes.find({}), db.folders.find({}), db.tags.find({})]).then(
@@ -77,6 +78,17 @@ ipcMain.on('note:create', (event, location) => {
     })
     .catch(error => {
       const errorMessage = error.message;
-      mainWindow.webContents.send('note:error', errorMessage);
+      mainWindow.webContents.send('note:created:error', errorMessage);
+    });
+});
+
+ipcMain.on('note:update', (event, { noteKey, input }) => {
+  updateNote(noteKey, input)
+    .then(note => {
+      mainWindow.webContents.send('note:updated', note);
+    })
+    .catch(error => {
+      const errorMessage = error.message;
+      mainWindow.webContents.send('note:updated:error', errorMessage);
     });
 });

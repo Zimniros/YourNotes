@@ -1,16 +1,15 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-one-expression-per-line */
-import React, { Component } from "react";
-import Modal from "react-modal";
-import { func } from "prop-types";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import Modal from 'react-modal';
+import { func } from 'prop-types';
+import { connect } from 'react-redux';
 
-import { folderType, notesDataType } from "../../types";
-import { updateNote, deleteFolder, closeModal } from "../../actions";
+import { folderType, notesDataType } from '../../types';
+import { updateNote, deleteFolder, closeModal } from '../../actions';
 
-import deleteFolderApi from "../../api/deleteFolder";
-import updateNoteApi from "../../api/updateNote";
+import deleteFolderApi from '../../api/deleteFolder';
 
 class DeleteFolderConfirmationModal extends Component {
   static propTypes = {
@@ -23,7 +22,7 @@ class DeleteFolderConfirmationModal extends Component {
     super();
 
     this.state = {
-      error: ""
+      error: ''
     };
   }
 
@@ -40,21 +39,17 @@ class DeleteFolderConfirmationModal extends Component {
 
         allNotes.forEach(note => {
           if (note.folder === id) {
-            const newNote = Object.assign({}, note, {
-              folder: "",
+            const { key: noteKey } = note;
+
+            const input = {
+              folder: '',
               isStarred: false,
               isTrashed: true
-            });
+            };
 
-            updateNoteApi(newNote)
-              .then(data => dispatch(updateNote(data)))
-              .catch(error =>
-                console.log(
-                  `Error during ${newNote.key} update`,
-                  error,
-                  newNote
-                )
-              );
+            dispatch(updateNote(noteKey, input)).catch(error =>
+              console.log(`Error during ${noteKey} update`, error, input)
+            );
           }
         });
 
@@ -65,7 +60,7 @@ class DeleteFolderConfirmationModal extends Component {
 
   onClose() {
     const { dispatch } = this.props;
-    this.setState({ error: "" });
+    this.setState({ error: '' });
     dispatch(closeModal());
   }
 
@@ -93,7 +88,7 @@ class DeleteFolderConfirmationModal extends Component {
         </div>
 
         <p className="modal__text-content">
-          Are you sure you want to delete{" "}
+          Are you sure you want to delete{' '}
           <span className="modal__text-content--bold">{name}</span> folder? All
           of the notes in the folder will be moved to the Trash.
         </p>

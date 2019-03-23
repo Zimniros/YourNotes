@@ -1,31 +1,27 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { func } from "prop-types";
-import { withRouter } from "react-router-dom";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { func } from 'prop-types';
 
-import Icon from "@mdi/react";
+import Icon from '@mdi/react';
 import {
   mdiStarOutline as starOutline,
   mdiStar as star,
   mdiTrashCanOutline as trashIcon,
   mdiInformationOutline as infoIcon
-} from "@mdi/js";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+} from '@mdi/js';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
-import { updateNote, showDeleteNoteConfirmationModal } from "../../actions";
-import updateNoteApi from "../../api/updateNote";
-import { noteType, historyType, locationType } from "../../types";
+import { updateNote, showDeleteNoteConfirmationModal } from '../../actions';
+import { noteType } from '../../types';
 
-import FolderSelect from "./FolderSelect";
-import TagSelect from "./TagSelect";
+import FolderSelect from './FolderSelect';
+import TagSelect from './TagSelect';
 
 class NoteEditor extends Component {
   static propTypes = {
     note: noteType.isRequired,
-    dispatch: func.isRequired,
-    history: historyType.isRequired,
-    location: locationType.isRequired
+    dispatch: func.isRequired
   };
 
   constructor(props) {
@@ -38,30 +34,30 @@ class NoteEditor extends Component {
     this.modules = {
       toolbar: [
         [{ header: [1, 2, false] }],
-        ["bold", "italic", "underline", "strike", "blockquote"],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
         [
-          { list: "ordered" },
-          { list: "bullet" },
-          { indent: "-1" },
-          { indent: "+1" }
+          { list: 'ordered' },
+          { list: 'bullet' },
+          { indent: '-1' },
+          { indent: '+1' }
         ],
-        ["link", "image"],
-        ["clean"]
+        ['link', 'image'],
+        ['clean']
       ]
     };
 
     this.formats = [
-      "header",
-      "bold",
-      "italic",
-      "underline",
-      "strike",
-      "blockquote",
-      "list",
-      "bullet",
-      "indent",
-      "link",
-      "image"
+      'header',
+      'bold',
+      'italic',
+      'underline',
+      'strike',
+      'blockquote',
+      'list',
+      'bullet',
+      'indent',
+      'link',
+      'image'
     ];
 
     this.delayTimer = null;
@@ -84,77 +80,59 @@ class NoteEditor extends Component {
   onInputChange = event => {
     const { note } = this.state;
     const { value: title } = event.target;
-    const updatedAt = new Date().getTime();
 
-    this.setState(
-      { note: Object.assign({}, note, { title, updatedAt }) },
-      () => {
-        this.saveNote();
-      }
-    );
+    this.setState({ note: Object.assign({}, note, { title }) }, () => {
+      this.saveNote();
+    });
   };
 
   onChange = value => {
     const { note } = this.state;
-    const updatedAt = new Date().getTime();
 
-    this.setState(
-      { note: Object.assign({}, note, { value, updatedAt }) },
-      () => {
-        this.saveNote();
-      }
-    );
+    this.setState({ note: Object.assign({}, note, { value }) }, () => {
+      this.saveNote();
+    });
   };
 
   onStarClick = event => {
     event.preventDefault();
 
-    const { dispatch, note } = this.props;
+    const { note } = this.state;
 
-    const newNote = Object.assign({}, note, { isStarred: !note.isStarred });
+    const { isStarred } = note;
+    const input = {
+      isStarred: !isStarred
+    };
 
-    updateNoteApi(newNote)
-      .then(data => dispatch(updateNote(data)))
-      .catch(error =>
-        console.log("Error in onStarClick() in NoteItem component", error)
-      );
+    this.setState({ note: Object.assign({}, note, input) }, () => {
+      this.saveNoteNow();
+    });
   };
 
   onTrashClick = event => {
     event.preventDefault();
 
-    const { dispatch, note, history, location } = this.props;
-    const { pathname } = location;
+    const { note } = this.state;
 
-    const newNote = Object.assign({}, note, {
+    const input = {
       isStarred: false,
       isTrashed: true
-    });
+    };
 
-    updateNoteApi(newNote).then(data => {
-      dispatch(updateNote(data));
-
-      history
-        .replace({
-          pathname
-        })
-
-        .catch(error =>
-          console.log("Error in onStarClick() in NoteItem component", error)
-        );
+    this.setState({ note: Object.assign({}, note, input) }, () => {
+      this.saveNoteNow();
     });
   };
 
   handleRestore = () => {
-    const { dispatch, note } = this.props;
+    const { note } = this.state;
+    const input = {
+      isTrashed: false
+    };
 
-    const newNote = Object.assign({}, note, { isTrashed: false });
-
-    updateNoteApi(newNote)
-      .then(data => dispatch(updateNote(data)))
-      .catch(error =>
-        console.log("Error in handleRestore() in NoteItem component", error)
-      );
+    this.setState({ note: Object.assign({}, note, input) }, () => {
+      this.saveNoteNow();
+    });
   };
 
   handleDelete = () => {
@@ -172,12 +150,13 @@ class NoteEditor extends Component {
   saveNoteNow() {
     const { dispatch } = this.props;
     const { note } = this.state;
+    const { key: noteKey } = note;
     clearTimeout(this.delayTimer);
     this.delayTimer = null;
 
-    updateNoteApi(note)
-      .then(data => dispatch(updateNote(data)))
-      .catch(error => console.log("Error in saveNoteNow()", error));
+    dispatch(updateNote(noteKey, note)).catch(error =>
+      console.log('Error in saveNoteNow() in NoteEditor component', error)
+    );
   }
 
   render() {
@@ -187,7 +166,7 @@ class NoteEditor extends Component {
 
     const starIcon = isStarred ? star : starOutline;
     const starIconClassName = `control-group__star-icon${
-      isStarred ? " control-group__star-icon--starred" : ""
+      isStarred ? ' control-group__star-icon--starred' : ''
     }`;
 
     const rightInfoGroup = isTrashed ? (
@@ -252,7 +231,7 @@ class NoteEditor extends Component {
           modules={this.modules}
           formats={this.formats}
           onChange={(newValue, delta, source) => {
-            if (source === "user") {
+            if (source === 'user') {
               this.onChange(newValue);
             }
           }}
@@ -263,4 +242,4 @@ class NoteEditor extends Component {
   }
 }
 
-export default withRouter(connect(null)(NoteEditor));
+export default connect(null)(NoteEditor);

@@ -1,24 +1,23 @@
 /* eslint-disable consistent-return */
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { connect } from "react-redux";
-import { func } from "prop-types";
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { func } from 'prop-types';
 
-import getSearchKey from "../lib/getSearchKey";
-import getNotes from "../lib/getNotes";
+import getSearchKey from '../lib/getSearchKey';
+import getNotes from '../lib/getNotes';
 import {
   notesDataType,
   locationType,
   historyType,
   sortByType
-} from "../../types";
+} from '../../types';
 
-import { updateNote, showDeleteNoteConfirmationModal } from "../../actions";
-import updateNoteApi from "../../api/updateNote";
+import { updateNote, showDeleteNoteConfirmationModal } from '../../actions';
 
-import context from "../../api/context";
+import context from '../../api/context';
 
-import NoteItem from "./NoteItem";
+import NoteItem from './NoteItem';
 
 function sortByUpdatedAtDesc(a, b) {
   return new Date(b.updatedAt) - new Date(a.updatedAt);
@@ -129,13 +128,13 @@ class NoteList extends Component {
       this.handleNoteClick(key);
     }
 
-    const deleteNoteLabel = "Delete Note";
-    const restoreNoteLabel = "Restore Note";
-    const moveToTrashLabel = "Move to trash";
+    const deleteNoteLabel = 'Delete Note';
+    const restoreNoteLabel = 'Restore Note';
+    const moveToTrashLabel = 'Move to trash';
 
     const templates = [];
 
-    if (pathname === "/trash") {
+    if (pathname === '/trash') {
       templates.push(
         {
           label: restoreNoteLabel,
@@ -158,41 +157,39 @@ class NoteList extends Component {
 
   handleStarClick(note) {
     const { dispatch } = this.props;
+    const { key: noteKey, isStarred } = note;
+    const input = {
+      isStarred: !isStarred
+    };
 
-    const newNote = Object.assign({}, note, { isStarred: !note.isStarred });
-
-    updateNoteApi(newNote)
-      .then(data => dispatch(updateNote(data)))
-      .catch(error =>
-        console.log("Error in handleStarClick() in NoteItem component", error)
-      );
+    dispatch(updateNote(noteKey, input)).catch(error =>
+      console.log('Error in handleStarClick() in NoteItem component', error)
+    );
   }
 
   handleTrash(note) {
     const { dispatch } = this.props;
-
-    const newNote = Object.assign({}, note, {
+    const { key: noteKey } = note;
+    const input = {
       isStarred: false,
       isTrashed: true
-    });
+    };
 
-    updateNoteApi(newNote)
-      .then(data => dispatch(updateNote(data)))
-      .catch(error =>
-        console.log("Error in handleTrash() in NoteItem component", error)
-      );
+    dispatch(updateNote(noteKey, input)).catch(error =>
+      console.log('Error in handleTrash() in NoteItem component', error)
+    );
   }
 
   handleRestore(note) {
     const { dispatch } = this.props;
+    const { key: noteKey } = note;
+    const input = {
+      isTrashed: false
+    };
 
-    const newNote = Object.assign({}, note, { isTrashed: false });
-
-    updateNoteApi(newNote)
-      .then(data => dispatch(updateNote(data)))
-      .catch(error =>
-        console.log("Error in handleRestore() in NoteItem component", error)
-      );
+    dispatch(updateNote(noteKey, input)).catch(error =>
+      console.log('Error in handleRestore() in NoteItem component', error)
+    );
   }
 
   render() {

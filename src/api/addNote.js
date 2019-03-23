@@ -1,5 +1,5 @@
-const v4 = require('uuid/v4');
 const { isEmpty } = require('lodash');
+const v4 = require('uuid/v4');
 
 const db = require('./db');
 
@@ -9,7 +9,7 @@ async function addNote(location) {
   const newNote = {
     key: v4(),
     title: '',
-    value: '<p><br></p>',
+    value: '',
     createdAt: new Date().getTime(),
     updatedAt: new Date().getTime(),
     folder: '',

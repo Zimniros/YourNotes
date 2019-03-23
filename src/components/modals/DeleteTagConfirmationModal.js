@@ -1,17 +1,16 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-one-expression-per-line */
-import React, { Component } from "react";
-import Modal from "react-modal";
-import { func } from "prop-types";
-import { connect } from "react-redux";
-import remove from "lodash/remove";
+import React, { Component } from 'react';
+import Modal from 'react-modal';
+import { func } from 'prop-types';
+import { connect } from 'react-redux';
+import remove from 'lodash/remove';
 
-import { tagType, notesDataType } from "../../types";
-import { updateNote, deleteTag, closeModal } from "../../actions";
+import { tagType, notesDataType } from '../../types';
+import { updateNote, deleteTag, closeModal } from '../../actions';
 
-import deleteTagApi from "../../api/deleteTag";
-import updateNoteApi from "../../api/updateNote";
+import deleteTagApi from '../../api/deleteTag';
 
 class DeleteTagConfirmationModal extends Component {
   static propTypes = {
@@ -24,7 +23,7 @@ class DeleteTagConfirmationModal extends Component {
     super();
 
     this.state = {
-      error: ""
+      error: ''
     };
   }
 
@@ -45,17 +44,14 @@ class DeleteTagConfirmationModal extends Component {
           if (tags.some(el => el.id === tagId)) {
             remove(tags, el => el.id === tagId);
 
-            const newNote = Object.assign({}, note, { tags });
+            const { key: noteKey } = note;
+            const input = {
+              tags
+            };
 
-            updateNoteApi(newNote)
-              .then(data => dispatch(updateNote(data)))
-              .catch(error =>
-                console.log(
-                  `Error during ${newNote.key} update`,
-                  error,
-                  newNote
-                )
-              );
+            dispatch(updateNote(noteKey, input)).catch(error =>
+              console.log(`Error during ${noteKey} update`, error, input)
+            );
           }
         });
 
@@ -66,7 +62,7 @@ class DeleteTagConfirmationModal extends Component {
 
   onClose() {
     const { dispatch } = this.props;
-    this.setState({ error: "" });
+    this.setState({ error: '' });
     dispatch(closeModal());
   }
 
@@ -94,7 +90,7 @@ class DeleteTagConfirmationModal extends Component {
         </div>
 
         <p className="modal__text-content">
-          Are you sure you want to delete{" "}
+          Are you sure you want to delete{' '}
           <span className="modal__text-content--bold">{name}</span> tag?
         </p>
 

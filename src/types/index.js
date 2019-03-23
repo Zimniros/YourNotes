@@ -10,9 +10,9 @@ import {
   object,
   func,
   array
-} from "prop-types";
-import Map from "../api/Map";
-import Set from "../api/Set";
+} from 'prop-types';
+import Map from '../api/Map';
+import Set from '../api/Set';
 
 export const folderType = shape({
   id: string.isRequired,
@@ -20,8 +20,8 @@ export const folderType = shape({
 });
 
 export const folderDefault = {
-  id: "",
-  name: ""
+  id: '',
+  name: ''
 };
 
 export const tagType = shape({
@@ -41,18 +41,6 @@ export const noteType = shape({
   isTrashed: bool.isRequired
 });
 
-export const noteDefault = {
-  key: "",
-  title: "",
-  value: {},
-  createdAt: new Date().getTime(),
-  updatedAt: new Date().getTime(),
-  folder: "",
-  tags: [],
-  isStarred: false,
-  isTrashed: false
-};
-
 export const notesDataType = shape({
   allNotes: instanceOf(Map).isRequired,
   starredNotes: instanceOf(Set).isRequired,
@@ -68,7 +56,7 @@ export const locationType = shape({
 });
 
 export const historyType = shape({
-  action: oneOf(["PUSH", "REPLACE", "POP"]).isRequired,
+  action: oneOf(['PUSH', 'REPLACE', 'POP']).isRequired,
   block: func.isRequired,
   canGo: func, // only in createMemoryHistory
   createHref: func.isRequired,
@@ -93,7 +81,6 @@ export default {
   folderType,
   folderDefault,
   noteType,
-  noteDefault,
   notesDataType,
   locationType,
   historyType,

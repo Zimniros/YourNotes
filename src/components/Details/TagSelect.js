@@ -1,20 +1,19 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable consistent-return */
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { func, instanceOf } from "prop-types";
-import { sortBy, filter, cloneDeep, includes, remove } from "lodash";
-import Autosuggest from "react-autosuggest";
-import Icon from "@mdi/react";
-import { mdiPound as poundIcon } from "@mdi/js";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { func, instanceOf } from 'prop-types';
+import { sortBy, filter, includes, remove } from 'lodash';
+import Autosuggest from 'react-autosuggest';
+import Icon from '@mdi/react';
+import { mdiPound as poundIcon } from '@mdi/js';
 
-import { updateNote, addTag } from "../../actions";
-import { noteType, historyType } from "../../types";
-import addTagApi from "../../api/addTag";
-import updateNoteApi from "../../api/updateNote";
-import Map from "../../api/Map";
+import { updateNote, addTag } from '../../actions';
+import { noteType, historyType } from '../../types';
+import addTagApi from '../../api/addTag';
+import Map from '../../api/Map';
 
 class TagSelect extends Component {
   static propTypes = {
@@ -25,7 +24,7 @@ class TagSelect extends Component {
   };
 
   state = {
-    value: "",
+    value: '',
     suggestions: []
   };
 
@@ -109,15 +108,20 @@ class TagSelect extends Component {
     event.stopPropagation();
 
     const { note } = this.props;
-    const newNote = cloneDeep(note);
-    remove(newNote.tags, tag => tag === tagId);
+    const { key: noteKey, tags } = note;
 
-    this.handleUpdateNote(newNote);
+    remove(tags, tag => tag === tagId);
+
+    const input = {
+      tags
+    };
+
+    this.handleUpdateNote(noteKey, input);
   };
 
   addNewTag(newTag) {
     const { note, tags, dispatch } = this.props;
-    const { tags: noteTagIds } = note;
+    const { key: noteKey, tags: noteTagIds } = note;
 
     if (newTag.length <= 0) {
       this.reset();
@@ -135,23 +139,25 @@ class TagSelect extends Component {
           return tag;
         })
         .then(tag => {
-          const newNote = cloneDeep(note);
-          newNote.tags.push(tag.id);
+          const input = {
+            tags: noteTagIds.push(tag.id)
+          };
 
-          this.handleUpdateNote(newNote);
+          this.handleUpdateNote(noteKey, input);
         })
         .catch(error =>
-          console.log("Error in addNewTag() in TagSelect component", error)
+          console.log('Error in addNewTag() in TagSelect component', error)
         );
 
       return null;
     }
 
     if (!includes(noteTagIds, targetTag.id)) {
-      const newNote = cloneDeep(note);
-      newNote.tags.push(targetTag.id);
+      const input = {
+        tags: noteTagIds.push(targetTag.id)
+      };
 
-      this.handleUpdateNote(newNote);
+      this.handleUpdateNote(noteKey, input);
       this.reset();
     }
   }
@@ -160,18 +166,16 @@ class TagSelect extends Component {
     this.buildSuggestions();
 
     this.setState({
-      value: ""
+      value: ''
     });
   }
 
-  handleUpdateNote(newNote) {
+  handleUpdateNote(noteKey, input) {
     const { dispatch } = this.props;
 
-    updateNoteApi(newNote)
-      .then(data => dispatch(updateNote(data)))
-      .catch(error =>
-        console.log("Error in updateNoteApi() in TagSelect component", error)
-      );
+    dispatch(updateNote(noteKey, input)).catch(error =>
+      console.log('Error in handleUpdateNote() in TagSelect component', error)
+    );
   }
 
   submitNewTag() {
@@ -180,7 +184,7 @@ class TagSelect extends Component {
 
   buildSuggestions() {
     const { tags } = this.props;
-    this.suggestions = sortBy(tags.toArray(), "name");
+    this.suggestions = sortBy(tags.toArray(), 'name');
   }
 
   render() {
@@ -210,7 +214,7 @@ class TagSelect extends Component {
     });
 
     const inputProps = {
-      placeholder: "Add tag...",
+      placeholder: 'Add tag...',
       value,
       onChange: this.onChange,
       onKeyDown: this.onInputKeyDown,
