@@ -58,6 +58,8 @@ const addNote = require('./../src/api/addNote');
 const updateNote = require('./../src/api/updateNote');
 const deleteNote = require('./../src/api/deleteNote');
 
+const addFolder = require('./../src/api/addFolder');
+
 ipcMain.on('init:start', () => {
   Promise.all([db.notes.find({}), db.folders.find({}), db.tags.find({})]).then(
     results => {
@@ -72,6 +74,9 @@ ipcMain.on('init:start', () => {
   );
 });
 
+/*
+  Note events
+*/
 ipcMain.on('note:create', (event, location) => {
   addNote(location)
     .then(note => {
@@ -102,5 +107,19 @@ ipcMain.on('note:delete', (event, noteKey) => {
     .catch(error => {
       const errorMessage = error.message;
       mainWindow.webContents.send('note:deleted:error', errorMessage);
+    });
+});
+
+/*
+  Folder events
+*/
+ipcMain.on('folder:create', (event, name) => {
+  addFolder(name)
+    .then(folder => {
+      mainWindow.webContents.send('folder:created', folder);
+    })
+    .catch(error => {
+      const errorMessage = error.message;
+      mainWindow.webContents.send('folder:created:error', errorMessage);
     });
 });

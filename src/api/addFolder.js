@@ -1,18 +1,24 @@
-import v4 from 'uuid/v4';
-import { isString } from 'lodash';
+const v4 = require('uuid/v4');
+const { isString } = require('lodash');
 
-import db from './db';
+const db = require('./db');
 
 async function addFolder(name) {
   if (!isString(name)) {
     return Promise.reject(new Error('Name must be a string.'));
   }
 
-  if (name < 1) {
+  if (name.length < 1) {
     return Promise.reject(new Error('Name must be at least 1 character long.'));
   }
 
-  const targetFolder = await db.folders.findOne({ name });
+  let targetFolder;
+
+  try {
+    targetFolder = await db.folders.findOne({ name });
+  } catch (error) {
+    return Promise.reject(error);
+  }
 
   if (targetFolder) {
     return Promise.reject(
@@ -25,9 +31,13 @@ async function addFolder(name) {
     name
   };
 
-  await db.folders.insert(newFolder);
+  try {
+    await db.folders.insert(newFolder);
+  } catch (error) {
+    return Promise.reject(error);
+  }
 
   return newFolder;
 }
 
-export default addFolder;
+module.exports = addFolder;

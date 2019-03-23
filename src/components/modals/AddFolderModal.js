@@ -3,13 +3,13 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-one-expression-per-line */
-import React, { Component } from "react";
-import Modal from "react-modal";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import Modal from 'react-modal';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import { closeModal, addFolder } from "../../actions";
-import addFolderAPI from "../../api/addFolder";
+import { closeModal } from '../../actions';
+import { addFolder } from '../../actions/folders';
 
 class AddFolderModal extends Component {
   static propTypes = {
@@ -20,8 +20,8 @@ class AddFolderModal extends Component {
     super(props);
 
     this.state = {
-      folderName: "",
-      error: ""
+      folderName: '',
+      error: ''
     };
 
     this.inputRef = React.createRef();
@@ -40,20 +40,18 @@ class AddFolderModal extends Component {
 
     const { folderName } = this.state;
     const { dispatch } = this.props;
+    const trimmedValue = folderName.trim();
 
-    this.setState({ folderName: folderName.trim() }, () => {
-      addFolderAPI(folderName)
-        .then(folder => {
-          dispatch(addFolder(folder));
-          this.onClose(event);
-        })
+    this.setState({ folderName: trimmedValue }, () => {
+      dispatch(addFolder(trimmedValue))
+        .then(() => this.onClose(event))
         .catch(error => this.setState({ error: error.message }));
     });
   }
 
   onClose() {
     const { dispatch } = this.props;
-    this.setState({ folderName: "", error: "" });
+    this.setState({ folderName: '', error: '' });
     dispatch(closeModal());
   }
 
@@ -64,8 +62,8 @@ class AddFolderModal extends Component {
       <span className="modal__error">{error}</span>
     ) : null;
     const inputClassName = error
-      ? "modal__input modal__input--error"
-      : "modal__input";
+      ? 'modal__input modal__input--error'
+      : 'modal__input';
 
     return (
       <Modal
