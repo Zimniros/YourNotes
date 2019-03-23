@@ -56,6 +56,7 @@ app.on('activate', () => {
 const db = require('./../src/api/db');
 const addNote = require('./../src/api/addNote');
 const updateNote = require('./../src/api/updateNote');
+const deleteNote = require('./../src/api/deleteNote');
 
 ipcMain.on('init:start', () => {
   Promise.all([db.notes.find({}), db.folders.find({}), db.tags.find({})]).then(
@@ -90,5 +91,16 @@ ipcMain.on('note:update', (event, { noteKey, input }) => {
     .catch(error => {
       const errorMessage = error.message;
       mainWindow.webContents.send('note:updated:error', errorMessage);
+    });
+});
+
+ipcMain.on('note:delete', (event, noteKey) => {
+  deleteNote(noteKey)
+    .then(deletedKey => {
+      mainWindow.webContents.send('note:deleted', deletedKey);
+    })
+    .catch(error => {
+      const errorMessage = error.message;
+      mainWindow.webContents.send('note:deleted:error', errorMessage);
     });
 });

@@ -1,15 +1,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-one-expression-per-line */
-import React, { Component } from "react";
-import Modal from "react-modal";
-import { func } from "prop-types";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import Modal from 'react-modal';
+import { func } from 'prop-types';
+import { connect } from 'react-redux';
 
-import { noteType } from "../../types";
-import { deleteNote, closeModal } from "../../actions";
-
-import DeleteNoteApi from "../../api/deleteNote";
+import { noteType } from '../../types';
+import { deleteNote, closeModal } from '../../actions';
 
 class DeleteNoteConfirmationModal extends Component {
   static propTypes = {
@@ -21,7 +19,7 @@ class DeleteNoteConfirmationModal extends Component {
     super();
 
     this.state = {
-      error: ""
+      error: ''
     };
   }
 
@@ -29,19 +27,16 @@ class DeleteNoteConfirmationModal extends Component {
     event.preventDefault();
 
     const { dispatch, note } = this.props;
-    const { key } = note;
+    const { key: noteKey } = note;
 
-    DeleteNoteApi(key)
-      .then(noteKey => {
-        dispatch(deleteNote(noteKey));
-        this.onClose(event);
-      })
+    dispatch(deleteNote(noteKey))
+      .then(() => this.onClose(event))
       .catch(error => this.setState({ error: error.message }));
   }
 
   onClose() {
     const { dispatch } = this.props;
-    this.setState({ error: "" });
+    this.setState({ error: '' });
     dispatch(closeModal());
   }
 

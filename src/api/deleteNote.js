@@ -1,14 +1,17 @@
-import { isEmpty } from 'lodash';
-import db from './db';
+const db = require('./db');
 
-async function deleteNote(key) {
-  if (isEmpty(key)) {
+async function deleteNote(noteKey) {
+  if (noteKey == null) {
     return Promise.reject(new Error('No note key was provided.'));
   }
 
-  await db.notes.remove({ key });
+  try {
+    await db.notes.remove({ key: noteKey });
+  } catch (error) {
+    return Promise.reject(error);
+  }
 
-  return Promise.resolve(key);
+  return Promise.resolve(noteKey);
 }
 
-export default deleteNote;
+module.exports = deleteNote;

@@ -110,10 +110,23 @@ export const updateNote = (noteKey, input) => dispatch =>
     });
   });
 
-export const deleteNote = key => ({
-  type: 'DELETE_NOTE',
-  key
-});
+export const deleteNote = noteKey => dispatch =>
+  new Promise((resolve, reject) => {
+    ipcRenderer.send('note:delete', noteKey);
+
+    ipcRenderer.once('note:deleted', (event, deletedKey) => {
+      dispatch({
+        type: 'DELETE_NOTE',
+        key: deletedKey
+      });
+
+      resolve(deletedKey);
+    });
+
+    ipcRenderer.once('note:deleted:error', (event, errorMessage) => {
+      reject(new Error(errorMessage));
+    });
+  });
 
 export const setSortBy = ({ sortField, sortOrder }) => ({
   type: 'SET_SORT_BY',
