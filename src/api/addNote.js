@@ -1,28 +1,10 @@
-import v4 from 'uuid/v4';
-import db from './db';
+const v4 = require('uuid/v4');
+const { isEmpty } = require('lodash');
 
-async function addNote(type, locationId) {
+const db = require('./db');
+
+async function addNote(location) {
   const { notes, folders, tags } = db;
-
-  if (type && locationId) {
-    if (type === 'folder') {
-      const targetFolder = folders.findOne({ id: locationId });
-      if (!targetFolder) {
-        return Promise.reject(
-          new Error(`A folder with the id '${locationId}' doesn't exist.`)
-        );
-      }
-    }
-
-    if (type === 'tag') {
-      const targetTag = tags.findOne({ id: locationId });
-      if (!targetTag) {
-        return Promise.reject(
-          new Error(`A tag with the id '${locationId}' doesn't exist.`)
-        );
-      }
-    }
-  }
 
   const newNote = {
     key: v4(),
@@ -36,15 +18,33 @@ async function addNote(type, locationId) {
     isTrashed: false
   };
 
-  if (type === 'folder') {
-    newNote.folder = locationId;
-  }
+  if (!isEmpty(location)) {
+    const { locationType, locationId } = location;
 
-  if (type === 'tag') {
-    newNote.tags.push(locationId);
+    if (locationType === 'folder') {
+      const targetFolder = folders.findOne({ id: locationId });
+      if (!targetFolder) {
+        return Promise.reject(
+          new Error(`A folder with the id '${locationId}' doesn't exist.`)
+        );
+      }
+
+      newNote.folder = locationId;
+    }
+
+    if (locationType === 'tag') {
+      const targetTag = tags.findOne({ id: locationId });
+      if (!targetTag) {
+        return Promise.reject(
+          new Error(`A tag with the id '${locationId}' doesn't exist.`)
+        );
+      }
+
+      newNote.tags.push(locationId);
+    }
   }
 
   return notes.insert(newNote);
 }
 
-export default addNote;
+module.exports = addNote;

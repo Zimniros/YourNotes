@@ -1,72 +1,71 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { instanceOf, func } from "prop-types";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { instanceOf, func } from 'prop-types';
 
-import Icon from "@mdi/react";
+import Icon from '@mdi/react';
 import {
   mdiFilePlus as newNoteIcon,
   mdiSortVariant as sortIcon,
   mdiFolderOutline as folderIcon,
   mdiTagOutline as tagIcon
-} from "@mdi/js";
+} from '@mdi/js';
 
-import addNoteApi from "../../api/addNote";
-import Map from "../../api/Map";
-import { addNote, setSortBy } from "../../actions";
+import Map from '../../api/Map';
+import { addNote, setSortBy } from '../../actions';
 import {
   folderPathnameRegex,
   tagPathnameRegex,
   sidebarShortcuts
-} from "../lib/consts";
-import { historyType, locationType } from "../../types";
+} from '../lib/consts';
+import { historyType, locationType as locationPropType } from '../../types';
 
-import SearchBar from "./SearchBar";
+import SearchBar from './SearchBar';
 
 const SORT_BY = {
   UPDATED_AT_DESC: {
-    label: "Updated At(Desc)",
+    label: 'Updated At(Desc)',
     sortBy: {
-      sortField: "UPDATED_AT",
-      sortOrder: "DESC"
+      sortField: 'UPDATED_AT',
+      sortOrder: 'DESC'
     }
   },
   UPDATED_AT_ASC: {
-    label: "Updated At(Asc)",
+    label: 'Updated At(Asc)',
     sortBy: {
-      sortField: "UPDATED_AT",
-      sortOrder: "ASC"
+      sortField: 'UPDATED_AT',
+      sortOrder: 'ASC'
     }
   },
   CREATED_AT_DESC: {
-    label: "Created At(Desc)",
+    label: 'Created At(Desc)',
     sortBy: {
-      sortField: "CREATED_AT",
-      sortOrder: "DESC"
+      sortField: 'CREATED_AT',
+      sortOrder: 'DESC'
     }
   },
   CREATED_AT_ASC: {
-    label: "Created At(Asc)",
+    label: 'Created At(Asc)',
     sortBy: {
-      sortField: "CREATED_AT",
-      sortOrder: "ASC"
+      sortField: 'CREATED_AT',
+      sortOrder: 'ASC'
     }
   },
   ALPHABETICAL_DESC: {
-    label: "Alphabetical(Desc)",
+    label: 'Alphabetical(Desc)',
     sortBy: {
-      sortField: "ALPHABETICAL",
-      sortOrder: "DESC"
+      sortField: 'ALPHABETICAL',
+      sortOrder: 'DESC'
     }
   },
   ALPHABETICAL_ASC: {
-    label: "Alphabetical(Asc)",
+    label: 'Alphabetical(Asc)',
     sortBy: {
-      sortField: "ALPHABETICAL",
-      sortOrder: "ASC"
+      sortField: 'ALPHABETICAL',
+      sortOrder: 'ASC'
     }
   }
 };
@@ -76,7 +75,7 @@ class TopBar extends Component {
     tags: instanceOf(Map).isRequired,
     folders: instanceOf(Map).isRequired,
     history: historyType.isRequired,
-    location: locationType.isRequired,
+    location: locationPropType.isRequired,
     dispatch: func.isRequired
   };
 
@@ -84,9 +83,9 @@ class TopBar extends Component {
     super();
 
     this.state = {
-      type: "",
-      locationName: "",
-      locationId: "",
+      locationType: '',
+      locationName: '',
+      locationId: '',
       isSortByOpen: false
     };
 
@@ -113,25 +112,23 @@ class TopBar extends Component {
 
   onNewNoteClick() {
     const { location, history, dispatch } = this.props;
-    const { type, locationId } = this.state;
+    const { locationType, locationId } = this.state;
 
     const newNoteButton = this.newNoteButtonRef.current;
-    newNoteButton.setAttribute("disabled", "disabled");
+    newNoteButton.setAttribute('disabled', 'disabled');
 
-    addNoteApi(type, locationId)
+    dispatch(addNote({ locationType, locationId }))
       .then(note => {
-        dispatch(addNote(note));
-
         history.push({
           pathname: location.pathname,
           search: `?key=${note.key}`
         });
 
-        newNoteButton.removeAttribute("disabled");
+        newNoteButton.removeAttribute('disabled');
       })
-      .catch(err => {
-        console.log("err", err);
-        newNoteButton.removeAttribute("disabled");
+      .catch(error => {
+        console.error('Error in onNewNoteClick()', error);
+        newNoteButton.removeAttribute('disabled');
       });
   }
 
@@ -168,7 +165,7 @@ class TopBar extends Component {
       return (
         targetFolder &&
         this.setState({
-          type: "folder",
+          locationType: 'folder',
           locationName: targetFolder.name,
           locationId: targetFolder.id
         })
@@ -181,7 +178,7 @@ class TopBar extends Component {
       return (
         targetTag &&
         this.setState({
-          type: "tag",
+          locationType: 'tag',
           locationName: targetTag.name,
           locationId: targetTag.id
         })
@@ -189,16 +186,16 @@ class TopBar extends Component {
     }
 
     const routeObj = sidebarShortcuts.find(({ route }) => route === pathname);
-    const locationName = routeObj ? routeObj.name : "";
-    return this.setState({ type: "", locationName, locationId: "" });
+    const locationName = routeObj ? routeObj.name : '';
+    return this.setState({ locationType: '', locationName, locationId: '' });
   }
 
   addListener() {
-    document.addEventListener("click", this.handleOutsideClick);
+    document.addEventListener('click', this.handleOutsideClick);
   }
 
   removeListener() {
-    document.removeEventListener("click", this.handleOutsideClick);
+    document.removeEventListener('click', this.handleOutsideClick);
   }
 
   handleOutsideClick(event) {
@@ -208,12 +205,12 @@ class TopBar extends Component {
   }
 
   render() {
-    const { type, locationName, isSortByOpen } = this.state;
+    const { locationType, locationName, isSortByOpen } = this.state;
     let locationIcon;
 
-    if (type === "folder") locationIcon = folderIcon;
+    if (locationType === 'folder') locationIcon = folderIcon;
 
-    if (type === "tag") locationIcon = tagIcon;
+    if (locationType === 'tag') locationIcon = tagIcon;
 
     const sortByList = Object.keys(SORT_BY).map(key => {
       const { label, sortBy } = SORT_BY[key];
@@ -271,5 +268,11 @@ class TopBar extends Component {
     );
   }
 }
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//       fetchData: (url) => dispatch(itemsFetchData(url))
+//   };
+// };
 
 export default withRouter(connect(null)(TopBar));
