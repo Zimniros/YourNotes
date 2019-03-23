@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/jsx-one-expression-per-line */
@@ -7,9 +8,9 @@ import { func } from 'prop-types';
 import { connect } from 'react-redux';
 
 import { folderType, notesDataType } from '../../types';
-import { updateNote, deleteFolder, closeModal } from '../../actions';
+import { updateNote, closeModal } from '../../actions';
 
-import deleteFolderApi from '../../api/deleteFolder';
+import { deleteFolder } from '../../actions/folders';
 
 class DeleteFolderConfirmationModal extends Component {
   static propTypes = {
@@ -31,31 +32,26 @@ class DeleteFolderConfirmationModal extends Component {
 
     const { dispatch, folder, notesData } = this.props;
     const { allNotes } = notesData;
-    const { id } = folder;
+    const { id: folderId } = folder;
 
-    deleteFolderApi(id)
-      .then(folderId => {
-        dispatch(deleteFolder(folderId));
+    dispatch(deleteFolder(folderId)).then(() => {
+      const notes = allNotes.toArray().filter(note => note.folder === folderId);
 
-        allNotes.forEach(note => {
-          if (note.folder === id) {
-            const { key: noteKey } = note;
+      const promises = notes.map(note => {
+        const { key: noteKey } = note;
 
-            const input = {
-              folder: '',
-              isStarred: false,
-              isTrashed: true
-            };
+        const input = {
+          folder: '',
+          isStarred: false,
+          isTrashed: true
+        };
 
-            dispatch(updateNote(noteKey, input)).catch(error =>
-              console.log(`Error during ${noteKey} update`, error, input)
-            );
-          }
-        });
-
-        this.onClose();
-      })
-      .catch(error => this.setState({ error: error.message }));
+        return dispatch(updateNote(noteKey, input)).catch(error =>
+          console.log(`Error during ${noteKey} update`, error, input)
+        );
+      });
+      Promise.all(promises).then(() => this.onClose());
+    });
   }
 
   onClose() {

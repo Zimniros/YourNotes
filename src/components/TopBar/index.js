@@ -117,7 +117,7 @@ class TopBar extends Component {
       const targetFolder = folders.get(folderMatch[1]);
       const prevFolder = prevProps.folders.get(folderMatch[1]);
 
-      if (prevFolder.name !== targetFolder.name) {
+      if (targetFolder && prevFolder && prevFolder.name !== targetFolder.name) {
         this.setLocation();
         return;
       }
@@ -127,7 +127,7 @@ class TopBar extends Component {
       const targetTag = tags.get(tagMatch[1]);
       const prevTag = prevProps.tags.get(tagMatch[1]);
 
-      if (prevTag.name !== targetTag.name) {
+      if (targetTag && prevTag && prevTag.name !== targetTag.name) {
         this.setLocation();
       }
     }

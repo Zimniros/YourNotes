@@ -54,11 +54,6 @@ export const updateTag = tag => ({
   tag
 });
 
-export const deleteFolder = folderId => ({
-  type: 'DELETE_FOLDER',
-  folderId
-});
-
 export const deleteTag = tagId => ({
   type: 'DELETE_TAG',
   tagId

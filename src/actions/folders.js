@@ -36,7 +36,26 @@ export const renameFolder = (folderId, folderName) => dispatch =>
     });
   });
 
+export const deleteFolder = folderId => dispatch =>
+  new Promise((resolve, reject) => {
+    ipcRenderer.send('folder:delete', folderId);
+
+    ipcRenderer.once('folder:deleted', (event, deletedKey) => {
+      dispatch({
+        type: 'DELETE_FOLDER',
+        id: deletedKey
+      });
+
+      resolve(deletedKey);
+    });
+
+    ipcRenderer.once('folder:deleted:error', (event, errorMessage) => {
+      reject(new Error(errorMessage));
+    });
+  });
+
 export default {
   addFolder,
-  renameFolder
+  renameFolder,
+  deleteFolder
 };

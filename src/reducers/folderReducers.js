@@ -14,10 +14,10 @@ export default (state = initialState, action) => {
     }
 
     case 'DELETE_FOLDER': {
-      const { folderId } = action;
+      const { id } = action;
       const newState = new Map(state);
 
-      newState.delete(folderId);
+      newState.delete(id);
 
       return newState;
     }

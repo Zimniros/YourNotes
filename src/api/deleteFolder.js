@@ -1,7 +1,7 @@
-import db from './db';
+const db = require('./db');
 
 async function deleteFolder(folderId) {
-  if (!folderId) {
+  if (folderId == null) {
     return Promise.reject(new Error('FolderId is not provided.'));
   }
 
@@ -14,4 +14,4 @@ async function deleteFolder(folderId) {
   return Promise.resolve(folderId);
 }
 
-export default deleteFolder;
+module.exports = deleteFolder;
