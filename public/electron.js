@@ -59,6 +59,7 @@ const updateNote = require('./../src/api/updateNote');
 const deleteNote = require('./../src/api/deleteNote');
 
 const addFolder = require('./../src/api/addFolder');
+const renameFolder = require('../src/api/renameFolder');
 
 ipcMain.on('init:start', () => {
   Promise.all([db.notes.find({}), db.folders.find({}), db.tags.find({})]).then(
@@ -121,5 +122,16 @@ ipcMain.on('folder:create', (event, name) => {
     .catch(error => {
       const errorMessage = error.message;
       mainWindow.webContents.send('folder:created:error', errorMessage);
+    });
+});
+
+ipcMain.on('folder:rename', (event, { folderId, folderName }) => {
+  renameFolder(folderId, folderName)
+    .then(folder => {
+      mainWindow.webContents.send('folder:renamed', folder);
+    })
+    .catch(error => {
+      const errorMessage = error.message;
+      mainWindow.webContents.send('folder:renamed:error', errorMessage);
     });
 });

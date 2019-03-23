@@ -102,11 +102,34 @@ class TopBar extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { location } = this.props;
+    const { location, tags, folders } = this.props;
     const { pathname } = location;
 
     if (prevProps.location.pathname !== pathname) {
       this.setLocation();
+      return;
+    }
+
+    const folderMatch = pathname.match(folderPathnameRegex);
+    const tagMatch = pathname.match(tagPathnameRegex);
+
+    if (folderMatch) {
+      const targetFolder = folders.get(folderMatch[1]);
+      const prevFolder = prevProps.folders.get(folderMatch[1]);
+
+      if (prevFolder.name !== targetFolder.name) {
+        this.setLocation();
+        return;
+      }
+    }
+
+    if (tagMatch) {
+      const targetTag = tags.get(tagMatch[1]);
+      const prevTag = prevProps.tags.get(tagMatch[1]);
+
+      if (prevTag.name !== targetTag.name) {
+        this.setLocation();
+      }
     }
   }
 
@@ -268,11 +291,5 @@ class TopBar extends Component {
     );
   }
 }
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//       fetchData: (url) => dispatch(itemsFetchData(url))
-//   };
-// };
 
 export default withRouter(connect(null)(TopBar));

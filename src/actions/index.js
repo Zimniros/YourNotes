@@ -49,11 +49,6 @@ export const addTag = tag => ({
   tag
 });
 
-export const updateFolder = folder => ({
-  type: 'UPDATE_FOLDER',
-  folder
-});
-
 export const updateTag = tag => ({
   type: 'UPDATE_TAG',
   tag

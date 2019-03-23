@@ -3,15 +3,15 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-one-expression-per-line */
-import React, { Component } from "react";
-import Modal from "react-modal";
-import { func } from "prop-types";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import Modal from 'react-modal';
+import { func } from 'prop-types';
+import { connect } from 'react-redux';
 
-import { folderType } from "../../types";
-import { closeModal, updateFolder } from "../../actions";
+import { folderType } from '../../types';
 
-import UpdateFolderApi from "../../api/updateFolder";
+import { closeModal } from '../../actions';
+import { renameFolder } from '../../actions/folders';
 
 class RenameFolderModal extends Component {
   static propTypes = {
@@ -23,8 +23,8 @@ class RenameFolderModal extends Component {
     super(props);
 
     this.state = {
-      folderName: "",
-      error: ""
+      folderName: '',
+      error: ''
     };
 
     this.inputRef = React.createRef();
@@ -48,22 +48,18 @@ class RenameFolderModal extends Component {
   onSubmit(event) {
     event.preventDefault();
 
-    const { folderName: name } = this.state;
+    const { folderName } = this.state;
     const { dispatch, folder } = this.props;
+    const { id: folderId } = folder;
 
-    const newFolder = Object.assign({}, folder, { name });
-
-    UpdateFolderApi(newFolder)
-      .then(data => {
-        dispatch(updateFolder(data));
-        this.onClose();
-      })
+    dispatch(renameFolder(folderId, folderName))
+      .then(() => this.onClose())
       .catch(error => this.setState({ error: error.message }));
   }
 
   onClose() {
     const { dispatch } = this.props;
-    this.setState({ folderName: "", error: "" });
+    this.setState({ folderName: '', error: '' });
     dispatch(closeModal());
   }
 
@@ -74,8 +70,8 @@ class RenameFolderModal extends Component {
       <span className="modal__error">{error}</span>
     ) : null;
     const inputClassName = error
-      ? "modal__input modal__input--error"
-      : "modal__input";
+      ? 'modal__input modal__input--error'
+      : 'modal__input';
 
     return (
       <Modal
