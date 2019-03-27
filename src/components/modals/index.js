@@ -3,19 +3,14 @@ import { connect } from 'react-redux';
 
 import AddFolderModal from './AddFolderModal';
 import RenameFolderModal from './RenameFolderModal';
-import DeleteFolderConfirmationModal from './DeleteFolderConfirmationModal';
 import AddTagModal from './AddTagModal';
 import RenameTagModal from './RenameTagModal';
-
-import DeleteTagConfirmationModal from './DeleteTagConfirmationModal';
 
 const MODAL_COMPONENTS = {
   ADD_FOLDER: AddFolderModal,
   RENAME_FOLDER: RenameFolderModal,
-  DELETE_FOLDER_CONFIRMATION: DeleteFolderConfirmationModal,
   ADD_TAG: AddTagModal,
-  RENAME_TAG: RenameTagModal,
-  DELETE_TAG_CONFIRMATION: DeleteTagConfirmationModal
+  RENAME_TAG: RenameTagModal
 };
 
 const ModalRoot = ({ modalType, modalProps }) => {

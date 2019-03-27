@@ -1,41 +1,50 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
-import { string, func, instanceOf } from "prop-types";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { string, func, instanceOf } from 'prop-types';
+import { connect } from 'react-redux';
+import { remove } from 'lodash';
 
-import Icon from "@mdi/react";
-import { mdiChevronRight as chevronIcon, mdiPlus as plusIcon } from "@mdi/js";
+import Icon from '@mdi/react';
+import { mdiChevronRight as chevronIcon, mdiPlus as plusIcon } from '@mdi/js';
 
-import context from "../../api/context";
-import Map from "../../api/Map";
-import getNotes from "../lib/getNotes";
-import getNotesAmount from "../lib/getNotesAmount";
+import context from '../../api/context';
+import Map from '../../api/Map';
+import getNotes from '../lib/getNotes';
+import getNotesAmount from '../lib/getNotesAmount';
 
-import { notesDataType } from "../../types";
+import { notesDataType } from '../../types';
 
 import {
+  updateNote,
   showAddFolderModal,
   showAddTagModal,
   showRenameFolderModal,
-  showRenameTagModal,
-  showDeleteFolderConfirmationModal,
-  showDeleteTagConfirmationModal
-} from "../../actions";
+  showRenameTagModal
+} from '../../actions';
 
-import ShortcutItem from "./ShortcutItem";
+import { deleteFolder } from '../../actions/folders';
+import { deleteTag } from '../../actions/tags';
+
+import confirmFolderDelete from '../dialogs/confirmFolderDelete';
+import folderDeletionSuccess from '../dialogs/folderDeletionSuccess';
+
+import confirmTagDelete from '../dialogs/confirmTagDelete';
+import tagDeletionSuccess from '../dialogs/tagDeletionSuccess';
+
+import ShortcutItem from './ShortcutItem';
 
 const LABELS = {
   folderList: {
-    renameLabel: "Rename folder",
-    deleteLabel: "Delete folder",
-    emptyLabel: "Your list of folders will show up here."
+    renameLabel: 'Rename folder',
+    deleteLabel: 'Delete folder',
+    emptyLabel: 'Your list of folders will show up here.'
   },
   tagList: {
-    renameLabel: "Rename tag",
-    deleteLabel: "Delete tag",
-    emptyLabel: "Your list of tags will show up here."
+    renameLabel: 'Rename tag',
+    deleteLabel: 'Delete tag',
+    emptyLabel: 'Your list of tags will show up here.'
   }
 };
 
@@ -66,35 +75,73 @@ class ShortcutList extends Component {
 
     const { dispatch, listType } = this.props;
 
-    if (listType === "folderList") {
+    if (listType === 'folderList') {
       dispatch(showAddFolderModal());
     }
 
-    if (listType === "tagList") {
+    if (listType === 'tagList') {
       dispatch(showAddTagModal());
     }
   }
 
   onDelete(item) {
-    const { dispatch, listType } = this.props;
+    const { dispatch, listType, notesData } = this.props;
+    const { allNotes } = notesData;
+    const { id, name } = item;
 
-    if (listType === "folderList") {
-      dispatch(showDeleteFolderConfirmationModal(item));
+    if (listType === 'folderList' && confirmFolderDelete()) {
+      dispatch(deleteFolder(id)).then(() => {
+        const notes = allNotes.toArray().filter(note => note.folder === id);
+
+        const promises = notes.map(note => {
+          const { key: noteKey } = note;
+
+          const input = {
+            folder: '',
+            isStarred: false,
+            isTrashed: true
+          };
+
+          return dispatch(updateNote(noteKey, input)).catch(error =>
+            console.log(`Error during ${noteKey} update`, error, input)
+          );
+        });
+        Promise.all(promises).then(() => folderDeletionSuccess());
+      });
     }
 
-    if (listType === "tagList") {
-      dispatch(showDeleteTagConfirmationModal(item));
+    if (listType === 'tagList' && confirmTagDelete(name)) {
+      dispatch(deleteTag(id)).then(deletedId => {
+        const notes = allNotes
+          .toArray()
+          .filter(note => note.tags.includes(deletedId));
+
+        const promises = notes.map(note => {
+          const { key: noteKey, tags } = note;
+
+          remove(tags, el => el === deletedId);
+
+          const input = {
+            tags: tags.slice()
+          };
+
+          return dispatch(updateNote(noteKey, input)).catch(error =>
+            console.log(`Error during ${noteKey} update`, error, input)
+          );
+        });
+        Promise.all(promises).then(() => tagDeletionSuccess());
+      });
     }
   }
 
   onRename(item) {
     const { dispatch, listType } = this.props;
 
-    if (listType === "folderList") {
+    if (listType === 'folderList') {
       dispatch(showRenameFolderModal(item));
     }
 
-    if (listType === "tagList") {
+    if (listType === 'tagList') {
       dispatch(showRenameTagModal(item));
     }
   }
@@ -138,11 +185,11 @@ class ShortcutList extends Component {
         ? list.map(item => {
             let pathTo;
 
-            if (listType === "folderList") {
+            if (listType === 'folderList') {
               pathTo = `/folder/${item.id}`;
             }
 
-            if (listType === "tagList") {
+            if (listType === 'tagList') {
               pathTo = `/tag/${item.id}`;
             }
 
@@ -161,7 +208,7 @@ class ShortcutList extends Component {
           })
         : null;
     const className = `sidebar__shortcuts ${
-      isOpen ? "sidebar__shortcuts--is-open" : ""
+      isOpen ? 'sidebar__shortcuts--is-open' : ''
     }`;
 
     return (
