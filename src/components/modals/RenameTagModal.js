@@ -3,15 +3,15 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-one-expression-per-line */
-import React, { Component } from "react";
-import Modal from "react-modal";
-import { func } from "prop-types";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import Modal from 'react-modal';
+import { func } from 'prop-types';
+import { connect } from 'react-redux';
 
-import { tagType } from "../../types";
-import { closeModal, updateTag } from "../../actions";
+import { tagType } from '../../types';
 
-import UpdateTagApi from "../../api/updateTag";
+import { closeModal } from '../../actions';
+import { renameTag } from '../../actions/tags';
 
 class RenameTagModal extends Component {
   static propTypes = {
@@ -23,8 +23,8 @@ class RenameTagModal extends Component {
     super(props);
 
     this.state = {
-      tagName: "",
-      error: ""
+      tagName: '',
+      error: ''
     };
 
     this.inputRef = React.createRef();
@@ -48,22 +48,19 @@ class RenameTagModal extends Component {
   onSubmit(event) {
     event.preventDefault();
 
-    const { tagName: name } = this.state;
+    const { tagName } = this.state;
     const { dispatch, tag } = this.props;
 
-    const newTag = Object.assign({}, tag, { name });
+    const { id: tagId } = tag;
 
-    UpdateTagApi(newTag)
-      .then(data => {
-        dispatch(updateTag(data));
-        this.onClose();
-      })
+    dispatch(renameTag(tagId, tagName))
+      .then(() => this.onClose())
       .catch(error => this.setState({ error: error.message }));
   }
 
   onClose() {
     const { dispatch } = this.props;
-    this.setState({ tagName: "", error: "" });
+    this.setState({ tagName: '', error: '' });
     dispatch(closeModal());
   }
 
@@ -74,8 +71,8 @@ class RenameTagModal extends Component {
       <span className="modal__error">{error}</span>
     ) : null;
     const inputClassName = error
-      ? "modal__input modal__input--error"
-      : "modal__input";
+      ? 'modal__input modal__input--error'
+      : 'modal__input';
 
     return (
       <Modal

@@ -44,11 +44,6 @@ export const closeModal = () => ({
   type: 'CLOSE_MODAL'
 });
 
-export const updateTag = tag => ({
-  type: 'UPDATE_TAG',
-  tag
-});
-
 export const deleteTag = tagId => ({
   type: 'DELETE_TAG',
   tagId
