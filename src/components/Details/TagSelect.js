@@ -189,7 +189,7 @@ class TagSelect extends Component {
   render() {
     const { value, suggestions } = this.state;
     const { note, tags } = this.props;
-    const { tags: tagsIds } = note;
+    const { tags: tagsIds, isTrashed } = note;
 
     const tagList = tagsIds.map(tagId => {
       const targetTag = tags.get(tagId);
@@ -203,10 +203,12 @@ class TagSelect extends Component {
           >
             <Icon className="tag-select__tag-icon" path={poundIcon} />
             <span className="tag-select__tag-name">{targetTag.name}</span>
-            <div
-              className="tag-select__tag-cross-icon"
-              onClick={event => this.onTagRemove(event, targetTag.id)}
-            />
+            {!isTrashed && (
+              <div
+                className="tag-select__tag-cross-icon"
+                onClick={event => this.onTagRemove(event, targetTag.id)}
+              />
+            )}
           </div>
         )
       );
@@ -223,16 +225,18 @@ class TagSelect extends Component {
     return (
       <div className="details__tag-select tag-select">
         {tagList}
-        <Autosuggest
-          ref={this.inputSuggestionRef}
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          onSuggestionSelected={this.onSuggestionSelected}
-          getSuggestionValue={suggestion => suggestion.name}
-          renderSuggestion={suggestion => <div>{suggestion.name}</div>}
-          inputProps={inputProps}
-        />
+        {!isTrashed && (
+          <Autosuggest
+            ref={this.inputSuggestionRef}
+            suggestions={suggestions}
+            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+            onSuggestionSelected={this.onSuggestionSelected}
+            getSuggestionValue={suggestion => suggestion.name}
+            renderSuggestion={suggestion => <div>{suggestion.name}</div>}
+            inputProps={inputProps}
+          />
+        )}
       </div>
     );
   }

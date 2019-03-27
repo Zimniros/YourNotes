@@ -85,7 +85,7 @@ class FolderSelect extends Component {
 
   render() {
     const { folders, note } = this.props;
-    const { folder: folderId } = note;
+    const { folder: folderId, isTrashed } = note;
     const { isOpen } = this.state;
     const folder = folders.get(folderId);
 
@@ -99,7 +99,7 @@ class FolderSelect extends Component {
         <Icon className="folder-select__icon" path={folderIcon} />
         <span className="folder-select__name">{folderName}</span>
 
-        {isOpen && (
+        {isOpen && !isTrashed && (
           <div
             onClick={e => e.stopPropagation()}
             ref={this.dropdownRef}
