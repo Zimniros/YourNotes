@@ -13,9 +13,10 @@ import {
   sortByType
 } from '../../types';
 
-import { updateNote, showDeleteNoteConfirmationModal } from '../../actions';
-
+import { updateNote, deleteNote } from '../../actions';
 import context from '../../api/context';
+
+import confirmNoteDelete from '../dialogs/confirmNoteDelete';
 
 import NoteItem from './NoteItem';
 
@@ -101,8 +102,11 @@ class NoteList extends Component {
 
   handleDeleteNote(note) {
     const { dispatch } = this.props;
+    const { key } = note;
 
-    dispatch(showDeleteNoteConfirmationModal(note));
+    if (confirmNoteDelete()) {
+      dispatch(deleteNote(key));
+    }
   }
 
   handleNoteClick(noteKey) {

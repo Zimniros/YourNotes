@@ -12,11 +12,13 @@ import {
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-import { updateNote, showDeleteNoteConfirmationModal } from '../../actions';
+import { updateNote, deleteNote } from '../../actions';
 import { noteType } from '../../types';
 
 import FolderSelect from './FolderSelect';
 import TagSelect from './TagSelect';
+
+import confirmNoteDelete from '../dialogs/confirmNoteDelete';
 
 class NoteEditor extends Component {
   static propTypes = {
@@ -137,7 +139,11 @@ class NoteEditor extends Component {
 
   handleDelete = () => {
     const { dispatch, note } = this.props;
-    dispatch(showDeleteNoteConfirmationModal(note));
+    const { key } = note;
+
+    if (confirmNoteDelete()) {
+      dispatch(deleteNote(key));
+    }
   };
 
   saveNote() {

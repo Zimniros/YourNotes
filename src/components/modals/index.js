@@ -8,7 +8,6 @@ import AddTagModal from './AddTagModal';
 import RenameTagModal from './RenameTagModal';
 
 import DeleteTagConfirmationModal from './DeleteTagConfirmationModal';
-import ShowDeleteNoteConfirmationModal from './DeleteNoteConfirmationModal';
 
 const MODAL_COMPONENTS = {
   ADD_FOLDER: AddFolderModal,
@@ -16,8 +15,7 @@ const MODAL_COMPONENTS = {
   DELETE_FOLDER_CONFIRMATION: DeleteFolderConfirmationModal,
   ADD_TAG: AddTagModal,
   RENAME_TAG: RenameTagModal,
-  DELETE_TAG_CONFIRMATION: DeleteTagConfirmationModal,
-  DELETE_NOTE_CONFIRMATION: ShowDeleteNoteConfirmationModal,
+  DELETE_TAG_CONFIRMATION: DeleteTagConfirmationModal
 };
 
 const ModalRoot = ({ modalType, modalProps }) => {
