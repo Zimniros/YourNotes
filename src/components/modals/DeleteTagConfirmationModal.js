@@ -8,9 +8,8 @@ import { connect } from 'react-redux';
 import remove from 'lodash/remove';
 
 import { tagType, notesDataType } from '../../types';
-import { updateNote, deleteTag, closeModal } from '../../actions';
-
-import deleteTagApi from '../../api/deleteTag';
+import { updateNote, closeModal } from '../../actions';
+import { deleteTag } from '../../actions/tags';
 
 class DeleteTagConfirmationModal extends Component {
   static propTypes = {
@@ -32,32 +31,28 @@ class DeleteTagConfirmationModal extends Component {
 
     const { dispatch, tag, notesData } = this.props;
     const { allNotes } = notesData;
-    const { id } = tag;
+    const { id: tagId } = tag;
 
-    deleteTagApi(id)
-      .then(tagId => {
-        dispatch(deleteTag(tagId));
+    dispatch(deleteTag(tagId)).then(deletedId => {
+      const notes = allNotes
+        .toArray()
+        .filter(note => note.tags.includes(deletedId));
 
-        allNotes.forEach(note => {
-          const { tags } = note;
+      const promises = notes.map(note => {
+        const { key: noteKey, tags } = note;
 
-          if (tags.some(el => el.id === tagId)) {
-            remove(tags, el => el.id === tagId);
+        remove(tags, el => el === deletedId);
 
-            const { key: noteKey } = note;
-            const input = {
-              tags
-            };
+        const input = {
+          tags: tags.slice()
+        };
 
-            dispatch(updateNote(noteKey, input)).catch(error =>
-              console.log(`Error during ${noteKey} update`, error, input)
-            );
-          }
-        });
-
-        this.onClose();
-      })
-      .catch(error => this.setState({ error: error.message }));
+        return dispatch(updateNote(noteKey, input)).catch(error =>
+          console.log(`Error during ${noteKey} update`, error, input)
+        );
+      });
+      Promise.all(promises).then(() => this.onClose());
+    });
   }
 
   onClose() {

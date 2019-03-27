@@ -64,6 +64,7 @@ const deleteFolder = require('./../src/api/deleteFolder');
 
 const addTag = require('./../src/api/addTag');
 const renameTag = require('../src/api/renameTag');
+const deleteTag = require('./../src/api/deleteTag');
 
 ipcMain.on('init:start', () => {
   Promise.all([db.notes.find({}), db.folders.find({}), db.tags.find({})]).then(
@@ -173,5 +174,16 @@ ipcMain.on('tag:rename', (event, { tagId, tagName }) => {
     .catch(error => {
       const errorMessage = error.message;
       mainWindow.webContents.send('tag:renamed:error', errorMessage);
+    });
+});
+
+ipcMain.on('tag:delete', (event, tagId) => {
+  deleteTag(tagId)
+    .then(deletedKey => {
+      mainWindow.webContents.send('tag:deleted', deletedKey);
+    })
+    .catch(error => {
+      const errorMessage = error.message;
+      mainWindow.webContents.send('tag:deleted:error', errorMessage);
     });
 });

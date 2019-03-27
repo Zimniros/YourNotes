@@ -44,11 +44,6 @@ export const closeModal = () => ({
   type: 'CLOSE_MODAL'
 });
 
-export const deleteTag = tagId => ({
-  type: 'DELETE_TAG',
-  tagId
-});
-
 export const addNote = location => dispatch =>
   new Promise((resolve, reject) => {
     ipcRenderer.send('note:create', location);

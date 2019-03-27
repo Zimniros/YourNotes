@@ -1,7 +1,7 @@
-import db from './db';
+const db = require('./db');
 
 async function deleteTag(tagId) {
-  if (!tagId) {
+  if (tagId == null) {
     return Promise.reject(new Error('TagId is not provided.'));
   }
 
@@ -14,4 +14,4 @@ async function deleteTag(tagId) {
   return Promise.resolve(tagId);
 }
 
-export default deleteTag;
+module.exports = deleteTag;

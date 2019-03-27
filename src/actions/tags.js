@@ -36,7 +36,26 @@ export const renameTag = (tagId, tagName) => dispatch =>
     });
   });
 
+export const deleteTag = tagId => dispatch =>
+  new Promise((resolve, reject) => {
+    ipcRenderer.send('tag:delete', tagId);
+
+    ipcRenderer.once('tag:deleted', (event, deletedKey) => {
+      dispatch({
+        type: 'DELETE_TAG',
+        id: deletedKey
+      });
+
+      resolve(deletedKey);
+    });
+
+    ipcRenderer.once('tag:deleted:error', (event, errorMessage) => {
+      reject(new Error(errorMessage));
+    });
+  });
+
 export default {
   addTag,
-  renameTag
+  renameTag,
+  deleteTag
 };
