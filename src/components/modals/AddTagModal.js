@@ -3,13 +3,13 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-one-expression-per-line */
-import React, { Component } from "react";
-import Modal from "react-modal";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import Modal from 'react-modal';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import { closeModal, addTag } from "../../actions";
-import addTagAPI from "../../api/addTag";
+import { closeModal } from '../../actions';
+import { addTag } from '../../actions/tags';
 
 class AddTagModal extends Component {
   static propTypes = {
@@ -20,8 +20,8 @@ class AddTagModal extends Component {
     super(props);
 
     this.state = {
-      tagName: "",
-      error: ""
+      tagName: '',
+      error: ''
     };
 
     this.inputRef = React.createRef();
@@ -42,18 +42,15 @@ class AddTagModal extends Component {
     const { dispatch } = this.props;
 
     this.setState({ tagName: tagName.trim() }, () => {
-      addTagAPI(tagName)
-        .then(tag => {
-          dispatch(addTag(tag));
-          this.onClose();
-        })
+      dispatch(addTag(tagName))
+        .then(() => this.onClose())
         .catch(error => this.setState({ error: error.message }));
     });
   }
 
   onClose() {
     const { dispatch } = this.props;
-    this.setState({ tagName: "", error: "" });
+    this.setState({ tagName: '', error: '' });
     dispatch(closeModal());
   }
 
@@ -64,8 +61,8 @@ class AddTagModal extends Component {
       <span className="modal__error">{error}</span>
     ) : null;
     const inputClassName = error
-      ? "modal__input modal__input--error"
-      : "modal__input";
+      ? 'modal__input modal__input--error'
+      : 'modal__input';
 
     return (
       <Modal

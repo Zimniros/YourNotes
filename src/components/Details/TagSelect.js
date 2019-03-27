@@ -10,9 +10,10 @@ import Autosuggest from 'react-autosuggest';
 import Icon from '@mdi/react';
 import { mdiPound as poundIcon } from '@mdi/js';
 
-import { updateNote, addTag } from '../../actions';
+import { updateNote } from '../../actions';
+import { addTag } from '../../actions/tags';
 import { noteType, historyType } from '../../types';
-import addTagApi from '../../api/addTag';
+
 import Map from '../../api/Map';
 
 class TagSelect extends Component {
@@ -132,29 +133,27 @@ class TagSelect extends Component {
     const targetTag = tags.toArray().find(tag => tag.name === newTag);
 
     if (!targetTag) {
-      addTagApi(newTag)
+      dispatch(addTag(newTag))
         .then(tag => {
-          dispatch(addTag(tag));
-          this.reset();
-          return tag;
-        })
-        .then(tag => {
+          noteTagIds.push(tag.id);
           const input = {
-            tags: noteTagIds.push(tag.id)
+            tags: noteTagIds.slice()
           };
 
           this.handleUpdateNote(noteKey, input);
+          this.reset();
         })
         .catch(error =>
-          console.log('Error in addNewTag() in TagSelect component', error)
+          console.log('Error in addTag() in TagSelect component', error)
         );
 
       return null;
     }
 
     if (!includes(noteTagIds, targetTag.id)) {
+      noteTagIds.push(targetTag.id);
       const input = {
-        tags: noteTagIds.push(targetTag.id)
+        tags: noteTagIds.slice()
       };
 
       this.handleUpdateNote(noteKey, input);

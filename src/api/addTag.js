@@ -1,18 +1,24 @@
-import v4 from 'uuid/v4';
-import { isString } from 'lodash';
+const v4 = require('uuid/v4');
+const { isString } = require('lodash');
 
-import db from './db';
+const db = require('./db');
 
 async function addTag(name) {
   if (!isString(name)) {
     return Promise.reject(new Error('Name must be a string.'));
   }
 
-  if (name < 1) {
+  if (name.length < 1) {
     return Promise.reject(new Error('Name must be at least 1 character long.'));
   }
 
-  const targetTag = await db.tags.findOne({ name });
+  let targetTag;
+
+  try {
+    targetTag = await db.tags.findOne({ name });
+  } catch (error) {
+    return Promise.reject(error);
+  }
 
   if (targetTag) {
     return Promise.reject(
@@ -25,9 +31,13 @@ async function addTag(name) {
     name
   };
 
-  await db.tags.insert(newTag);
+  try {
+    await db.tags.insert(newTag);
+  } catch (error) {
+    return Promise.reject(error);
+  }
 
-  return newTag;
+  return Promise.resolve(newTag);
 }
 
-export default addTag;
+module.exports = addTag;
