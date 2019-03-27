@@ -81,22 +81,30 @@ class NoteList extends Component {
     this.handleNoteContextMenu = this.handleNoteContextMenu.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const { location, history } = this.props;
     const { pathname } = location;
     const visibleNoteKeys = this.notes.map(note => note.key);
     const note = this.notes[0];
-    const prevKey = getSearchKey(prevProps.location);
     const curKey = getSearchKey(location);
-    const noteKey = visibleNoteKeys.includes(prevKey)
-      ? prevKey
-      : note && note.key;
 
     if (note && curKey === null) {
+      const { key } = note;
+
       history.replace({
         pathname,
-        search: `key=${noteKey}`
+        search: `key=${key}`
       });
+
+      return null;
+    }
+
+    if (curKey !== null && !visibleNoteKeys.includes(curKey)) {
+      history.replace({
+        pathname
+      });
+
+      return null;
     }
   }
 
